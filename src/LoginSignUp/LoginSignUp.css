@@ -1,8 +1,23 @@
+.custom-bg {
+    background-image: url('../assets/Carousel3.jpeg');
+    /* Replace with your image path */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 .Main-container {
+    background-image: url('../assets/Uirback.jpeg');
+    /* Adjust the path according to your project structure */
+    background-size: cover;
+    /* Ensures the image covers the entire container */
+    background-position: center;
+    /* Centers the background image */
     background-color: rgba(24, 54, 128, 0.3);
     width: 100%;
     position: absolute;
     height: 100%;
+    z-index: 1;
 }
 
 .Login-container {

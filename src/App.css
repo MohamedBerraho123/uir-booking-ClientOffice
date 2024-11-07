@@ -40,3 +40,10 @@
 .read-the-docs {
   color: #888;
 } */
+.customm-bg {
+  background-image: url('../assets/Carousel3.jpeg');
+  /* Replace with your image path */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

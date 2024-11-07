@@ -5,6 +5,7 @@ import LoginSignUp from "./LoginSignUp/loginSignUp.jsx";
 import Stepper from "./components/stepper/Stepper.jsx";
 import About from "./components/pages/About"; // Ensure the path is correct
 import Contact from "./components/pages/Contact"; // Ensure the path is correct
+import '../src/LoginSignUp//LoginSignup.css'
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -26,7 +27,7 @@ function App() {
   return (
     <Router>
       {isLoggedIn ? (
-        <div className="flex h-screen">
+        <div className="flex h-screen customm-bg">
           <div className="flex-1 flex flex-col">
             <Header onLogout={handleLogout} />
             <div className="p-10">
