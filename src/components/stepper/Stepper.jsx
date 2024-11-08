@@ -8,9 +8,8 @@ import "./Stepper.css";
 
 const steps = ["Choose Sport", "Choose Match", "Select Time", "Summary"];
 
-const Stepper = () => {
+const Stepper = ({ token, studentcodeUIR }) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [token, setToken] = useState("your_token_here");
   const [selectedSport, setSelectedSport] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedTimeRange, setSelectedTimeRange] = useState(null);
@@ -18,7 +17,6 @@ const Stepper = () => {
   const [sports, setSports] = useState([]);
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
-  const studentcodeUIR = "your_student_code_here";
 
   const nextStep = () => setCurrentStep((prev) => prev + 1);
   const prevStep = () => setCurrentStep((prev) => prev - 1);

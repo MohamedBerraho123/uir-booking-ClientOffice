@@ -16,10 +16,14 @@ const Step4ReservationSummary = ({ token, studentcodeUIR, selectedCategory, sele
       const response = await axios.post("https://localhost:7125/api/Reservations/AddReservations", reservationData, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      console.log("reservationData ,,:" ,reservationData);
+      
       setSuccess("Reservation successful!");
     } catch (error) {
       setError("Failed to create reservation.");
+
       console.error("Error:", error.response ? error.response.data : error.message);
+      console.error("Error data :::::", reservationData);
     }
   };
 
