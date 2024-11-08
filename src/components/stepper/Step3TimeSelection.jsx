@@ -1,33 +1,30 @@
-// Step3TimeSelection.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const Step3TimeSelection = ({ token, selectedCategory, selectedTimeRange, setSelectedTimeRange, nextStep, prevStep, setError }) => {
   const [timeRanges, setTimeRanges] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [participantCodes, setParticipantCodes] = useState(['']); // State for participant codes
+  const [participantCodes, setParticipantCodes] = useState(['']);
 
   useEffect(() => {
     const fetchTimeRanges = async () => {
-      if (!selectedCategory) return; // Prevent fetching if no category is selected
+      if (!selectedCategory) return;
 
       try {
         setLoading(true);
         const response = await axios.get(`https://localhost:7125/api/Plannings/get-time-ranges-by-sport-not-reserved/${selectedCategory}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        // Log the fetched time ranges
         setTimeRanges(response.data);
       } catch (error) {
         setError("Failed to load time ranges");
-        // Log the error for debugging
       } finally {
         setLoading(false);
       }
     };
 
     fetchTimeRanges();
-  }, [token, selectedCategory, setError]); // Fetch time ranges whenever token or selected category changes
+  }, [token, selectedCategory, setError]);
 
   const handleParticipantCodeChange = (e, index) => {
     const updatedList = [...participantCodes];
@@ -36,7 +33,7 @@ const Step3TimeSelection = ({ token, selectedCategory, selectedTimeRange, setSel
   };
 
   const addParticipantCodeField = () => {
-    setParticipantCodes([...participantCodes, '']); // Add a new input field for a participant
+    setParticipantCodes([...participantCodes, '']);
   };
 
   const removeParticipantCodeField = (index) => {
@@ -55,14 +52,13 @@ const Step3TimeSelection = ({ token, selectedCategory, selectedTimeRange, setSel
             type="radio"
             name="timeRange"
             value={timeRange.id}
-            checked={selectedTimeRange && selectedTimeRange.id === timeRange.id} // Check if this time range is selected
-            onChange={() => setSelectedTimeRange(timeRange)} // Update selected time range on change
+            checked={selectedTimeRange && selectedTimeRange.id === timeRange.id}
+            onChange={() => setSelectedTimeRange(timeRange)}
           />
           <label>{timeRange.hourStart} - {timeRange.hourEnd}</label>
         </div>
       ))}
 
-      {/* Participant Codes Section */}
       <div>
         <h3 className="text-lg font-semibold mt-4">Codes des participants :</h3>
         {participantCodes.map((code, index) => (
@@ -74,24 +70,14 @@ const Step3TimeSelection = ({ token, selectedCategory, selectedTimeRange, setSel
               required
               placeholder="Entrer le code UIR"
             />
-            <button type="button" onClick={() => removeParticipantCodeField(index)}>
-              Remove
-            </button>
+            <button type="button" onClick={() => removeParticipantCodeField(index)}>Remove</button>
           </div>
         ))}
-        <button type="button" onClick={addParticipantCodeField}>
-          Ajouter un participant
-        </button>
+        <button type="button" onClick={addParticipantCodeField}>Ajouter un participant</button>
       </div>
 
-      <button className="btn btn-secondary mt-4" onClick={prevStep}>
-        Précédent
-      </button>
-      {selectedTimeRange && (
-        <button className="btn btn-primary mt-4" onClick={nextStep}>
-          Suivant
-        </button>
-      )}
+      <button className="btn btn-secondary mt-4" onClick={prevStep}>Précédent</button>
+      {selectedTimeRange && <button className="btn btn-primary mt-4" onClick={nextStep}>Suivant</button>}
     </div>
   );
 };

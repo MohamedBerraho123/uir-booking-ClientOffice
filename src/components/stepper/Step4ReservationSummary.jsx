@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 
-const Step4ReservationSummary = ({ token, studentcodeUIR, selectedCategory, selectedTimeRange, studentCodeUIRList, setStudentCodeUIRList, setSuccess, setError, prevStep, sports }) => {
+const Step4ReservationSummary = ({ token, studentcodeUIR, selectedCategory, selectedTimeRange, studentCodeUIRList, setSuccess, setError, prevStep, sports }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const reservationData = {
@@ -16,22 +16,13 @@ const Step4ReservationSummary = ({ token, studentcodeUIR, selectedCategory, sele
       const response = await axios.post("https://localhost:7125/api/Reservations/AddReservations", reservationData, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log(
-        "message error:?", response
-      );
-
       setSuccess("Reservation successful!");
     } catch (error) {
       setError("Failed to create reservation.");
-      console.log(
-        "message error:?", error.response.data
-
-      );
-      const er = error.response.data;
+      console.error("Error:", error.response ? error.response.data : error.message);
     }
   };
 
-  // Find the sport name based on the ID
   const sport = sports.find(sport => sport.id === selectedCategory);
 
   return (
@@ -42,7 +33,6 @@ const Step4ReservationSummary = ({ token, studentcodeUIR, selectedCategory, sele
       <p>Heure: {selectedTimeRange.hourStart} - {selectedTimeRange.hourEnd}</p>
       <button className="btn btn-secondary mt-4" onClick={prevStep}>Précédent</button>
       <button className="btn btn-primary mt-4" onClick={handleSubmit}>Confirmer la réservation</button>
-      <p>{error.er}</p>
     </div>
   );
 };

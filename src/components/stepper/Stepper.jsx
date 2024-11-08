@@ -1,4 +1,3 @@
-// Stepper.jsx
 import React, { useState } from "react";
 import { TiTick } from "react-icons/ti";
 import Step1ChooseSport from "./Step1ChooseSport";
