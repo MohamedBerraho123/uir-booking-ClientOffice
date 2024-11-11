@@ -24,6 +24,7 @@ function Header({ onLogout }) {
           <Link to="/" className="text-gray-600 hover:text-blue-600">Home</Link>
           <Link to="/about" className="text-gray-600 hover:text-blue-600">About</Link>
           <Link to="/contact" className="text-gray-600 hover:text-blue-600">Contact</Link>
+          <Link to="/stepper" className="text-gray-600 hover:text-blue-600">stepper</Link>
         </nav>
 
         {/* User Profile Dropdown */}

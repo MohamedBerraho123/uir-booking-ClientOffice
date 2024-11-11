@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { TiTick } from "react-icons/ti";
 import Step1ChooseSport from "./Step1ChooseSport";
 import Step2ChooseMatch from "./Step2ChooseMatch";
-import Step3TimeSelection from "./Step3TimeSelection";
-import Step4ReservationSummary from "./Step4ReservationSummary";
+// import Step3TimeSelection from "./Step3TimeSelection";
+// import Step4ReservationSummary from "./Step4ReservationSummary";
+import Step3And4Reservation from "./Step3And4Reservation"
 import "./Stepper.css";
 
 const steps = ["Choose Sport", "Choose Match", "Select Time", "Summary"];
@@ -27,7 +28,9 @@ const Stepper = ({ token, studentcodeUIR }) => {
         {steps.map((step, index) => (
           <div
             key={index}
-            className={`step-item ${index + 1 < currentStep ? "complete" : ""} ${index + 1 === currentStep ? "active" : ""}`}
+            className={`step-item ${
+              index + 1 < currentStep ? "complete" : ""
+            } ${index + 1 === currentStep ? "active" : ""}`}
           >
             <div className="step">
               {index + 1 < currentStep ? <TiTick size={20} /> : index + 1}
@@ -60,22 +63,12 @@ const Stepper = ({ token, studentcodeUIR }) => {
           />
         )}
         {currentStep === 3 && (
-          <Step3TimeSelection
+          <Step3And4Reservation
             token={token}
             selectedCategory={selectedCategory}
             selectedTimeRange={selectedTimeRange}
             setSelectedTimeRange={setSelectedTimeRange}
-            nextStep={nextStep}
-            prevStep={prevStep}
-            setError={setError}
-          />
-        )}
-        {currentStep === 4 && (
-          <Step4ReservationSummary
-            token={token}
             studentcodeUIR={studentcodeUIR}
-            selectedCategory={selectedCategory}
-            selectedTimeRange={selectedTimeRange}
             studentCodeUIRList={studentCodeUIRList}
             setStudentCodeUIRList={setStudentCodeUIRList}
             setSuccess={setSuccess}
@@ -84,6 +77,8 @@ const Stepper = ({ token, studentcodeUIR }) => {
             sports={sports}
           />
         )}
+
+      
       </div>
 
       {success && <p className="success-message">{success}</p>}

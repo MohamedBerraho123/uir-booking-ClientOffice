@@ -6,6 +6,7 @@ import Stepper from "./components/stepper/Stepper.jsx";
 import About from "./components/pages/About"; // Ensure the path is correct
 import Contact from "./components/pages/Contact"; // Ensure the path is correct
 import '../src/LoginSignUp//LoginSignup.css'
+ import Home from "./components/pages/Home.jsx"
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -32,7 +33,8 @@ function App() {
             <Header onLogout={handleLogout} />
             <div className="p-10">
               <Routes>
-                <Route path="/" element={<Stepper />} />
+                <Route path="/" element={<Home />} />
+                <Route path="/stepper" element={<Stepper />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
               </Routes>

@@ -47,11 +47,12 @@ const LoginSignUp = () => {
   };
 
   return (
+   
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h1 className="text-2xl font-semibold text-center mb-6">Login</h1>
         {!token ? (
           <form onSubmit={handleSubmit}>
+            <h1 className="text-2xl font-semibold text-center mb-6">Login</h1>
             <div className="mb-4">
               <label htmlFor="email" className="block text-gray-700">Email:</label>
               <input
@@ -81,6 +82,8 @@ const LoginSignUp = () => {
           </form>
         ) : (
           studentData && (
+            <div className="min-h-screen flex items-center justify-center bg-gray-100">
+         <div className="bg-white p-8 rounded-lg shadow-lg w-96">
             <FetchConversationById
               token={token}
               userId={studentData.userId}
@@ -89,6 +92,8 @@ const LoginSignUp = () => {
               lastName={studentData.lastName}
               handleLogout={handleLogout}
             />
+             </div>
+             </div>
           )
         )}
       </div>
