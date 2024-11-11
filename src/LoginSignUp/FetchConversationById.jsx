@@ -84,7 +84,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Stepper from "../components/stepper/Stepper"; 
+import Stepper from "../components/stepper/Stepper";
 
 const FetchConversationById = ({ userId, codeUIR, firstName, lastName, token, handleLogout }) => {
   const [student, setStudent] = useState({
@@ -93,7 +93,7 @@ const FetchConversationById = ({ userId, codeUIR, firstName, lastName, token, ha
     userId: userId || '',
     codeUIR: codeUIR || '',
   });
-  
+
   const [studentcodeUIR, setStudentCodeUIR] = useState('');
   const [error, setError] = useState('');
 
@@ -119,11 +119,17 @@ const FetchConversationById = ({ userId, codeUIR, firstName, lastName, token, ha
             Authorization: `Bearer ${token}`,
           },
         });
-        setStudentCodeUIR(response.data.codeUIR);
-        setStudent((prevStudent) => ({
-          ...prevStudent,
-          codeUIR: response.data.codeUIR,
-        }));
+        if (response.data) {
+          // If student exists, do not add them again
+          setStudentCodeUIR(response.data.codeUIR);
+          setStudent((prevStudent) => ({
+            ...prevStudent,
+            codeUIR: response.data.codeUIR,
+          }));
+        } else {
+          // If student does not exist, add the student
+          addStudent();
+        }
       } catch (err) {
         console.error('Error fetching student:', err);
         setError('Failed to fetch student.');
@@ -131,13 +137,9 @@ const FetchConversationById = ({ userId, codeUIR, firstName, lastName, token, ha
     };
 
     if (userId) {
-      getStudentByUserId().then((studentData) => {
-        if (!studentData) {
-          addStudent();
-        }
-      });
+      getStudentByUserId();  // Check if student exists, add if not
     }
-  }, [userId, token]);
+  }, [userId, token, student]);
 
   return (
     <div>
@@ -152,5 +154,6 @@ const FetchConversationById = ({ userId, codeUIR, firstName, lastName, token, ha
 };
 
 export default FetchConversationById;
+
 
 
