@@ -5,19 +5,27 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { ToastContainer, toast } from "react-toastify";
 
-const Step3And4Reservation = ({ token, selectedCategory, selectedTimeRange, setSelectedTimeRange, studentcodeUIR, studentCodeUIRList, setStudentCodeUIRList, setSuccess, setError, prevStep, sports }) => {
+const Step3And4Reservation = ({ token, selectedCategory, selectedTimeRange, setSelectedTimeRange, studentcodeUIR, userId, studentCodeUIRList, setStudentCodeUIRList, setSuccess, setError, prevStep, sports }) => {
   const [timeRanges, setTimeRanges] = useState([]);
   const [loading, setLoading] = useState(false);
   const [participantCodes, setParticipantCodes] = useState(['']);
+//   const [studentCodeUIR, setStudentCodeUIR] = useState('');
   const navigate = useNavigate();
+  console.log("GET USER ID from LoginSignUp:", userId); 
+  
+
+  
 
   useEffect(() => {
     const fetchTimeRanges = async () => {
       if (!selectedCategory) return;
+        // Calculate the current day of the week, aligning Sunday as 6 and Monday as 0
+    const jsDay = new Date().getDay();
+    const day = jsDay === 0 ? 6 : jsDay - 1;
 
       try {
         setLoading(true);
-        const response = await axios.get(`https://localhost:7125/api/Plannings/get-time-ranges-by-sport-not-reserved/${selectedCategory}`, {
+        const response = await axios.get(`https://localhost:7125/api/Plannings/get-timeRanges-by-sport-and-day-not-reserved/${selectedCategory}/${day}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setTimeRanges(response.data);
@@ -53,12 +61,15 @@ const Step3And4Reservation = ({ token, selectedCategory, selectedTimeRange, setS
   console.log('Participant Codes:5', participantCodes);
 
     const reservationData = {
-      codeUIR: studentcodeUIR,
+      codeUIR: "UIR57412",
       sportId: selectedCategory,
       hourStart: selectedTimeRange.hourStart,
       hourEnd: selectedTimeRange.hourEnd,
       codeUIRList: updatedStudentCodeUIRList,
     };
+    console.log("reservationData : ",reservationData);
+    console.log("GET USER ID from LoginSignUp : ", userId);
+    console.log("Student Code UIR:", studentcodeUIR); 
 
     try {
       const response = await axios.post("https://localhost:7125/api/Reservations/AddReservations", reservationData, {
@@ -74,7 +85,7 @@ const Step3And4Reservation = ({ token, selectedCategory, selectedTimeRange, setS
           icon: "success",
         });
         toast.success("Reservation ajouté avec succès!");
-         navigate("/about");
+         navigate("/contact");
       } else {
         Swal.fire({
             title: "Erreur lors de l'ajout du Reservation!",

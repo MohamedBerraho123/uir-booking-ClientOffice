@@ -14,6 +14,8 @@ const FetchConversationById = ({ userId, codeUIR, firstName, lastName, token, ha
 
   const [studentcodeUIR, setStudentCodeUIR] = useState('');
   const [error, setError] = useState('');
+  console.log(student);
+  
 
   useEffect(() => {
     const addStudent = async () => {
@@ -32,7 +34,7 @@ const FetchConversationById = ({ userId, codeUIR, firstName, lastName, token, ha
 
     const getStudentByUserId = async () => {
       try {
-        const response = await axios.get(`https://localhost:7125/api/Students/${userId}`, {
+        const response = await axios.get(`https://localhost:7125/api/Students/GetStudentByUserId/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

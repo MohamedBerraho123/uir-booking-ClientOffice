@@ -21,10 +21,10 @@ function Header({ onLogout }) {
 
         {/* Navigation Links */}
         <nav className="hidden md:flex space-x-4">
-          <Link to="/" className="text-gray-600 hover:text-blue-600">Home</Link>
+          <Link to="/" className="text-gray-600 hover:text-blue-600">List des Reservations</Link>
           <Link to="/about" className="text-gray-600 hover:text-blue-600">About</Link>
           <Link to="/contact" className="text-gray-600 hover:text-blue-600">Contact</Link>
-          <Link to="/stepper" className="text-gray-600 hover:text-blue-600">stepper</Link>
+          <Link to="/stepper" className="text-gray-600 hover:text-blue-600">Reservation</Link>
         </nav>
 
         {/* User Profile Dropdown */}
@@ -48,6 +48,16 @@ function Header({ onLogout }) {
                 <FaSignOutAlt className="text-xl text-gray-400 mr-2" />
                 <span className="text-gray-800">Sign out</span>
               </button>
+
+              <button
+              className="flex items-center block px-4 py-2 text-gray-800 hover:bg-gray-100 w-full hover:bg-black/10 text-left"
+              onClick={() => {
+                console.log("View Profile clicked" );
+              }}
+            >
+              <FaUserCircle className="text-xl text-gray-400 mr-2" />
+              <span className="text-gray-800">View Profile</span>
+            </button>
             </div>
           )}
         </div>
