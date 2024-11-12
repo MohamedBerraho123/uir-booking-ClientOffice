@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import { TiTick } from "react-icons/ti";
 import Step1ChooseSport from "./Step1ChooseSport";
 import Step2ChooseMatch from "./Step2ChooseMatch";
-// import Step3TimeSelection from "./Step3TimeSelection";
-// import Step4ReservationSummary from "./Step4ReservationSummary";
+
 import Step3And4Reservation from "./Step3And4Reservation"
 import "./Stepper.css";
 
 const steps = ["Choose Sport", "Choose Match", "Select Time", "Summary"];
 
-const Stepper = ({ token, studentcodeUIR  }) => {
+const Stepper = ({ token }) => {
   
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedSport, setSelectedSport] = useState("");
@@ -71,7 +70,7 @@ const Stepper = ({ token, studentcodeUIR  }) => {
             selectedTimeRange={selectedTimeRange}
             setSelectedTimeRange={setSelectedTimeRange}
             studentCodeUIRList={studentCodeUIRList}
-            studentCodeUIR={studentcodeUIR}
+         
             setStudentCodeUIRList={setStudentCodeUIRList}
             setSuccess={setSuccess}
             setError={setError}

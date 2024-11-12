@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// import Stepper from '../components/stepper/Stepper';
+
 
 const LoginSignUp = ({ onLogin }) => {
   const [email, setEmail] = useState('');
@@ -30,8 +30,6 @@ const LoginSignUp = ({ onLogin }) => {
       });
 
       const { token, userId, codeUIR, firstName, lastName } = response.data;
-      console.log("code uir 1 :" , userId );
-      
       setToken(token);
       localStorage.setItem('token', token);
       localStorage.setItem('userId', userId);
@@ -39,12 +37,11 @@ const LoginSignUp = ({ onLogin }) => {
       
       const newStudentData = { userId, codeUIR, firstName, lastName };
       setStudentData(newStudentData);
-      console.log("code uir 2 :" , userId );
+   
 
-      // Automatically add the student upon successful registration and login
+      // Automatically add the student upon successful registration and login 
       await addStudent(newStudentData, token);
-
-      onLogin(userId);
+      onLogin();
     } catch (error) {
       setErrorMessage(error.response?.data?.Message || 'Registration/Login failed');
     }
@@ -55,6 +52,13 @@ const LoginSignUp = ({ onLogin }) => {
       const response = await axios.get(`https://localhost:7125/api/Students/GetStudentByUserId/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      console.log("id from method fetch student by UserId data : ",response.data);
+      console.log("id from method fetch student by UserId : ",response.data.userId);
+      //pass the value of response.data.id to componenet Home 
+      console.log("id from method fetch student by Id : ",response.data.id);
+      //pass the value of response.data.codeUIR from method FetchStudentByUserId 
+      console.log("id from method fetch CodeUIR : ",response.data.codeUIR);
+      
       if (response.data) {
         setStudentCodeUIR(response.data.codeUIR);
       } else {

@@ -21,17 +21,18 @@ function Header({ onLogout }) {
 
         {/* Navigation Links */}
         <nav className="hidden md:flex space-x-4">
+          <Link to="/stepper" className="text-gray-600 hover:text-blue-600">Reservation</Link>
+          
           <Link to="/" className="text-gray-600 hover:text-blue-600">List des Reservations</Link>
           <Link to="/about" className="text-gray-600 hover:text-blue-600">About</Link>
           <Link to="/contact" className="text-gray-600 hover:text-blue-600">Contact</Link>
-          <Link to="/stepper" className="text-gray-600 hover:text-blue-600">Reservation</Link>
         </nav>
 
         {/* User Profile Dropdown */}
         <div className="relative">
           <div className="flex items-center cursor-pointer" onClick={toggleDropdown}>
             <div className="flex flex-col">
-              <span className="text-gray-800 font-semibold">Jaafar TAGMOUTI</span>
+              <span className="text-gray-800 font-semibold">Souhail elghiouane</span>
             </div>
             <RxCaretDown
               size={25}

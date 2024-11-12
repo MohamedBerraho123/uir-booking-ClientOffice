@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
 import ApiManager from "../../api";
-import { Link } from "react-router-dom";
-// import { FaRegEdit } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
 import { toast } from "react-toastify";
 
 const Home = () => {
@@ -11,17 +8,40 @@ const Home = () => {
   const [studentNames, setStudentNames] = useState({});
   const [studentFirstNames, setstudentFirstNames] = useState({});
   const [studentLastName, setstudentLastName] = useState({});
+  const [studentId, setStudentId] = useState(null);
 
   useEffect(() => {
-    fetchReservation();
+    const storedData = JSON.parse(localStorage.getItem("studentData"));
+    if (storedData) {
+      fetchStudentByUserId(storedData.userId);
+    }
   }, []);
 
+  useEffect(() => {
+    if (studentId) {
+      fetchReservation();
+    }
+  }, [studentId]);
+
+  const fetchStudentByUserId = async (userId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await ApiManager.get(`/Students/GetStudentByUserId/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.data) {
+        setStudentId(response.data.id); // Save fetched studentId in state
+      }
+    } catch (err) {
+      console.error("Error fetching student:", err);
+    }
+  };
+
   const fetchReservation = () => {
-    const studentId="3084fbc2-8622-47d1-95ef-729a8cf5e2ce"
+    if (!studentId) return;
+
     ApiManager.get(`/Reservations/byStudent/${studentId}`)
       .then((res) => {
-        console.log(res.data);
-        
         setReservations(res.data);
         res.data.forEach((reservation) => {
           if (reservation.sportId && !sportNames[reservation.sportId]) {
@@ -33,7 +53,7 @@ const Home = () => {
         });
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
 
@@ -52,13 +72,10 @@ const Home = () => {
   const fetchStudentName = async (studentId) => {
     try {
       const response = await ApiManager.get(`/Students/student/${studentId}`);
-
-
       setStudentNames((prevStudentNames) => ({
         ...prevStudentNames,
         [studentId]: response.data.codeUIR,
       }));
-
       setstudentFirstNames((prevStudentNames) => ({
         ...prevStudentNames,
         [studentId]: response.data.firstName,
@@ -67,20 +84,20 @@ const Home = () => {
         ...prevStudentNames,
         [studentId]: response.data.lastName,
       }));
-
     } catch (error) {
       console.error("Error fetching student name:", error);
     }
   };
 
+  // Handle Delete Reservation
   const handleDelete = async (reservationId) => {
-    if (window.confirm("Êtes-vous sûr de vouloir supprimer cet élément ?")) {
+    if (window.confirm("Are you sure you want to delete this reservation?")) {
       try {
         await ApiManager.delete(`/Reservation/${reservationId}`);
         fetchReservation();
-        toast.success("reservation supprimée avec succès !");
+        toast.success("Reservation successfully deleted!");
       } catch (error) {
-        toast.error("Erreur lors de la suppression de la reservation.");
+        toast.error("Error deleting reservation.");
       }
     }
   };
@@ -88,7 +105,7 @@ const Home = () => {
   return (
     <div className="rounded-sm border m-6 border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
     <div className="flex justify-between items-center mb-6">
-      <h4 className="text-xl font-semibold text-black dark:text-white font-satoshi">
+      <h4 className="text-xl font-semibold text-black  font-satoshi">
         List des Reservations
       </h4>
     </div>
@@ -126,22 +143,22 @@ const Home = () => {
           key={reservation.id}
         >
           <div className="flex items-center gap-3 p-2.5 xl:p-5">
-            <p className="hidden text-black dark:text-white sm:block font-semibold">
+            <p className="hidden text-black  sm:block font-semibold">
               {studentNames[reservation.studentId] || "Loading..."}
             </p>
           </div>
           <div className="flex items-center gap-3 p-2.5 xl:p-5">
-            <p className="hidden text-black dark:text-white sm:block font-semibold">
+            <p className="hidden text-black  sm:block font-semibold">
               {studentFirstNames[reservation.studentId] || "Loading..."}
             </p>
           </div>
           <div className="flex items-center gap-3 p-2.5 xl:p-5">
-            <p className="hidden text-black dark:text-white sm:block font-semibold">
+            <p className="hidden text-black  sm:block font-semibold">
               {studentLastName[reservation.studentId] || "Loading..."}
             </p>
           </div>
           <div className="flex items-center justify-center p-2.5 xl:p-5">
-            <p className="hidden text-black dark:text-white sm:block font-semibold">
+            <p className="hidden text-black  sm:block font-semibold">
               {sportNames[reservation.sportId] || "Loading..."}
             </p>
           </div>
