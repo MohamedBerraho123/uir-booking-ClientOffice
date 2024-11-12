@@ -31,35 +31,40 @@ const Step2ChooseMatch = ({ token, selectedSport, selectedCategory, setSelectedC
 
   return (
     <div>
-      <h3 className="text-lg font-semibold mb-2">Choisissez un match pour {selectedSport} :</h3>
-      {loading && <p>Loading matches...</p>}
-      {matches.length === 0 && !loading && <p>No matches available for this sport.</p>}
-      <div className="card-container">
-        {matches.map((match, index) => (
-          <div
-            key={index}
-            className={`card ${selectedCategory === match.id ? "selected" : ""}`}
-            onClick={() => {
-              setSelectedCategory(match.id);
-              nextStep(); // Proceed to the next step when a match is selected
-            }}
-          >
-            <img
-              src={match.image ? `data:image/png;base64,${match.image}` : 'placeholder.png'}
-              alt={match.name}
-              style={{ width: '100px', height: '100px' }}
-            />
-            <p style={{ color: 'black' }}>{match.name}</p>
-          </div>
-        ))}
-      </div>
-      {selectedCategory && (
-        <p className="mt-2 text-green-600">Match sélectionné : {selectedCategory}</p>
-      )}
-      <button className="btn btn-secondary mt-4" onClick={prevStep}>
-        Précédent
-      </button>
+    <h3 className="text-lg font-semibold mb-2 white-text">Choisissez un terrain :</h3>
+    {loading && <p>Loading matches...</p>}
+    {matches.length === 0 && !loading && <p>No matches available for this sport.</p>}
+    
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 card-container">
+      {matches.map((match, index) => (
+        <div
+          key={index}
+         
+          onClick={() => {
+            setSelectedCategory(match.id);
+            nextStep(); // Proceed to the next step when a match is selected
+          }}
+        >
+          <img
+            src={match.image ? `data:image/png;base64,${match.image}` : 'placeholder.png'}
+            alt={match.name}
+            className="w-24 h-24 object-cover rounded-md mx-auto mb-2"
+          />
+          <p className="text-center  font-medium white-text">{match.name}</p>
+        </div>
+      ))}
     </div>
+  
+    
+    
+    <button 
+      className="btn   px-4 py-2 mt-4 rounded-md  focus:outline-none focus:ring-2 focus:ring-gray-500 gree-button"
+      onClick={prevStep}
+    >
+      Précédent
+    </button>
+  </div>
+  
   );
 };
 

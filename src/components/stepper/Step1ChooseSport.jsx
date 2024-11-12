@@ -30,20 +30,30 @@ const Step1ChooseSport = ({ token, selectedSport, setSelectedSport, nextStep, se
 
   return (
     <div>
-      <h3 className="text-lg font-semibold mb-2">Choisissez un sport :</h3>
-      {loading && <p>Loading sports...</p>}
-      <select className="select" value={selectedSport} onChange={handleSportSelection}>
-        <option value="">-- Sélectionnez un sport --</option>
-        {sports.map((sport) => (
-          <option key={sport.id} value={sport.id}>{sport.name}</option>
-        ))}
-      </select>
-      {selectedSport && (
-        <button className="btn btn-primary mt-4" onClick={nextStep}>
-          Suivant
-        </button>
-      )}
-    </div>
+    <h3 className="text-lg font-semibold mb-2 white-text">Choisissez un sport :</h3>
+    {loading && <p>Loading sports...</p>}
+    <select 
+  className="select w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 text-center"
+  value={selectedSport} 
+  onChange={handleSportSelection}
+>
+  <option value="" className="blue-txt text-center">-- Sélectionnez un sport --</option>
+  {sports.map((sport) => (
+    <option className="blue-txt text-center" key={sport.id} value={sport.id}>{sport.name}</option>
+  ))}
+</select>
+
+
+    {selectedSport && (
+      <button 
+        className="btn  px-4 py-2 mt-4 rounded-md  focus:outline-none focus:ring-2 focus:ring-gray-500 gree-button"
+        onClick={nextStep}
+      >
+        Suivant
+      </button>
+    )}
+  </div>
+  
   );
 };
 

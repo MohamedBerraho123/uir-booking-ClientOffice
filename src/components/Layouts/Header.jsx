@@ -3,6 +3,8 @@ import { FaUserCircle, FaSignOutAlt } from "react-icons/fa";
 import { RxCaretDown } from "react-icons/rx";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import UIRRLogo from "../../assets/UIRR.png";
+import "./Header.css";
 
 function Header({ onLogout, token }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -46,21 +48,26 @@ function Header({ onLogout, token }) {
     <header className="bg-white shadow-md">
       <div className="container mx-auto flex justify-between items-center p-4">
         {/* Logo */}
-        <div className="font-bold text-2xl text-blue-600">UIR</div>
+        <div className="font-bold text-2xl text-blue-600">
+        <Link to="/Home" className="font-bold">
+        {/* <p>LOGO</p> */}
+        <img src={UIRRLogo} alt="UIRR Logo" className="h-8 w-auto rounded-full" />
+      </Link>
+        </div>
 
         {/* Navigation Links */}
         <nav className="hidden md:flex space-x-4">
-          <Link to="/stepper" className="text-gray-600 hover:text-blue-600">
+          <Link to="/stepper" className="blue-txt hover:text-blue-600">
             Reservation
           </Link>
           
-          <Link to="/about" className="text-gray-600 hover:text-blue-600">
+          <Link to="/about" className="blue-txt hover:text-blue-600">
             About
           </Link>
-          <Link to="/" className="text-gray-600 hover:text-blue-600">
+          <Link to="/" className="blue-txt hover:text-blue-600">
             List des Reservations
           </Link>
-          <Link to="/contact" className="text-gray-600 hover:text-blue-600">
+          <Link to="/contact" className="blue-txt hover:text-blue-600">
             Contact
           </Link>
         </nav>
@@ -69,7 +76,7 @@ function Header({ onLogout, token }) {
         <div className="relative">
           <div className="flex items-center cursor-pointer" onClick={toggleDropdown}>
             <div className="flex flex-col">
-              <span className="text-gray-800 font-semibold">
+              <span className="blue-txt font-semibold">
                 {userData.firstName} {userData.lastName}
               </span>
             </div>
@@ -86,7 +93,7 @@ function Header({ onLogout, token }) {
                 onClick={onLogout}
               >
                 <FaSignOutAlt className="text-xl text-red-400 mr-2" />
-                <span className="text-gray-800">Sign out</span>
+                <span className="blue-txt">Sign out</span>
               </button>
 
               {/* <button

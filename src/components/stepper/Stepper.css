@@ -1,6 +1,6 @@
 /* Stepper.css */
 .stepper-container {
-  background-color: #53aee2;
+  background-color: #183680;
   padding: 20px;
   max-width: 700px;
   margin: 20px auto;
@@ -21,12 +21,57 @@
 
 .step {
   width: 32px;
+  
   height: 32px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #ffffff;
-  border: 2px solid #00aaff;
-  color: #00aaff;
+  background-color: #D1D901;
+  border: 2px solid #D1D901;
+  color: #183680;
+}
+/* Change text color to red */
+.step-item p {
+  color: white;
+}
+
+.success-message {
+  color: green; 
+}
+
+.error-message {
+  color: red; 
+}
+.white-text {
+  color: white;
+}
+
+.gree-button{
+  background-color: #D1D901;
+  color: #183680;
+
+}
+.gree-button:hover {
+  background-color: #B2B200; 
+  color: #183680; 
+}
+
+.blue-button{
+  background-color:#183680 ;
+  color:  #D1D901;
+}
+
+.blue-button:hover{
+  background-color: #142C6A ; 
+  color:  #B2B200; 
+}
+
+.blue-txt{
+  color: #183680;
+}
+
+/* Center the placeholder text */
+select option:first-child {
+  text-align: center;
 }
