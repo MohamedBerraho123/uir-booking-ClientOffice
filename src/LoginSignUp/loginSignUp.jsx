@@ -54,6 +54,8 @@ const LoginSignUp = ({ onLogin }) => {
       });
       console.log("id from method fetch student by UserId data : ",response.data);
       console.log("id from method fetch student by UserId : ",response.data.userId);
+      console.log("id from method fetch student name first name : ",response.data.firstName);
+      console.log("id from method fetch student name last name : ",response.data.lastName);
       //pass the value of response.data.id to componenet Home 
       console.log("id from method fetch student by Id : ",response.data.id);
       //pass the value of response.data.codeUIR from method FetchStudentByUserId 
@@ -64,6 +66,7 @@ const LoginSignUp = ({ onLogin }) => {
       } else {
         await addStudent(studentData, token);
       }
+      
     } catch (err) {
       console.error('Error fetching student:', err);
       setError('Failed to fetch student.');
