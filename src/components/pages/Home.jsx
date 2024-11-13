@@ -93,18 +93,7 @@ const Home = () => {
     }
   };
 
-  // // Handle Delete Reservation
-  // const handleDelete = async (reservationId) => {
-  //   if (window.confirm("Are you sure you want to delete this reservation?")) {
-  //     try {
-  //       await ApiManager.delete(`/Reservation/${reservationId}`);
-  //       fetchReservation();
-  //       toast.success("Reservation successfully deleted!");
-  //     } catch (error) {
-  //       toast.error("Error deleting reservation.");
-  //     }
-  //   }
-  // };
+
 
   // Pagination logic
   const indexOfLastRequest = currentPage * requestsPerPage;
@@ -116,7 +105,7 @@ const Home = () => {
     <>
       <div className="flex justify-center items-center mt-32 mb-40">
         <div className="flex flex-col items-center w-full mx-40">
-          <Filtrage requests={requests} onFilteredRequests={setFilteredRequests} />
+          <Filtrage requests={requests} onFilteredRequests={setFilteredRequests} sportNames={sportNames}  />
 
           <div className="overflow-x-auto mt-10 w-full">
             <table className="bg-white border border-gray-200 w-full">
@@ -150,9 +139,7 @@ const Home = () => {
                     <td className="border-t py-3 px-4 border-gris-moyen">
                       {request.codeUIRList ? request.codeUIRList.join(" ") : "No codes"}
                     </td>
-                    {/* <td className="border-t py-3 px-4 border-gris-moyen">
-                      <button onClick={() => handleDelete(request.id)} className="text-red-500">Delete</button>
-                    </td> */}
+                 
                   </tr>
                 ))}
               </tbody>
