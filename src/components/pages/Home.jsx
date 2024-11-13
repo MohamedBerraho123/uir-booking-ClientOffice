@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from "react";
 import ApiManager from "../../api";
 import { toast } from "react-toastify";
-import ApiSystem from "../../apiSystem"
+import ApiSystem from "../../apiSystem";
+import Filtrage from "../TableComponent/Fitrage";
+import Pagination from "../TableComponent/Pagination";
 
 const Home = () => {
-  const [reservations, setReservations] = useState([]);
+  const [requests, setRequests] = useState([]);
+  const [filteredRequests, setFilteredRequests] = useState([]);
   const [sportNames, setSportNames] = useState({});
   const [studentNames, setStudentNames] = useState({});
-  const [studentFirstNames, setstudentFirstNames] = useState({});
-  const [studentLastName, setstudentLastName] = useState({});
+  const [studentFirstNames, setStudentFirstNames] = useState({});
+  const [studentLastNames, setStudentLastNames] = useState({});
   const [studentId, setStudentId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [requestsPerPage] = useState(5);
 
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("studentData"));
@@ -26,7 +31,6 @@ const Home = () => {
 
   const fetchStudentByUserId = async (userId) => {
     try {
-  
       const response = await ApiSystem.get(`/Students/GetStudentByUserId/${userId}`);
       if (response.data) {
         setStudentId(response.data.id); // Save fetched studentId in state
@@ -41,7 +45,8 @@ const Home = () => {
 
     ApiSystem.get(`/Reservations/byStudent/${studentId}`)
       .then((res) => {
-        setReservations(res.data);
+        setRequests(res.data); // Store all fetched requests
+        setFilteredRequests(res.data); // Set filtered requests to all initially
         res.data.forEach((reservation) => {
           if (reservation.sportId && !sportNames[reservation.sportId]) {
             fetchSportName(reservation.sportId);
@@ -75,12 +80,12 @@ const Home = () => {
         ...prevStudentNames,
         [studentId]: response.data.codeUIR,
       }));
-      setstudentFirstNames((prevStudentNames) => ({
-        ...prevStudentNames,
+      setStudentFirstNames((prevFirstNames) => ({
+        ...prevFirstNames,
         [studentId]: response.data.firstName,
       }));
-      setstudentLastName((prevStudentNames) => ({
-        ...prevStudentNames,
+      setStudentLastNames((prevLastNames) => ({
+        ...prevLastNames,
         [studentId]: response.data.lastName,
       }));
     } catch (error) {
@@ -88,106 +93,76 @@ const Home = () => {
     }
   };
 
-  // Handle Delete Reservation
-  const handleDelete = async (reservationId) => {
-    if (window.confirm("Are you sure you want to delete this reservation?")) {
-      try {
-        await ApiManager.delete(`/Reservation/${reservationId}`);
-        fetchReservation();
-        toast.success("Reservation successfully deleted!");
-      } catch (error) {
-        toast.error("Error deleting reservation.");
-      }
-    }
-  };
+  // // Handle Delete Reservation
+  // const handleDelete = async (reservationId) => {
+  //   if (window.confirm("Are you sure you want to delete this reservation?")) {
+  //     try {
+  //       await ApiManager.delete(`/Reservation/${reservationId}`);
+  //       fetchReservation();
+  //       toast.success("Reservation successfully deleted!");
+  //     } catch (error) {
+  //       toast.error("Error deleting reservation.");
+  //     }
+  //   }
+  // };
+
+  // Pagination logic
+  const indexOfLastRequest = currentPage * requestsPerPage;
+  const indexOfFirstRequest = indexOfLastRequest - requestsPerPage;
+  const currentRequests = filteredRequests.slice(indexOfFirstRequest, indexOfLastRequest);
+  const totalPages = Math.ceil(filteredRequests.length / requestsPerPage);
 
   return (
-    <div className="rounded-sm border m-6 border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-    <div className="flex justify-between items-center mb-6">
-      <h4 className="text-xl font-semibold text-black  font-satoshi">
-        List des Reservations
-      </h4>
-    </div>
+    <>
+      <div className="flex justify-center items-center mt-32 mb-40">
+        <div className="flex flex-col items-center w-full mx-40">
+          <Filtrage requests={requests} onFilteredRequests={setFilteredRequests} />
 
-    <div className="flex flex-col font-satoshi">
-      <div className="grid grid-cols-2 rounded-sm bg-blue-100 dark:bg-meta-4 text-graydark sm:grid-cols-9"> 
-        <div className="p-2.5 xl:p-5">
-          <h5 className="text-sm font-medium uppercase xsm:text-base">Student code</h5>
-        </div>
-        <div className="p-2.5 xl:p-5">
-          <h5 className="text-sm font-medium uppercase xsm:text-base">first Name</h5>
-        </div>
-        <div className="p-2.5 xl:p-5">
-          <h5 className="text-sm font-medium uppercase xsm:text-base">last Name</h5>
-        </div>
-        <div className="p-2.5 text-center xl:p-5">
-          <h5 className="text-sm font-medium uppercase xsm:text-base">Sport</h5>
-        </div>
-        <div className="p-2.5 text-center xl:p-5">
-          <h5 className="text-sm font-medium uppercase xsm:text-base">Time</h5>
-        </div>
-        <div className="hidden p-2.5 text-center sm:block xl:p-5">
-          <h5 className="text-sm font-medium uppercase xsm:text-base">Date</h5>
-        </div>
-        <div className="hidden p-2.5 text-center sm:block xl:p-5">
-          <h5 className="text-sm font-medium uppercase xsm:text-base">List Student</h5>
+          <div className="overflow-x-auto mt-10 w-full">
+            <table className="bg-white border border-gray-200 w-full">
+              <thead>
+                <tr style={{ backgroundColor: '#183680' , color: 'white' }}>
+                  <th className="text-left py-3 px-4 font-semibold text-lg bg-darkBlue text-gris-clair">Student code</th>
+                  <th className="text-left py-3 px-4 font-semibold text-lg bg-darkBlue text-gris-clair">Full Name</th>
+                  <th className="text-left py-3 px-4 font-semibold text-lg bg-darkBlue text-gris-clair">Sport</th>
+                  <th className="text-left py-3 px-4 font-semibold text-lg bg-darkBlue text-gris-clair">Time</th>
+                  <th className="text-left py-3 px-4 font-semibold text-lg bg-darkBlue text-gris-clair">Date</th>
+                  <th className="text-left py-3 px-4 font-semibold text-lg bg-darkBlue text-gris-clair">List Student</th>
+                  <th className="text-left py-3 px-4 font-semibold text-lg bg-darkBlue text-gris-clair"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentRequests.map((request) => (
+                  <tr key={request.id}>
+                    <td className="border-t py-3 px-4 border-gris-moyen">
+                      {studentNames[request.studentId] || "Loading..."}
+                    </td>
+                    <td className="border-t py-3 px-4 border-gris-moyen">
+                      {studentFirstNames[request.studentId] || "Loading..."} {studentLastNames[request.studentId] || "Loading..."}
+                    </td>
+                    <td className="border-t py-3 px-4 border-gris-moyen">
+                      {sportNames[request.sportId] || "Loading..."}
+                    </td>
+                    <td className="border-t py-3 px-4 border-gris-moyen">
+                      {request.hourStart} - {request.hourEnd}
+                    </td>
+                    <td className="border-t py-3 px-4 border-gris-moyen">{request.onlyDate}</td>
+                    <td className="border-t py-3 px-4 border-gris-moyen">
+                      {request.codeUIRList ? request.codeUIRList.join(" ") : "No codes"}
+                    </td>
+                    {/* <td className="border-t py-3 px-4 border-gris-moyen">
+                      <button onClick={() => handleDelete(request.id)} className="text-red-500">Delete</button>
+                    </td> */}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+          </div>
         </div>
       </div>
+    </>
+  );
+};
 
-      {reservations.map((reservation, key) => (
-        <div
-          className={`grid grid-cols-2 sm:grid-cols-9 ${
-            key === reservations.length - 1 ? "" : "border-b border-stroke dark:border-strokedark"
-          }`}
-          key={reservation.id}
-        >
-          <div className="flex items-center gap-3 p-2.5 xl:p-5">
-            <p className="hidden text-black  sm:block font-semibold">
-              {studentNames[reservation.studentId] || "Loading..."}
-            </p>
-          </div>
-          <div className="flex items-center gap-3 p-2.5 xl:p-5">
-            <p className="hidden text-black  sm:block font-semibold">
-              {studentFirstNames[reservation.studentId] || "Loading..."}
-            </p>
-          </div>
-          <div className="flex items-center gap-3 p-2.5 xl:p-5">
-            <p className="hidden text-black  sm:block font-semibold">
-              {studentLastName[reservation.studentId] || "Loading..."}
-            </p>
-          </div>
-          <div className="flex items-center justify-center p-2.5 xl:p-5">
-            <p className="hidden text-black  sm:block font-semibold">
-              {sportNames[reservation.sportId] || "Loading..."}
-            </p>
-          </div>
-          <div className="flex items-center justify-center p-2.5 xl:p-5">
-            <p className="text-black">
-              {reservation.hourStart} - {reservation.hourEnd}
-            </p>
-          </div>
-          <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
-            {reservation.onlyDate}
-          </div>
-          <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
-            {/* {reservation.codeUIRList} */}
-            {reservation.codeUIRList ? reservation.codeUIRList.join(" ") : "No codes"}
-          </div>
-
-          {/* <div className="hidden items-center justify-center text-2xl p-2.5 sm:flex xl:p-5 gap-3">
-            <Link to={`/update/${reservation.id}`}>
-              <FaRegEdit className="text-graydark cursor-pointer" />
-            </Link>
-            <MdDelete
-              className="cursor-pointer text-red-500"
-              onClick={() => handleDelete(reservation.id)}
-            />
-          </div> */}
-        </div>
-      ))}
-    </div>
-  </div>
-  )
-}
-
-export default Home
+export default Home;
