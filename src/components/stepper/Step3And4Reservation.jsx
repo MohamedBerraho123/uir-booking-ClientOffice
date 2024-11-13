@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { ToastContainer, toast } from "react-toastify";
+import ApiSystem from "../../apiSystem";
 
 const Step3And4Reservation = ({
-  token,
+
   selectedCategory,
   selectedTimeRange,
   setSelectedTimeRange,
@@ -29,12 +29,7 @@ const Step3And4Reservation = ({
 
       try {
         setLoading(true);
-        const response = await axios.get(
-          `https://localhost:7125/api/Plannings/get-timeRanges-by-sport-and-day-not-reserved/${selectedCategory}/${day}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const response = await ApiSystem.get(`/Plannings/get-timeRanges-by-sport-and-day-not-reserved/${selectedCategory}/${day}`);
         setTimeRanges(response.data);
       } catch (error) {
         // setError("Failed to load time ranges");
@@ -49,12 +44,7 @@ const Step3And4Reservation = ({
         console.log("from step 3/4",userId);
         
       try {
-        const response = await axios.get(
-          `https://localhost:7125/api/Students/GetStudentByUserId/${userId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const response = await ApiSystem.get(`/Students/GetStudentByUserId/${userId}`);
         if (response.data) {
           setCodeUIR(response.data.codeUIR); // Set codeUIR from response
         }
@@ -66,12 +56,12 @@ const Step3And4Reservation = ({
 
     fetchTimeRanges();
 
-    // Fetch student information using userId stored in local storage or token payload
+    // Fetch student information using userId stored in local storage 
     const userId = localStorage.getItem("userId");
     if (userId) {
       fetchStudentByUserId(userId);
     }
-  }, [token, selectedCategory]);
+  }, [ selectedCategory]);
 
   const handleParticipantCodeChange = (e, index) => {
     const updatedList = [...participantCodes];
@@ -107,13 +97,7 @@ const Step3And4Reservation = ({
     };
 
     try {
-      const response = await axios.post(
-        "https://localhost:7125/api/Reservations/AddReservations",
-        reservationData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await ApiSystem.post("/Reservations/AddReservations",reservationData);
       if (response.status === 200 || response.status === 201) {
         Swal.fire({
           title: "Réservation ajoutée avec succès!",

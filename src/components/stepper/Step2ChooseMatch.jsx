@@ -1,8 +1,8 @@
-// Step2ChooseMatch.js
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+// import axios from "axios";
+import ApiSystem from "../../apiSystem";
 
-const Step2ChooseMatch = ({ token, selectedSport, selectedCategory, setSelectedCategory, nextStep, prevStep }) => {
+const Step2ChooseMatch = ({  selectedSport, selectedCategory, setSelectedCategory, nextStep, prevStep }) => {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -13,9 +13,7 @@ const Step2ChooseMatch = ({ token, selectedSport, selectedCategory, setSelectedC
       try {
         setLoading(true);
         // Use selectedSport as the category ID for the API call
-        const response = await axios.get(`https://localhost:7125/api/Sports/category/${selectedSport}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await ApiSystem.get(`/Sports/category/${selectedSport}`);
         // Log the matches fetched
         setMatches(response.data);
       } catch (error) {
@@ -29,7 +27,7 @@ const Step2ChooseMatch = ({ token, selectedSport, selectedCategory, setSelectedC
     };
 
     fetchMatches();
-  }, [token, selectedSport]); // Ensure selectedSport is included in the dependencies
+  }, [ selectedSport]); // Ensure selectedSport is included in the dependencies
 
   return (
     <div>

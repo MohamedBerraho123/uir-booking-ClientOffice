@@ -1,8 +1,9 @@
-// Step1ChooseSport.js
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+// import axios from "axios";
+import ApiSystem from "../../apiSystem";
 
-const Step1ChooseSport = ({ token, selectedSport, setSelectedSport, nextStep, setSports }) => {
+
+const Step1ChooseSport = ({  selectedSport, setSelectedSport, nextStep, setSports }) => {
   const [sports, setSportsLocal] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -10,9 +11,7 @@ const Step1ChooseSport = ({ token, selectedSport, setSelectedSport, nextStep, se
     const fetchSports = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("https://localhost:7125/api/SportCategorys/list", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await ApiSystem.get("/SportCategorys/list");
         setSportsLocal(response.data);
         setSports(response.data); // Passer la liste des sports en tant que prop
       } catch (error) {
@@ -24,7 +23,7 @@ const Step1ChooseSport = ({ token, selectedSport, setSelectedSport, nextStep, se
       }
     };
     fetchSports();
-  }, [token, setSports]); // Ajoutez setSports ici pour éviter les avertissements sur la dépendance
+  }, [ setSports]); // Ajoutez setSports ici pour éviter les avertissements sur la dépendance
 
   const handleSportSelection = (e) => {
     setSelectedSport(e.target.value);

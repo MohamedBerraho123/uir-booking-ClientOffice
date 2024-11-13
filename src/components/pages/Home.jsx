@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ApiManager from "../../api";
 import { toast } from "react-toastify";
+import ApiSystem from "../../apiSystem"
 
 const Home = () => {
   const [reservations, setReservations] = useState([]);
@@ -25,10 +26,8 @@ const Home = () => {
 
   const fetchStudentByUserId = async (userId) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await ApiManager.get(`/Students/GetStudentByUserId/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+  
+      const response = await ApiSystem.get(`/Students/GetStudentByUserId/${userId}`);
       if (response.data) {
         setStudentId(response.data.id); // Save fetched studentId in state
       }
@@ -40,7 +39,7 @@ const Home = () => {
   const fetchReservation = () => {
     if (!studentId) return;
 
-    ApiManager.get(`/Reservations/byStudent/${studentId}`)
+    ApiSystem.get(`/Reservations/byStudent/${studentId}`)
       .then((res) => {
         setReservations(res.data);
         res.data.forEach((reservation) => {
@@ -59,7 +58,7 @@ const Home = () => {
 
   const fetchSportName = async (sportId) => {
     try {
-      const response = await ApiManager.get(`/Sports/${sportId}`);
+      const response = await ApiSystem.get(`/Sports/${sportId}`);
       setSportNames((prevSportNames) => ({
         ...prevSportNames,
         [sportId]: response.data.name,
@@ -71,7 +70,7 @@ const Home = () => {
 
   const fetchStudentName = async (studentId) => {
     try {
-      const response = await ApiManager.get(`/Students/student/${studentId}`);
+      const response = await ApiSystem.get(`/Students/student/${studentId}`);
       setStudentNames((prevStudentNames) => ({
         ...prevStudentNames,
         [studentId]: response.data.codeUIR,

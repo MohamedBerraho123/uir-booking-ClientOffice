@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { FaUserCircle, FaSignOutAlt } from "react-icons/fa";
 import { RxCaretDown } from "react-icons/rx";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
 import UIRRLogo from "../../assets/UIRR.png";
 import "./Header.css";
+import ApiSystem from "../../apiSystem"
 
-function Header({ onLogout, token }) {
+function Header({ onLogout }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userData, setUserData] = useState({ firstName: "", lastName: "" });
   const navigate = useNavigate();
@@ -19,12 +20,8 @@ function Header({ onLogout, token }) {
     const fetchStudentByUserId = async (userId) => {
       console.log("Header ", userId);
       try {
-        const response = await axios.get(
-          `https://localhost:7125/api/Students/GetStudentByUserId/${userId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const response = await ApiSystem.get(
+          `/Students/GetStudentByUserId/${userId}`);
         console.log("the first name", response.data.firstName);
         console.log("the last name", response.data.lastName);
         
@@ -42,7 +39,7 @@ function Header({ onLogout, token }) {
     if (userId) {
       fetchStudentByUserId(userId);
     }
-  }, [token]);
+  },[]);
 
   return (
     <header className="bg-white shadow-md">

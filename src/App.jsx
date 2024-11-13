@@ -10,9 +10,7 @@ import '../src/LoginSignUp//LoginSignup.css'
 
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return localStorage.getItem("isLoggedIn") === "true";
-  });
+  const [isLoggedIn, setIsLoggedIn] = useState(() => { return localStorage.getItem("isLoggedIn") === "true";} , !!localStorage.getItem("token"));
  
 
 

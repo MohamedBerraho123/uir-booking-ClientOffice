@@ -8,7 +8,7 @@ import "./Stepper.css";
 
 const steps = ["Choose Sport", "Choose Match", "Select Time", "Summary"];
 
-const Stepper = ({ token }) => {
+const Stepper = () => {
   
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedSport, setSelectedSport] = useState("");
@@ -44,7 +44,7 @@ const Stepper = ({ token }) => {
       <div className="step-content">
         {currentStep === 1 && (
           <Step1ChooseSport
-            token={token}
+           
             selectedSport={selectedSport}
             setSelectedSport={setSelectedSport}
             nextStep={nextStep}
@@ -54,7 +54,7 @@ const Stepper = ({ token }) => {
         )}
         {currentStep === 2 && (
           <Step2ChooseMatch
-            token={token}
+          
             selectedSport={selectedSport}
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
@@ -65,7 +65,7 @@ const Stepper = ({ token }) => {
         )}
         {currentStep === 3 && (
           <Step3And4Reservation
-            token={token}
+           
             selectedCategory={selectedCategory}
             selectedTimeRange={selectedTimeRange}
             setSelectedTimeRange={setSelectedTimeRange}

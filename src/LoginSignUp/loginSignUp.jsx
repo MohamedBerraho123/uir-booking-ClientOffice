@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import ApiManager from "../api";
+import ApiSystem from "../apiSystem";
 
 
 const LoginSignUp = ({ onLogin }) => {
@@ -9,22 +11,12 @@ const LoginSignUp = ({ onLogin }) => {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [studentData, setStudentData] = useState(null);
   const [studentCodeUIR, setStudentCodeUIR] = useState('');
-  // const [error, setError] = useState('');
-
-  useEffect(() => {
-    if (token) {
-      const storedData = JSON.parse(localStorage.getItem('studentData'));
-      if (storedData) {
-        setStudentData(storedData);
-        fetchStudentByUserId(storedData.userId);
-      }
-    }
-  }, [token]);
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://localhost:7253/api/Account/registerAutomaticallyAndLoginAutomatically', {
+      const response = await ApiManager.post('/Account/registerAutomaticallyAndLoginAutomatically', {
         email,
         password,
       });
@@ -49,7 +41,7 @@ const LoginSignUp = ({ onLogin }) => {
 
   const fetchStudentByUserId = async (userId) => {
     try {
-      const response = await axios.get(`https://localhost:7125/api/Students/GetStudentByUserId/${userId}`, {
+      const response = await ApiSystem.get(`/Students/GetStudentByUserId/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       console.log("id from method fetch student by UserId data : ",response.data);
@@ -73,11 +65,9 @@ const LoginSignUp = ({ onLogin }) => {
     }
   };
 
-  const addStudent = async (studentData, token) => {
+  const addStudent = async (studentData) => {
     try {
-      await axios.post('https://localhost:7125/api/Students/add', studentData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await ApiSystem.post('/Students/add', studentData);
       setStudentCodeUIR(studentData.codeUIR);
     } catch (err) {
       console.error('Error adding student:', err);
