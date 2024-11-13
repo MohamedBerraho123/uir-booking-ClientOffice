@@ -181,13 +181,14 @@ const Step3And4Reservation = ({
         Confirmer la réservation
       </button>
     </form>
-  
+    <div className="pt-20">
     <button
       className="btn gree-button px-4 py-2 mt-4 rounded-md  focus:outline-none focus:ring-2 focus:ring-gray-500"
       onClick={prevStep}
     >
-      Précédent
+      &lt;&lt; Précédent
     </button>
+  </div>
   </div>
   
   );

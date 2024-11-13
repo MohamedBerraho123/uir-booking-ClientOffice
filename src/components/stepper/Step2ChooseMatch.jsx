@@ -30,8 +30,8 @@ const Step2ChooseMatch = ({  selectedSport, selectedCategory, setSelectedCategor
   }, [ selectedSport]); // Ensure selectedSport is included in the dependencies
 
   return (
-    <div>
-    <h3 className="text-lg font-semibold mb-2 white-text">Choisissez un terrain :</h3>
+    <div className=" pt-10">
+    <h3 className="text-lg font-semibold mb-5 white-text">Choisissez un terrain :</h3>
     {loading && <p>Loading matches...</p>}
     {matches.length === 0 && !loading && <p>No matches available for this sport.</p>}
     
@@ -55,14 +55,20 @@ const Step2ChooseMatch = ({  selectedSport, selectedCategory, setSelectedCategor
       ))}
     </div>
   
-    
+    <div className="pt-15">
+    <div className="pt-15">
+    <div className="pt-15">
+
     
     <button 
       className="btn   px-4 py-2 mt-4 rounded-md  focus:outline-none focus:ring-2 focus:ring-gray-500 gree-button"
       onClick={prevStep}
-    >
-      Précédent
+      >
+     &lt;&lt; Précédent
     </button>
+      </div>
+      </div>
+      </div>
   </div>
   
   );

@@ -2,9 +2,11 @@
 .stepper-container {
   background-color: #183680;
   padding: 20px;
-  max-width: 700px;
+  max-width: 800px;
   margin: 20px auto;
   border-radius: 10px;
+ 
+  height: 750px auto;
 }
 
 .steps {
@@ -52,6 +54,9 @@
   color: #183680;
 
 }
+
+
+
 .gree-button:hover {
   background-color: #B2B200; 
   color: #183680; 
