@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const Step1ChooseSport = ({ token, selectedSport, setSelectedSport, nextStep, setError, setSports }) => {
+const Step1ChooseSport = ({ token, selectedSport, setSelectedSport, nextStep, setSports }) => {
   const [sports, setSportsLocal] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -16,13 +16,15 @@ const Step1ChooseSport = ({ token, selectedSport, setSelectedSport, nextStep, se
         setSportsLocal(response.data);
         setSports(response.data); // Passer la liste des sports en tant que prop
       } catch (error) {
-        setError("Failed to load sports");
+        // setError("Failed to load sports");
+        console.log("Failed to load sports");
+        
       } finally {
         setLoading(false);
       }
     };
     fetchSports();
-  }, [token, setError, setSports]); // Ajoutez setSports ici pour éviter les avertissements sur la dépendance
+  }, [token, setSports]); // Ajoutez setSports ici pour éviter les avertissements sur la dépendance
 
   const handleSportSelection = (e) => {
     setSelectedSport(e.target.value);

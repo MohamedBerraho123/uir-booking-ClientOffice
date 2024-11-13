@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const Step2ChooseMatch = ({ token, selectedSport, selectedCategory, setSelectedCategory, nextStep, prevStep, setError }) => {
+const Step2ChooseMatch = ({ token, selectedSport, selectedCategory, setSelectedCategory, nextStep, prevStep }) => {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -19,7 +19,9 @@ const Step2ChooseMatch = ({ token, selectedSport, selectedCategory, setSelectedC
         // Log the matches fetched
         setMatches(response.data);
       } catch (error) {
-        setError("Failed to fetch matches for the selected category.");
+        // setError("Failed to fetch matches for the selected category.");
+        console.log('Failed to fetch matches for the selected category.');
+        
 
       } finally {
         setLoading(false);
@@ -27,7 +29,7 @@ const Step2ChooseMatch = ({ token, selectedSport, selectedCategory, setSelectedC
     };
 
     fetchMatches();
-  }, [token, selectedSport, setError]); // Ensure selectedSport is included in the dependencies
+  }, [token, selectedSport]); // Ensure selectedSport is included in the dependencies
 
   return (
     <div>

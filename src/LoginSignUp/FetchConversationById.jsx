@@ -13,7 +13,7 @@ const FetchConversationById = ({ userId, codeUIR, firstName, lastName, token, ha
   });
 
   const [studentcodeUIR, setStudentCodeUIR] = useState('');
-  const [error, setError] = useState('');
+  // const [error, setError] = useState('');
   console.log(student);
   
 
@@ -28,7 +28,7 @@ const FetchConversationById = ({ userId, codeUIR, firstName, lastName, token, ha
         console.log('Student added successfully!', response.data);
       } catch (err) {
         console.error('Error adding student:', err);
-        setError('Failed to add student.');
+        // setError('Failed to add student.');
       }
     };
 
@@ -52,7 +52,7 @@ const FetchConversationById = ({ userId, codeUIR, firstName, lastName, token, ha
         }
       } catch (err) {
         console.error('Error fetching student:', err);
-        setError('Failed to fetch student.');
+        // setError('Failed to fetch student.');
       }
     };
 

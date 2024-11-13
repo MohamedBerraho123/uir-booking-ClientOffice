@@ -9,7 +9,7 @@ const Step3And4Reservation = ({
   selectedCategory,
   selectedTimeRange,
   setSelectedTimeRange,
-  setError,
+
   prevStep,
   sports,
 }) => {
@@ -37,7 +37,9 @@ const Step3And4Reservation = ({
         );
         setTimeRanges(response.data);
       } catch (error) {
-        setError("Failed to load time ranges");
+        // setError("Failed to load time ranges");
+        console.log('Failed to load time ranges');
+        
       } finally {
         setLoading(false);
       }
@@ -58,7 +60,7 @@ const Step3And4Reservation = ({
         }
       } catch (err) {
         console.error("Error fetching student:", err);
-        setError("Failed to fetch student.");
+        // setError("Failed to fetch student.");
       }
     };
 
@@ -69,7 +71,7 @@ const Step3And4Reservation = ({
     if (userId) {
       fetchStudentByUserId(userId);
     }
-  }, [token, selectedCategory, setError]);
+  }, [token, selectedCategory]);
 
   const handleParticipantCodeChange = (e, index) => {
     const updatedList = [...participantCodes];
@@ -126,9 +128,11 @@ const Step3And4Reservation = ({
         });
       }
     } catch (error) {
+      console.log(error.response.data);
+      
       Swal.fire({
-        title: "Erreur réseau!",
-        text: error.message,
+        title: "Erreur l'ajout de la réservation!",
+        text: error.response.data,
         icon: "error",
       });
     }
@@ -138,8 +142,8 @@ const Step3And4Reservation = ({
     <div className="p-6 bg-white rounded-lg shadow-lg">
     <h3 className="text-lg font-semibold mb-4 blue-txt">Sélectionnez un créneau horaire :</h3>
     
-    {loading && <p className="text-gray-500">Loading time ranges...</p>}
-    {!loading && timeRanges.length === 0 && <p className="text-red-500">No available time ranges for this match.</p>}
+    {/* {loading && <p className="text-gray-500">Loading time ranges...</p>} */}
+    {!loading && timeRanges.length === 0 && <p className="text-red-500">Nous sommes désolés mais il n'est pas possible de réservation cet terrain pour le moment.</p>}
     
     {timeRanges.map((timeRange) => (
       <div key={timeRange.id} className="flex items-center space-x-2 mb-4">

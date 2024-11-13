@@ -17,7 +17,7 @@ const Stepper = ({ token }) => {
   const [studentCodeUIRList, setStudentCodeUIRList] = useState([]);
   const [sports, setSports] = useState([]);
   const [success, setSuccess] = useState(null);
-  const [error, setError] = useState(null);
+  // const [error, setError] = useState(null);
   // const [studentCodeUIR, setStudentCodeUIR] = useState(""); 
 
   const nextStep = () => setCurrentStep((prev) => prev + 1);
@@ -48,7 +48,7 @@ const Stepper = ({ token }) => {
             selectedSport={selectedSport}
             setSelectedSport={setSelectedSport}
             nextStep={nextStep}
-            setError={setError}
+            // setError={setError}
             setSports={setSports}
           />
         )}
@@ -60,7 +60,7 @@ const Stepper = ({ token }) => {
             setSelectedCategory={setSelectedCategory}
             nextStep={nextStep}
             prevStep={prevStep}
-            setError={setError}
+            // setError={setError}
           />
         )}
         {currentStep === 3 && (
@@ -73,7 +73,7 @@ const Stepper = ({ token }) => {
          
             setStudentCodeUIRList={setStudentCodeUIRList}
             setSuccess={setSuccess}
-            setError={setError}
+            // setError={setError}
             prevStep={prevStep}
             sports={sports}
           />
@@ -83,7 +83,7 @@ const Stepper = ({ token }) => {
       </div>
 
       {success && <p className="success-message">{success}</p>}
-      {error && <p className="error-message">{error}</p>}
+    
     </div>
   );
 };
