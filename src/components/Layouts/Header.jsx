@@ -24,7 +24,7 @@ function Header({ onLogout }) {
           `/Students/GetStudentByUserId/${userId}`);
         console.log("the first name", response.data.firstName);
         console.log("the last name", response.data.lastName);
-        
+
         // Update state with fetched data
         setUserData({
           firstName: response.data.firstName,
@@ -39,28 +39,29 @@ function Header({ onLogout }) {
     if (userId) {
       fetchStudentByUserId(userId);
     }
-  },[]);
+  }, []);
 
   return (
     <header className="bg-white shadow-md">
       <div className="container mx-auto flex justify-between items-center p-4">
         {/* Logo */}
         <div className="font-bold text-2xl text-blue-600">
-        <Link to="/Home" className="font-bold">
-        {/* <p>LOGO</p> */}
-        <img src={UIRRLogo} alt="UIRR Logo" className="h-8 w-auto rounded-full" />
-      </Link>
+          <Link to="/Home" className="font-bold">
+            {/* <p>LOGO</p> */}
+            <img src={UIRRLogo} alt="UIRR Logo" className="h-8 w-auto rounded-full" />
+          </Link>
         </div>
 
         {/* Navigation Links */}
         <nav className="hidden md:flex space-x-4">
+          <Link to="/about" className="blue-txt hover:text-blue-600">
+            Home
+          </Link>
           <Link to="/stepper" className="blue-txt hover:text-blue-600">
             Reservation
           </Link>
-          
-          <Link to="/about" className="blue-txt hover:text-blue-600">
-            About
-          </Link>
+
+
           <Link to="/" className="blue-txt hover:text-blue-600">
             List des Reservations
           </Link>
