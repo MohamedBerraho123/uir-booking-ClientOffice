@@ -6,7 +6,7 @@ import Step2ChooseMatch from "./Step2ChooseMatch";
 import Step3And4Reservation from "./Step3And4Reservation"
 import "./Stepper.css";
 
-const steps = ["Choose Sport", "Choose Match", "Select Time", "Summary"];
+const steps = ["Choose Sport", "Choose Match", "Select Time"];
 
 const Stepper = () => {
   
