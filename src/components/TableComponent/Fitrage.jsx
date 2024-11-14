@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Dropdown from './DropDown';
+import Dropdown from './Dropdown';
 import InputFilter from './InputFilter';
 import DateFilter from './DateFilter';
 
-function Filtrage({ onFilteredRequests, requests, sportNames }) {
+function Filtrage({ onFilteredRequests, requests, sportNames, onSportSelect }) {
   const [filterText, setFilterText] = useState('');
   const [filterType, setFilterType] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
@@ -17,14 +17,13 @@ function Filtrage({ onFilteredRequests, requests, sportNames }) {
         (request.nameTrainee?.toLowerCase().includes(searchText) || sportName.includes(searchText)) &&
         (filterType === '' || request.documentType === filterType) &&
         (filterStatus === '' || request.documentStatus.toString() === filterStatus) &&
-        (filterDate === '' || request.onlyDate === filterDate) 
+        (filterDate === '' || request.onlyDate === filterDate)
       );
     });
 
     onFilteredRequests(filteredRequests);
   };
 
-  // Update filtered requests whenever filter values change
   useEffect(() => {
     filterRequests();
   }, [filterText, filterType, filterStatus, filterDate, requests, sportNames]);
@@ -32,7 +31,7 @@ function Filtrage({ onFilteredRequests, requests, sportNames }) {
   return (
     <div className="flex flex-row gap-24 mt-4 mb-6 p-4 bg-gray-100 rounded-lg shadow-md w-full">
       <InputFilter filterText={filterText} onFilterTextChange={setFilterText} />
-      <Dropdown filterType={filterType} onFilterTypeChange={setFilterType} />
+      <Dropdown onSportSelect={onSportSelect} />
       <DateFilter filterDate={filterDate} onFilterDateChange={setFilterDate} />
     </div>
   );

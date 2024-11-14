@@ -49,7 +49,7 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
   return (
     <div className="mt-4 flex justify-center items-center">
       <button
-      style={{ backgroundColor: '#183680' , color: 'white' }}
+       style={{ backgroundColor: '#D1D901' , color: '#183680' }}
         className={`px-2 py-1 mx-1 rounded bg-gray-200 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
         onClick={handlePrevious}
         disabled={currentPage === 1}
@@ -67,7 +67,7 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
         </button>
       ))}
       <button
-      style={{ backgroundColor: '#183680' , color: 'white' }}
+      style={{ backgroundColor: '#D1D901' , color: '#183680' }}
         className={`px-2 py-1 mx-1 rounded bg-gray-200 ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`}
         onClick={handleNext}
         disabled={currentPage === totalPages}

@@ -14,7 +14,8 @@ const Home = () => {
   const [studentLastNames, setStudentLastNames] = useState({});
   const [studentId, setStudentId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [requestsPerPage] = useState(5);
+  const [requestsPerPage] = useState(3);
+  const [selectedSport, setSelectedSport] = useState(null); // Store selected sport
 
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("studentData"));
@@ -45,8 +46,8 @@ const Home = () => {
 
     ApiSystem.get(`/Reservations/byStudent/${studentId}`)
       .then((res) => {
-        setRequests(res.data); // Store all fetched requests
-        setFilteredRequests(res.data); // Set filtered requests to all initially
+        setRequests(res.data);
+        setFilteredRequests(res.data);
         res.data.forEach((reservation) => {
           if (reservation.sportId && !sportNames[reservation.sportId]) {
             fetchSportName(reservation.sportId);
@@ -93,7 +94,11 @@ const Home = () => {
     }
   };
 
-
+  const handleSportSelect = (sportId) => {
+    setSelectedSport(sportId);
+    const filtered = requests.filter(request => request.sportId === sportId);
+    setFilteredRequests(filtered); // Filter the requests based on the selected sport
+  };
 
   // Pagination logic
   const indexOfLastRequest = currentPage * requestsPerPage;
@@ -101,11 +106,12 @@ const Home = () => {
   const currentRequests = filteredRequests.slice(indexOfFirstRequest, indexOfLastRequest);
   const totalPages = Math.ceil(filteredRequests.length / requestsPerPage);
 
+
   return (
     <>
       <div className="flex justify-center items-center mt-32 mb-40">
         <div className="flex flex-col items-center w-full mx-40">
-          <Filtrage requests={requests} onFilteredRequests={setFilteredRequests} sportNames={sportNames}  />
+          <Filtrage requests={requests} onFilteredRequests={setFilteredRequests} sportNames={sportNames}    onSportSelect={handleSportSelect} />
 
           <div className="overflow-x-auto mt-10 w-full">
             <table className="bg-white border border-gray-200 w-full">
