@@ -76,6 +76,7 @@ const Stepper = () => {
             // setError={setError}
             prevStep={prevStep}
             sports={sports}
+            selectedSport={selectedSport} 
           />
         )}
 

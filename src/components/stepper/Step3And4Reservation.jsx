@@ -9,9 +9,9 @@ const Step3And4Reservation = ({
   selectedCategory,
   selectedTimeRange,
   setSelectedTimeRange,
-
   prevStep,
   sports,
+  selectedSport
 }) => {
   const [timeRanges, setTimeRanges] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -30,6 +30,8 @@ const Step3And4Reservation = ({
       try {
         setLoading(true);
         const response = await ApiSystem.get(`/Plannings/get-timeRanges-by-sport-and-day-not-reserved/${selectedCategory}/${day}`);
+        console.log('selectedSport id : ', selectedSport);
+        
         setTimeRanges(response.data);
       } catch (error) {
         // setError("Failed to load time ranges");
@@ -90,6 +92,7 @@ const Step3And4Reservation = ({
     const reservationData = {
       codeUIR, // Use dynamically fetched codeUIR
       dayBooking:day,
+      sportCategoryId:selectedSport,
       sportId: selectedCategory,
       hourStart: selectedTimeRange.hourStart,
       hourEnd: selectedTimeRange.hourEnd,
