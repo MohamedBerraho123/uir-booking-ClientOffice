@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import ApiSystem from "../../apiSystem";
 
-function Dropdown({ onSportSelect }) {
+
+//{ onSportSelect }
+function Dropdown({ onSportSelect , onFilterListSports}) {
   const [sports, setSportsLocal] = useState([]);
   const [selectedSport, setSelectedSport] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -13,10 +15,13 @@ function Dropdown({ onSportSelect }) {
         setLoading(true);
         const response = await ApiSystem.get("/SportCategorys/list");
         setSportsLocal(response.data);
+    
+        
       } catch (error) {
         console.log("Failed to load sports");
       } finally {
         setLoading(false);
+        
       }
     };
     fetchSports();
@@ -26,7 +31,8 @@ function Dropdown({ onSportSelect }) {
   const handleSportSelection = (e) => {
     const selectedSportId = e.target.value;
     setSelectedSport(selectedSportId);
-    onSportSelect(selectedSportId); // Pass the selected sport to the parent component
+    onSportSelect(selectedSportId);
+    console.log("Selected Sport ID from Dropdown:", selectedSportId);
   };
 
   useEffect(() => {
@@ -36,6 +42,15 @@ function Dropdown({ onSportSelect }) {
           setLoading(true);
           const response = await ApiSystem.get(`/Sports/category/${selectedSport}`);
           setMatches(response.data);
+          console.log("Sports/category/${selectedSport}" ,selectedSport);
+          
+    
+           // Logging each sport name Name
+        console.log("Data when clicking on DropDown List - sport names:");
+        response.data.forEach((sport) => {
+          console.log(sport.name);
+        });
+          
         } catch (error) {
           console.log('Failed to fetch matches for the selected category.');
         } finally {
@@ -59,18 +74,9 @@ function Dropdown({ onSportSelect }) {
         ))}
       </select>
 
-      {loading && <p>Loading...</p>}
+     
 
-      {matches.length > 0 && (
-        <div>
-          <h3>Matches for selected category:</h3>
-          <ul>
-            {matches.map(match => (
-              <li key={match.id}>{match.name}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+  
     </div>
   );
 }
