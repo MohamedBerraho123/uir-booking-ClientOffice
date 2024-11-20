@@ -20,20 +20,12 @@ const Step3And4Reservation = ({
   const [codeUIR, setCodeUIR] = useState("");
   const navigate = useNavigate();
 
-
-
   useEffect(() => {
     const fetchTimeRanges = async () => {
       if (!selectedCategory) return;
       const jsDay = new Date().getDay();
       const day = jsDay === 0 ? 6 : jsDay - 1;
-
-      // console.log(day );
-      console.log("Reference Sport:", referenceSport); // Log referenceSport for debugging
-      console.log("number Players Sport :", nbPlayerSport); // Log nbPlayerSport for debugging
-      
-
-     
+      console.log(day);
 
       try {
         setLoading(true);
@@ -41,6 +33,8 @@ const Step3And4Reservation = ({
           `/Plannings/get-timeRanges-by-sport-and-day-not-reserved/${selectedCategory}/${day}`
         );
         console.log("selectedSport id : ", selectedSport);
+        console.log(response.data);
+        
 
         // Get the current time in "HH:mm" format
         const currentTime = new Date();
@@ -54,7 +48,6 @@ const Step3And4Reservation = ({
         });
 
         setTimeRanges(filteredTimeRanges);
-
       } catch (error) {
         console.log("Failed to load time ranges");
       } finally {
@@ -63,9 +56,7 @@ const Step3And4Reservation = ({
     };
 
     const fetchStudentByUserId = async (userId) => {
-
-        // console.log("from step 3/4",userId);
-        
+      console.log("from step 3/4", userId);
 
       try {
         const response = await ApiSystem.get(`/Students/GetStudentByUserId/${userId}`);
@@ -83,14 +74,7 @@ const Step3And4Reservation = ({
     if (userId) {
       fetchStudentByUserId(userId);
     }
-
-  }, [ selectedCategory , referenceSport , nbPlayerSport]);
-
-
-
-
-
-
+  }, [selectedCategory, referenceSport , nbPlayerSport]);
 
   const handleParticipantCodeChange = (e, index) => {
     const updatedList = [...participantCodes];
@@ -99,21 +83,15 @@ const Step3And4Reservation = ({
   };
 
   const addParticipantCodeField = () => {
-
     if (participantCodes.length < nbPlayerSport-1) {
       setParticipantCodes([...participantCodes, '']);
     } else {
-      var numberPlayer = nbPlayerSport-1;
-      console.log("Cannot add more participants. Maximum limit reached:", numberPlayer);
+      console.log("Cannot add more participants. Maximum limit reached:", nbPlayerSport-1);
       // Optionally display a warning message to the user
-     
-      Swal.fire({
-        title: `Vous ne pouvez ajouter que ${nbPlayerSport - 1} participants !`,
-        icon: "error",
-      });
+      alert(`Vous ne pouvez ajouter que ${nbPlayerSport-1} participants.`);
     }
-
   };
+  
 
   const removeParticipantCodeField = (index) => {
     const updatedList = participantCodes.filter((_, i) => i !== index);
@@ -127,7 +105,6 @@ const Step3And4Reservation = ({
     const updatedStudentCodeUIRList = participantCodes.filter(
       (code) => code.trim() !== ""
     );
-
   
     // Validation: Check if the number of participants matches nbPlayerSport
     if (updatedStudentCodeUIRList.length !== nbPlayerSport-1) {
@@ -149,11 +126,6 @@ const Step3And4Reservation = ({
       return; // Stop further execution
     }
 
-    const jsDay = new Date().getDay();
-    const day = jsDay === 0 ? 6 : jsDay - 1;
-    console.log("day of add reservation : ", day);
-
-
       // Validation: Check for duplicate participant codes
   const uniqueCodes = new Set(updatedStudentCodeUIRList);
   if (uniqueCodes.size !== updatedStudentCodeUIRList.length) {
@@ -165,12 +137,12 @@ const Step3And4Reservation = ({
     return; // Stop further execution
   }
   
-    
+    // Prepare reservation data
+    const jsDay = new Date().getDay();
+    const day = jsDay === 0 ? 6 : jsDay - 1;
   
     const reservationData = {
-
       codeUIR, // Use dynamically fetched codeUIR
-
       dayBooking: day,
       sportCategoryId: selectedSport,
       sportId: selectedCategory,
@@ -180,9 +152,7 @@ const Step3And4Reservation = ({
     };
   
     try {
-
       const response = await ApiSystem.post("/Reservations/AddReservations", reservationData);
-
       if (response.status === 200 || response.status === 201) {
         Swal.fire({
           title: "Réservation ajoutée avec succès!",
@@ -198,7 +168,7 @@ const Step3And4Reservation = ({
       }
     } catch (error) {
       console.log(error.response.data);
-
+  
       Swal.fire({
         title: "Erreur l'ajout de la réservation!",
         text: error.response.data,
@@ -207,7 +177,7 @@ const Step3And4Reservation = ({
     }
   };
   
-
+  
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">
       <h3 className="text-lg font-semibold mb-4 blue-txt">
@@ -235,9 +205,6 @@ const Step3And4Reservation = ({
         </div>
       ))}
 
-  
-
-
       <div className="mt-6">
         <h3 className="text-lg font-semibold mb-4 blue-txt">
           Codes des participants :
@@ -261,15 +228,14 @@ const Step3And4Reservation = ({
             </button>
           </div>
         ))}
-            <button
-  type="button"
-  className="btn bg-blue-600 text-white px-4 py-2 mt-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-  onClick={addParticipantCodeField}
-  disabled={participantCodes.length >= nbPlayerSport}
->
-  Ajouter un participant
-</button>
-
+        <button
+          type="button"
+          className="btn bg-blue-600 text-white px-4 py-2 mt-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          onClick={addParticipantCodeField}
+          disabled={participantCodes.length >= nbPlayerSport}
+        >
+          Ajouter un participant
+        </button>
       </div>
 
       <form onSubmit={handleSubmit} className="mt-6">
@@ -288,7 +254,6 @@ const Step3And4Reservation = ({
           &lt;&lt; Précédent
         </button>
       </div>
-
     </div>
   );
 };
