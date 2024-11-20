@@ -46,10 +46,10 @@ function Header({ onLogout }) {
       <div className="container mx-auto flex justify-between items-center p-4">
         {/* Logo */}
         <div className="font-bold text-2xl text-blue-600">
-          <Link to="/Home" className="font-bold">
-            {/* <p>LOGO</p> */}
-            <img src={UIRRLogo} alt="UIRR Logo" className="h-8 w-auto rounded-full" />
-          </Link>
+
+          {/* <p>LOGO</p> */}
+          <img src={UIRRLogo} alt="UIRR Logo" className="h-8 w-auto rounded-full" />
+
         </div>
 
         {/* Navigation Links */}

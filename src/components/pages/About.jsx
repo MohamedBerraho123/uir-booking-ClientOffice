@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';  // Import useNavigate hook
 import Carousel1 from '../../assets/Carousel1.jpeg';
-import Carousel5 from '../../assets/Carousel2.jpeg';
+import Carousel5 from '../../assets/Carousel5.jpg';
 import Carousel3 from '../../assets/Carousel3.jpeg';
 
 const About = () => {
