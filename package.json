@@ -19,6 +19,7 @@
     "@progress/kendo-react-buttons": "^8.2.0",
     "@progress/kendo-react-layout": "^8.2.0",
     "@progress/kendo-theme-default": "^9.0.0",
+    "@sendgrid/mail": "^8.1.4",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "framer-motion": "^11.3.17",

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 // import axios from "axios";
 import ApiSystem from "../../apiSystem";
 
-const Step2ChooseMatch = ({  selectedSport, setSelectedCategory, nextStep, prevStep }) => {
+const Step2ChooseMatch = ({  selectedSport, setSelectedCategory,  setReferenceSport,setNbPlayerSport, nextStep, prevStep }) => {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -14,8 +14,11 @@ const Step2ChooseMatch = ({  selectedSport, setSelectedCategory, nextStep, prevS
         setLoading(true);
         // Use selectedSport as the category ID for the API call
         const response = await ApiSystem.get(`/Sports/category/${selectedSport}`);
-        console.log('selected Sport id categroy : ', selectedSport);
-        console.log('selected Sport : ', response.data);
+        // console.log('selected Sport id categroy : ', selectedSport);
+        //  console.log('selected Sport : ', response.data);
+     
+
+
         // Log the matches fetched
         setMatches(response.data);
       } catch (error) {
@@ -44,6 +47,8 @@ const Step2ChooseMatch = ({  selectedSport, setSelectedCategory, nextStep, prevS
          
           onClick={() => {
             setSelectedCategory(match.id);
+            setReferenceSport(match.referenceSport);
+            setNbPlayerSport(match.nbPlayer);
             nextStep(); // Proceed to the next step when a match is selected
           }}
         >

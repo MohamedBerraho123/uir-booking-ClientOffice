@@ -15,6 +15,8 @@ const Stepper = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedTimeRange, setSelectedTimeRange] = useState(null);
   const [studentCodeUIRList, setStudentCodeUIRList] = useState([]);
+  const [referenceSport, setReferenceSport] = useState(null);
+  const [nbPlayerSport,setNbPlayerSport] = useState(null);
   const [sports, setSports] = useState([]);
   const [success, setSuccess] = useState(null);
   // const [error, setError] = useState(null);
@@ -57,7 +59,9 @@ const Stepper = () => {
           
             selectedSport={selectedSport}
             selectedCategory={selectedCategory}
+            setReferenceSport={setReferenceSport} 
             setSelectedCategory={setSelectedCategory}
+            setNbPlayerSport={setNbPlayerSport}
             nextStep={nextStep}
             prevStep={prevStep}
             // setError={setError}
@@ -70,6 +74,9 @@ const Stepper = () => {
             selectedTimeRange={selectedTimeRange}
             setSelectedTimeRange={setSelectedTimeRange}
             studentCodeUIRList={studentCodeUIRList}
+            nbPlayerSport={nbPlayerSport}
+            referenceSport={referenceSport} 
+
          
             setStudentCodeUIRList={setStudentCodeUIRList}
             setSuccess={setSuccess}

@@ -6,7 +6,8 @@ const ApiSystem = axios.create({
 });
 
 ApiSystem.interceptors.request.use(config => {
-  const token = localStorage.getItem("token");
+const token = localStorage.getItem("token");
+  // const token = "";
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

@@ -13,9 +13,9 @@ const Step1ChooseSport = ({  selectedSport, setSelectedSport, nextStep, setSport
         setLoading(true);
         const response = await ApiSystem.get("/SportCategorys/list");
         setSportsLocal(response.data);
-        console.log('fetch sport  : ', sports);
-        console.log('selectedSport : ', selectedSport);
-        console.log('fetch sport category : ', response.data);
+        // console.log('fetch sport  : ', sports);
+        // console.log('selectedSport : ', selectedSport);
+        // console.log('fetch sport category : ', response.data);
         
         setSports(response.data); // Passer la liste des sports en tant que prop
       } catch (error) {

@@ -11,7 +11,9 @@ const Step3And4Reservation = ({
   setSelectedTimeRange,
   prevStep,
   sports,
-  selectedSport
+  selectedSport,
+  referenceSport,
+  nbPlayerSport
 }) => {
   const [timeRanges, setTimeRanges] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -19,18 +21,22 @@ const Step3And4Reservation = ({
   const [codeUIR, setCodeUIR] = useState(''); // Add codeUIR state
   const navigate = useNavigate();
 
+
+
   useEffect(() => {
     const fetchTimeRanges = async () => {
       if (!selectedCategory) return;
       const jsDay = new Date().getDay();
       const day = jsDay === 0 ? 6 : jsDay - 1;
-      console.log(day );
+      // console.log(day );
+      console.log("Reference Sport:", referenceSport); // Log referenceSport for debugging
+      console.log("number Players Sport :", nbPlayerSport); // Log nbPlayerSport for debugging
       
 
       try {
         setLoading(true);
         const response = await ApiSystem.get(`/Plannings/get-timeRanges-by-sport-and-day-not-reserved/${selectedCategory}/${day}`);
-        console.log('selectedSport id : ', selectedSport);
+        // console.log('selectedSport id : ', selectedSport);
         
         setTimeRanges(response.data);
       } catch (error) {
@@ -43,7 +49,7 @@ const Step3And4Reservation = ({
     };
 
     const fetchStudentByUserId = async (userId) => {
-        console.log("from step 3/4",userId);
+        // console.log("from step 3/4",userId);
         
       try {
         const response = await ApiSystem.get(`/Students/GetStudentByUserId/${userId}`);
@@ -63,7 +69,7 @@ const Step3And4Reservation = ({
     if (userId) {
       fetchStudentByUserId(userId);
     }
-  }, [ selectedCategory]);
+  }, [ selectedCategory , referenceSport , nbPlayerSport]);
 
   const handleParticipantCodeChange = (e, index) => {
     const updatedList = [...participantCodes];
@@ -72,7 +78,18 @@ const Step3And4Reservation = ({
   };
 
   const addParticipantCodeField = () => {
-    setParticipantCodes([...participantCodes, '']);
+    if (participantCodes.length < nbPlayerSport-1) {
+      setParticipantCodes([...participantCodes, '']);
+    } else {
+      var numberPlayer = nbPlayerSport-1;
+      console.log("Cannot add more participants. Maximum limit reached:", numberPlayer);
+      // Optionally display a warning message to the user
+     
+      Swal.fire({
+        title: `Vous ne pouvez ajouter que ${nbPlayerSport - 1} participants !`,
+        icon: "error",
+      });
+    }
   };
 
   const removeParticipantCodeField = (index) => {
@@ -82,25 +99,59 @@ const Step3And4Reservation = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    // Filter out empty participant codes
     const updatedStudentCodeUIRList = participantCodes.filter(
       (code) => code.trim() !== ""
     );
-    const jsDay = new Date().getDay();
-      const day = jsDay === 0 ? 6 : jsDay - 1;
-      console.log("day of add reservation : ",day );
+  
+    // Validation: Check if the number of participants matches nbPlayerSport
+    if (updatedStudentCodeUIRList.length !== nbPlayerSport-1) {
+      Swal.fire({
+        title: "Erreur de réservation!",
+        text: `Veuillez ajouter ${nbPlayerSport-1} participants valides avant de continuer.`,
+        icon: "error",
+      });
+      return; // Stop further execution
+    }
+  
+    // Validation: Check for empty inputs
+    if (updatedStudentCodeUIRList.some((code) => code.trim() === "")) {
+      Swal.fire({
+        title: "Erreur de réservation!",
+        text: "Tous les champs des participants doivent être remplis.",
+        icon: "error",
+      });
+      return; // Stop further execution
+    }
 
+      // Validation: Check for duplicate participant codes
+  const uniqueCodes = new Set(updatedStudentCodeUIRList);
+  if (uniqueCodes.size !== updatedStudentCodeUIRList.length) {
+    Swal.fire({
+      title: "Erreur de réservation!",
+      text: "Les codes des participants doivent être uniques.",
+      icon: "error",
+    });
+    return; // Stop further execution
+  }
+  
+    // Prepare reservation data
+    const jsDay = new Date().getDay();
+    const day = jsDay === 0 ? 6 : jsDay - 1;
+  
     const reservationData = {
       codeUIR, // Use dynamically fetched codeUIR
-      dayBooking:day,
-      sportCategoryId:selectedSport,
+      dayBooking: day,
+      sportCategoryId: selectedSport,
       sportId: selectedCategory,
       hourStart: selectedTimeRange.hourStart,
       hourEnd: selectedTimeRange.hourEnd,
       codeUIRList: updatedStudentCodeUIRList,
     };
-
+  
     try {
-      const response = await ApiSystem.post("/Reservations/AddReservations",reservationData);
+      const response = await ApiSystem.post("/Reservations/AddReservations", reservationData);
       if (response.status === 200 || response.status === 201) {
         Swal.fire({
           title: "Réservation ajoutée avec succès!",
@@ -116,7 +167,7 @@ const Step3And4Reservation = ({
       }
     } catch (error) {
       console.log(error.response.data);
-      
+  
       Swal.fire({
         title: "Erreur l'ajout de la réservation!",
         text: error.response.data,
@@ -124,6 +175,7 @@ const Step3And4Reservation = ({
       });
     }
   };
+  
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">
@@ -168,12 +220,14 @@ const Step3And4Reservation = ({
         </div>
       ))}
       <button
-        type="button"
-        className="btn bg-blue-600 text-white px-4 py-2 mt-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        onClick={addParticipantCodeField}
-      >
-        Ajouter un participant
-      </button>
+  type="button"
+  className="btn bg-blue-600 text-white px-4 py-2 mt-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+  onClick={addParticipantCodeField}
+  disabled={participantCodes.length >= nbPlayerSport}
+>
+  Ajouter un participant
+</button>
+
     </div>
   
     <form onSubmit={handleSubmit} className="mt-6">
