@@ -9,9 +9,11 @@ const Home = () => {
   const [filteredRequests, setFilteredRequests] = useState([]);
   const [sportNames, setSportNames] = useState({});
   const [studentNames, setStudentNames] = useState({});
-  const [studentFirstNames, setStudentFirstNames] = useState({});
+ 
+  const [studentFirstNames, setStudentFirstNames] = useState('');
   const [studentLastNames, setStudentLastNames] = useState({});
   const [studentId, setStudentId] = useState(null);
+  const [codeUIR, setCodeUIR] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [requestsPerPage] = useState(3);
   const [selectedSport, setSelectedSport] = useState(null);
@@ -27,13 +29,22 @@ const Home = () => {
     if (studentId) {
       fetchReservation();
     }
-  }, [studentId, selectedSport]); // Add selectedSport as a dependency
+    console.log('is work : codeUIR' , codeUIR);
+    
+  }, [studentId, selectedSport , codeUIR ,studentFirstNames , studentLastNames]); // Add selectedSport as a dependency
+
 
   const fetchStudentByUserId = async (userId) => {
     try {
       const response = await ApiSystem.get(`/Students/GetStudentByUserId/${userId}`);
       if (response.data) {
         setStudentId(response.data.id);
+        setCodeUIR(response.data.codeUIR);
+        setStudentFirstNames(response.data.firstName);
+        setStudentLastNames(response.data.lastName);
+        console.log('response.data.codeUIR : ', response.data.codeUIR);
+        
+
       }
     } catch (err) {
       console.error("Error fetching student:", err);
@@ -45,10 +56,14 @@ const Home = () => {
 
     try {
       const endpoint = selectedSport
-        ? `/Reservations/ByCategoryAndStudentId/${selectedSport}/${studentId}`
-        : `/Reservations/byStudent/${studentId}`;
+        ? `/Reservations/ByCategoryAndStudentId/${selectedSport}/${codeUIR}`
+        : `/Reservations/byStudent/${codeUIR}`;
 
       const response = await ApiSystem.get(endpoint);
+      console.log('log brahhou',response.data);
+      console.log('log brahhou',studentId);
+      console.log('log brahhou',selectedSport);
+      
       setRequests(response.data);
       setFilteredRequests(response.data);
 
@@ -74,16 +89,7 @@ const Home = () => {
     }
   };
 
-  const fetchStudentName = async (studentId) => {
-    try {
-      const response = await ApiSystem.get(`/Students/student/${studentId}`);
-      setStudentNames((prev) => ({ ...prev, [studentId]: response.data.codeUIR }));
-      setStudentFirstNames((prev) => ({ ...prev, [studentId]: response.data.firstName }));
-      setStudentLastNames((prev) => ({ ...prev, [studentId]: response.data.lastName }));
-    } catch (error) {
-      console.error("Error fetching student name:", error);
-    }
-  };
+
 
   const handleSportSelect = (sportId) => {
     setSelectedSport(sportId);
@@ -120,10 +126,10 @@ const Home = () => {
               <tbody>
                 {currentRequests.map((request) => (
                   <tr key={request.id}>
-                    <td>{studentNames[request.studentId] || "Loading..."}</td>
+                    <td>{codeUIR || "Loading..."}</td>
                     <td>
-                      {`${studentFirstNames[request.studentId] || "Loading..."} ${
-                        studentLastNames[request.studentId] || "Loading..."
+                      {`${studentFirstNames|| "Loading..."} ${
+                        studentLastNames || "Loading..."
                       }`}
                     </td>
                     <td>{sportNames[request.sportId] || "Loading..."}</td>
