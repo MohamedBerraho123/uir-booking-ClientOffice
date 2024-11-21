@@ -1,4 +1,4 @@
-import { useState ,useEffect } from "react"
+import React, { useState ,useEffect } from "react"
 import { Calendar, ChevronLeft, ChevronRight, Clock, ClubIcon as Football, Plus, Shield, Trophy, Users, X } from 'lucide-react'
 import { motion } from "framer-motion"
 
@@ -7,29 +7,70 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group"
-// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-const sports = [
-  { id: "football", name: "Football", icon: Football, courts: ["Main Field", "Training Ground"] },
-  { id: "padel", name: "Padel", icon: Shield, courts: ["Court A", "Court B"] },
-  { id: "tennis", name: "Tennis", icon: Trophy, courts: ["Center Court", "Court 1", "Court 2"] },
-  { id: "volleyball", name: "Volleyball", icon: Users, courts: ["Indoor Court", "Beach Court"] },
-]
+import ApiSystem from "../../apiSystem"
 
 export default function Booking() {
   const [step, setStep] = useState(1)
   const [selectedSport, setSelectedSport] = useState("")
   const [selectedCourt, setSelectedCourt] = useState("")
   const [participants, setParticipants] = useState([])
+  const [sports, setSports] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [matches, setMatches] = useState([]);
 
-  const handleNext = () => setStep(step + 1)
-  const handleBack = () => setStep(step - 1)
+//todo Fetch sports categories initially
+useEffect(() => {
+  const fetchSports = async () => {
+    try {
+      const response = await ApiSystem.get("/SportCategorys/list");
+      setSports(response.data);
+    } catch (error) {
+      console.error("Failed to load sports:", error);
+    } 
+  };
+  fetchSports();
+}, []);
+
+
+ //todo Fetch matches when selectedSport changes
+ useEffect(() => {
+  if (selectedSport) {
+    const fetchMatches = async () => {
+      try {
+        setLoading(true);
+        const response = await ApiSystem.get(`/Sports/category/${selectedSport}`);
+        setMatches(response.data);
+      } catch (error) {
+        console.error("Failed to fetch matches for the selected category:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMatches();
+  }
+}, [selectedSport]);
+
+
+//todo steps : 
+const handleNext = () => {
+  setStep((prevStep) => prevStep + 1);
+};
+
+const handleBack = () => {
+  setStep((prevStep) => prevStep - 1);
+};
+
+  //todo : adding participant 
   
   const addParticipant = (code) => {
     if (code && !participants.includes(code)) {
       setParticipants([...participants, code])
     }
   }
+
+
+  //todo : remove input 
 
   const removeParticipant = (code) => {
     setParticipants(participants.filter(p => p !== code))
@@ -39,15 +80,17 @@ export default function Booking() {
 
 
 
+// todo : handel select Sport 
 
-
-    const HandelSelectSport =(id)=>{
+    const handleSelectSport =(id)=>{
 
         setSelectedSport(id)
         console.log("id for sport selected : " , id);
         
       
       }
+
+
     const HandleSelectedCourt=(court)=>{
         setSelectedCourt(court)
         console.log("court : ", court);
@@ -110,111 +153,116 @@ export default function Booking() {
 
 
              {/* ---div---1 body of  stepper one for choose Sport */}
-          {step === 1 && (
-            <motion.div 
-              className="space-y-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold text-[#1E3B8B]">Select Your Sport</h2>
-                <p className="text-muted-foreground">Choose from our available sports facilities</p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {sports.map((sport) => (
-                  <Card 
-                    key={sport.id}
-                    className={`cursor-pointer transition-all hover:border-[#1E3B8B] ${
-                      selectedSport === sport.id ? "border-[#1E3B8B] bg-[#1E3B8B]/5" : ""
-                    }`}
-                    onClick={()=>HandelSelectSport(sport.id)}
-                  >
-                    <CardContent className="flex items-center gap-4 p-6">
-                      <div className="w-12 h-12 rounded-full bg-[#1E3B8B]/10 flex items-center justify-center">
-                        <sport.icon className="w-6 h-6 text-[#1E3B8B]" />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-lg">{sport.name}</h3>
-                        <p className="text-sm text-muted-foreground">{sport.courts.length} courts available</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-              <div className="flex justify-end">
-                <Button 
-                  onClick={handleNext} 
-                  disabled={!selectedSport}
-                  className="bg-[#1E3B8B] hover:bg-[#1E3B8B]/90"
+             {step === 1 && (
+        <motion.div
+          className="space-y-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-[#1E3B8B]">Select Your Sport</h2>
+            <p className="text-muted-foreground">Choose from our available sports facilities</p>
+          </div>
+
+         
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {sports.map((sport) => (
+                <Card
+                  key={sport.id}
+                  className={`cursor-pointer transition-all hover:border-[#1E3B8B] ${
+                    selectedSport === sport.id ? "border-[#1E3B8B] bg-[#1E3B8B]/5" : ""
+                  }`}
+                  onClick={() => handleSelectSport(sport.id)}
                 >
-                  Next <ChevronRight className="ml-2 w-4 h-4" />
-                </Button>
-              </div>
-            </motion.div>
-          )}
+                  <CardContent className="flex items-center gap-4 p-6">
+                    <div className="w-12 h-12 rounded-full bg-[#1E3B8B]/10 flex items-center justify-center">
+                      {/* Customize sport icon */}
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-lg">{sport.name}</h3>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+         
+
+          <div className="flex justify-end">
+            <Button
+              onClick={handleNext}
+              disabled={!selectedSport}
+              className="bg-[#1E3B8B] hover:bg-[#1E3B8B]/90"
+            >
+              Next
+            </Button>
+          </div>
+        </motion.div>
+      )}
                 {/* ---div---FINAL 1 body of  stepper one for choose Sport */}
                 {/* ------------------------------------------------------------------------------------------------------ */}
 
 
                       {/* ---div---2 body of  stepper one for select Court */}
 
-          {step === 2 && (
-            <motion.div 
-              className="space-y-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+                      {step === 2 && (
+        <motion.div
+          className="space-y-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-[#1E3B8B]">Select Your Court</h2>
+            <p className="text-muted-foreground">Choose your preferred playing area</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {matches.map((match) => (
+              <Card
+                key={match.id}
+                className={`cursor-pointer transition-all hover:border-[#1E3B8B] ${
+                  selectedCourt === match.id ? "border-[#1E3B8B] ring-2 ring-[#1E3B8B]/20" : ""
+                }`}
+                onClick={() => setSelectedCourt(match.id)}
+              >
+                <CardContent className="p-0">
+                  <div className="aspect-video relative">
+                    <img
+                      src={match.image ? `data:image/png;base64,${match.image}` : 'placeholder.png'}
+                      alt={match.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                      <h3 className="font-semibold text-lg">{match.name}</h3>
+                      <p className="text-sm text-white/80">Available Now</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="flex justify-between">
+            <Button variant="outline" onClick={handleBack}>
+              Back
+            </Button>
+            <Button
+              onClick={handleNext}
+              disabled={!selectedCourt}
+              className="bg-[#1E3B8B] hover:bg-[#1E3B8B]/90"
             >
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold text-[#1E3B8B]">Select Your Court</h2>
-                <p className="text-muted-foreground">Choose your preferred playing area</p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {sports.find(s => s.id === selectedSport)?.courts.map((court) => (
-                  <Card 
-                    key={court}
-                    className={`cursor-pointer transition-all hover:border-[#1E3B8B] overflow-hidden ${
-                      selectedCourt === court ? "border-[#1E3B8B] ring-2 ring-[#1E3B8B]/20" : ""
-                    }`}
-                    onClick={() => HandleSelectedCourt(court)}
-                  >
-                    <CardContent className="p-0">
-                      <div className="aspect-video relative">
-                        <img 
-                          src="/placeholder.svg?height=400&width=600" 
-                          alt={court}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                        <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                          <h3 className="font-semibold text-lg">{court}</h3>
-                          <p className="text-sm text-white/80">Available Now</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-              <div className="flex justify-between">
-                <Button variant="outline" onClick={handleBack}>
-                  <ChevronLeft className="mr-2 w-4 h-4" /> Back
-                </Button>
-                <Button 
-                  onClick={handleNext} 
-                  disabled={!selectedCourt}
-                  className="bg-[#1E3B8B] hover:bg-[#1E3B8B]/90"
-                >
-                  Next <ChevronRight className="ml-2 w-4 h-4" />
-                </Button>
-              </div>
-            </motion.div>
-          )}
+              Next
+            </Button>
+          </div>
+        </motion.div>
+      )}
           {/* ---div--- final 2 body of  stepper one for select Court */}
 
                 {/* ------------------------------------------------------------------------------------------------------ */}
 
           {/* ---div--- final 3 body of  stepper one for Book Time */}
 
-          {step === 3 && (
+          {/* {step === 3 && (
             <motion.div 
               className="space-y-8"
               initial={{ opacity: 0, y: 20 }}
@@ -314,7 +362,7 @@ export default function Booking() {
                 </Button>
               </div>
             </motion.div>
-          )}
+          )} */}
            {/* ---div--- final 3 body of  stepper one for Book Time */}
         </CardContent>
          {/* ---div---fn body of  stepper */}
