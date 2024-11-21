@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Layouts/Header";
 import LoginSignUp from "./LoginSignUp/loginSignUp.jsx";
-import Stepper from "./components/stepper/Stepper.jsx";
+// import Stepper from "./components/stepper/Stepper.jsx";
 import About from "./components/pages/About"; // Ensure the path is correct
 import Contact from "./components/pages/Contact"; // Ensure the path is correct
 import '../src/LoginSignUp//LoginSignup.css'
  import Home from "./components/pages/Home.jsx"
+ import Booking from "../src/components/Steppers/Booking"
 
 
 function App() {
@@ -45,7 +46,7 @@ function App() {
             <div className="p-10">
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/stepper" element={<Stepper />} />
+                <Route path="/stepper" element={<Booking />} />
              
               
                 <Route path="/about" element={<About/>} />
