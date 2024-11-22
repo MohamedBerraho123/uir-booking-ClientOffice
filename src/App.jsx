@@ -6,7 +6,7 @@ import LoginSignUp from "./LoginSignUp/loginSignUp.jsx";
 import About from "./components/pages/About"; // Ensure the path is correct
 import Contact from "./components/pages/Contact"; // Ensure the path is correct
 import '../src/LoginSignUp//LoginSignup.css'
- import Home from "./components/pages/Home.jsx"
+ import Home from "./components/pages/ReservationList.jsx"
  import Booking from "../src/components/Steppers/Booking"
 
 

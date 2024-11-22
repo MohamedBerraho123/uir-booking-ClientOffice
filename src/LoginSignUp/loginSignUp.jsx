@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ApiManager from "../api";
 import ApiSystem from "../apiSystem";
+import Uirback from "../assets/Uirback.jpeg";
 
 
 const LoginSignUp = ({ onLogin }) => {
@@ -87,7 +88,7 @@ const LoginSignUp = ({ onLogin }) => {
   };
 
   return (
-    <div className='Main-container'>
+    <div className='Main-container '   style={{ backgroundImage: `url(${Uirback})` }}>
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
         <h1 className="text-2xl font-semibold text-center mb-6">Login</h1>

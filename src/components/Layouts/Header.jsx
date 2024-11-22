@@ -7,6 +7,7 @@ import UIRRLogo from "../../assets/UIRR.png";
 import "./Header.css";
 import ApiSystem from "../../apiSystem"
 
+
 function Header({ onLogout }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userData, setUserData] = useState({ firstName: "", lastName: "" });

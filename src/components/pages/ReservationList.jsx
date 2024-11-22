@@ -4,7 +4,7 @@ import ApiSystem from "../../apiSystem";
 import Filtrage from "../TableComponent/Fitrage";
 import Pagination from "../TableComponent/Pagination";
 
-const Home = () => {
+const ReservationList = () => {
   const [requests, setRequests] = useState([]);
   const [filteredRequests, setFilteredRequests] = useState([]);
   const [sportNames, setSportNames] = useState({});
@@ -148,4 +148,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default ReservationList;

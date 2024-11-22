@@ -1,103 +1,266 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';  // Import useNavigate hook
-import Carousel1 from '../../assets/Carousel1.jpeg';
-import Carousel5 from '../../assets/Carousel5.jpg';
-import Carousel3 from '../../assets/Carousel3.jpeg';
+import { motion } from "framer-motion";
+import { Calendar, Clock, Trophy, Users } from "lucide-react";
+import { useState, useEffect } from "react";
 
-const About = () => {
-  const navigate = useNavigate();  // Declare navigate
-  const [currentIndex, setCurrentIndex] = useState(0);
+import { Button } from "../ui/button";
+import { Card, CardContent } from "../ui/card";
+import ApiSystem from "../../apiSystem";
+import { useNavigate } from "react-router-dom"; 
+import Uirback from "../../assets/Uirback.jpeg";
+import uiir from "../../assets/uiir.jpeg";
+import uiirr from "../../assets/uiirr.jpeg";
+
+
+export default function About() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [sports, setSports] = useState([]);
+  const navigate = useNavigate();
 
   const slides = [
     {
-      image: Carousel1,
-      title: 'Carrefour de coopération',
-      subtitle: 'internationale',
-      description: "L'UIR a eu l'honneur d'accueillir le Président de la République française.",
+      image: Uirback,
+      title: "World-Class Sports Facilities",
+      subtitle: "Experience the best in university athletics",
     },
     {
-      image: Carousel5,
-      title: 'Another Slide Title',
-      subtitle: 'Subtitle Here',
-      description: 'Description for the second slide.',
+      // image: "../../assets/Uirback.jpeg?height=1080&width=1920",
+      image: uiir,
+      title: "Train Like a Champion",
+      subtitle: "State-of-the-art equipment and expert coaching",
     },
     {
-      image: Carousel3,
-      title: 'Another Slide Title',
-      subtitle: 'Subtitle Here',
-      description: 'Description for the second slide.',
+      image: uiirr,
+      title: "Join the Community",
+      subtitle: "Connect with fellow sports enthusiasts",
     },
   ];
 
-  // Random image change every 5 seconds using setInterval
   useEffect(() => {
-    const interval = setInterval(() => {
-      const randomIndex = Math.floor(Math.random() * slides.length);
-      setCurrentIndex(randomIndex);  // Update the current index with a random index
-    }, 2000);  // Change image every 5 seconds
+    const timer = setInterval(() => {
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
+    }, 5000); // Change slide every 5 seconds
 
-    return () => clearInterval(interval);  // Cleanup on component unmount
-  }, []);  // Empty array to run this effect only once (when the component mounts)
+    return () => clearInterval(timer);
+  }, [slides.length]);
 
-  const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
-  };
+  const features = [
+    {
+      icon: Trophy,
+      title: "Multiple Sports",
+      description:
+        "Access to various sports facilities including football, tennis, padel, and volleyball",
+    },
+    {
+      icon: Calendar,
+      title: "Easy Booking",
+      description:
+        "Simple and quick online booking system for all university sports facilities",
+    },
+    {
+      icon: Users,
+      title: "Team Building",
+      description:
+        "Perfect for organizing team sports and recreational activities",
+    },
+    {
+      icon: Clock,
+      title: "Flexible Hours",
+      description:
+        "Extended facility hours to accommodate different schedules",
+    },
+  ];
 
-  const handlePrev = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? slides.length - 1 : prevIndex - 1
-    );
-  };
+  // const sports = [
+  //   { name: "Football", image: "/placeholder.svg?height=400&width=600" },
+  //   { name: "Tennis", image: "/placeholder.svg?height=400&width=600" },
+  //   { name: "Padel", image: "/placeholder.svg?height=400&width=600" },
+  //   { name: "Volleyball", image: "/placeholder.svg?height=400&width=600" },
+  // ];
 
-  const handleReservationClick = () => {
-    navigate('/stepper');  // Navigate to the reservation page
-  };
+
+
+  useEffect(() => {
+    const fetchSports = async () => {
+      try {
+        const response = await ApiSystem.get("/Sports/list");
+        setSports(response.data);
+      } catch (error) {
+        console.error("Failed to load sports:", error);
+      }
+    };
+    fetchSports();
+  }, []);
 
   return (
-    <div className="w-full h-screen overflow-hidden relative">
-      {/* Section de l'image de fond */}
-      <div
-        className="absolute inset-0 bg-cover bg-center transition-all duration-700"
-        style={{
-          backgroundImage: `url(${slides[currentIndex].image})`,
-        }}
-      >
-        <div className="flex flex-col items-center justify-center h-full bg-black bg-opacity-50 text-white p-6 text-center">
-          <h1 className="text-4xl font-bold mb-2">{slides[currentIndex].title}</h1>
-          <h2 className="text-2xl text-yellow-400 mb-4">{slides[currentIndex].subtitle}</h2>
-          <p className="text-lg mb-6">{slides[currentIndex].description}</p>
-          <button className="px-4 py-2 bg-white text-black font-semibold rounded hover:bg-gray-200 transition">
-            En savoir +
-          </button>
+    <div className="min-h-screen">
+      {/* Hero Section with Slider */}
+      <div className="relative bg-[#1E3B8B] text-white h-[600px]">
+        {slides.map((slide, index) => (
+          <div
+            key={index}
+            className={`absolute inset-0 transition-opacity duration-1000 ${
+              index === currentSlide ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            <img
+              src={slide.image}
+              alt={slide.title}
+              className="w-full h-full object-cover opacity-50"
+            />
+            <div className="absolute inset-0 bg-black bg-opacity-50" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center space-y-6 max-w-4xl mx-auto px-6">
+                <motion.h1
+                  key={`${index}-title`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5 }}
+                  className="text-5xl font-bold mb-6"
+                >
+                  {slide.title}
+                </motion.h1>
+                <motion.p
+                  key={`${index}-subtitle`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="text-xl text-white/80"
+                >
+                  {slide.subtitle}
+                </motion.p>
+              </div>
+            </div>
+          </div>
+        ))}
+        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2">
+          <div className="flex space-x-2">
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  index === currentSlide
+                    ? "bg-white scale-125"
+                    : "bg-white/50 hover:bg-white/80"
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Boutons de navigation */}
-      <button
-        className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-70 transition"
-        onClick={handlePrev}
-      >
-        &#8249;
-      </button>
-      <button
-        className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-70 transition"
-        onClick={handleNext}
-      >
-        &#8250;
-      </button>
+      {/* Features Section */}
+      <div className="py-24 bg-[#f8f9fc]">
+        <div className="max-w-6xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl font-bold text-[#1E3B8B] mb-4">
+              Why Choose Our Facilities?
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Experience top-notch sports facilities with modern amenities
+            </p>
+          </motion.div>
 
-      {/* Section du bouton de réservation */}
-      <div className="absolute bottom-0 left-0 w-full bg-blue-800 text-white py-4 px-6 flex items-center justify-between">
-        <span className="font-semibold">Démarrer ma réservation</span>
-        <button
-          className="bg-yellow-400 text-black font-bold py-2 px-4 rounded hover:bg-yellow-500 transition"
-          onClick={handleReservationClick}  // Add click handler to navigate
-        >
-          JE RÉSERVE
-        </button>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Card className="border-0 shadow-lg h-full">
+                  <CardContent className="pt-6">
+                    <div className="w-12 h-12 rounded-lg bg-[#1E3B8B]/10 flex items-center justify-center mb-4">
+                      <feature.icon className="w-6 h-6 text-[#1E3B8B]" />
+                    </div>
+                    <h3 className="text-xl font-semibold mb-2">
+                      {feature.title}
+                    </h3>
+                    <p className="text-muted-foreground">
+                      {feature.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Sports Section */}
+      <div className="py-24">
+        <div className="max-w-6xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl font-bold text-[#1E3B8B] mb-4">
+              Available Sports
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Choose from our wide range of sports facilities
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {sports.map((sport, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.1 }}
+                className="relative group cursor-pointer"
+                onClick={() => navigate("/stepper", { state: { sport } })}
+              >
+                <div className="relative overflow-hidden rounded-lg">
+                  <img
+                    src={ sport.image
+                      ? `data:image/png;base64,${sport.image}`
+                      : "placeholder.png"}
+                    alt={sport.name}
+                    className="w-full aspect-square object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <h3 className="text-xl font-semibold text-white">
+                      {sport.name}
+                    </h3>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      <div className="bg-[#1E3B8B] text-white py-16">
+        <div className="max-w-6xl mx-auto px-6 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            <h2 className="text-3xl font-bold">Ready to Get Started?</h2>
+            <p className="text-lg text-white/80 max-w-2xl mx-auto">
+              Book your preferred sports facility now and enjoy our modern
+              amenities
+            </p>
+            <Button size="lg" className="bg-white text-[#1E3B8B] hover:bg-white/90"    onClick={() => navigate("/stepper")}>
+              Book a Facility
+            </Button>
+          </motion.div>
+        </div>
       </div>
     </div>
   );
-};
-
-export default About;
+}
