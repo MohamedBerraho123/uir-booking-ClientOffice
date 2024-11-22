@@ -574,6 +574,12 @@ export default function Booking() {
                   <CardContent>
                     {/* ---div--- RadioGroup ----------------------------------*/}
                     <div className="grid gap-4">
+                    {!loading && timeRanges.length === 0 && (
+                   <p className="text-red-500">
+          Nous sommes désolés mais il n'est pas possible de réservation cet
+          terrain pour le moment.
+                                 </p>
+                            )}
                       {timeRanges.map((timeRange) => (
                         <div
                           key={timeRange.id}
