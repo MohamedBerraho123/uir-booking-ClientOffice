@@ -598,7 +598,8 @@ export default function Booking() {
                             className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                           />
                           <label className="blue-txt">
-                            {timeRange.hourStart} - {timeRange.hourEnd}
+                          {new Date(`1970-01-01T${timeRange.hourStart}Z`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - 
+                          {new Date(`1970-01-01T${timeRange.hourEnd}Z`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </label>
                         </div>
                       ))}
