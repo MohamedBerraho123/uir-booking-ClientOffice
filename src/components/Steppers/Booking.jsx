@@ -45,7 +45,7 @@ export default function Booking() {
 
   const [participantCodes, setParticipantCodes] = useState([""]);
   const [codeUIR, setCodeUIR] = useState("");
-  // const navigate = useNavigate();
+  
 
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("studentData"));
@@ -146,7 +146,8 @@ export default function Booking() {
 
         // Filter the time ranges to keep only those greater than the current time
         const filteredTimeRanges = response.data.filter((timeRange) => {
-          return timeRange.hourStart > formattedCurrentTime;
+          return  formattedCurrentTime;
+          // return timeRange.hourStart > formattedCurrentTime;
         });
 
         setTimeRanges(filteredTimeRanges); // Update time ranges
@@ -313,7 +314,7 @@ export default function Booking() {
   };
   
   return (
-    <div className="min-h-screen bg-[#f8f9fc] p-6">
+    <div className="min-h-screen bg-[#f8f9fc] p-10">
       <Card className="w-full max-w-5xl mx-auto border-0 shadow-lg">
         <CardHeader className="bg-[#1E3B8B] text-white rounded-t-lg">
           {/* ---div--- of header stepper  */}
@@ -523,21 +524,28 @@ export default function Booking() {
                   </CardHeader>
                   <CardContent>
                     {/* ---div--- RadioGroup ----------------------------------*/}
-                    {timeRanges.map((timeRange) => (
-        <div key={timeRange.id} className="flex items-center space-x-2 mb-4">
-          <input
-            type="radio"
-            name="timeRange"
-            value={timeRange.id}
-            checked={selectedTimeRange && selectedTimeRange.id === timeRange.id}
-            onChange={() => setSelectedTimeRange(timeRange)}
-            className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-          />
-          <label className="blue-txt">
-            {timeRange.hourStart} - {timeRange.hourEnd}
-          </label>
-        </div>
-      ))}
+                  <div className="grid gap-4">
+  {timeRanges.map((timeRange) => (
+    <div
+      key={timeRange.id}
+      className="flex items-center space-x-2 rounded-lg border p-4 cursor-pointer hover:bg-[#1E3B8B]/5"
+      onClick={() => setSelectedTimeRange(timeRange)} // Set the selected time range on click
+    >
+      <input
+        type="radio"
+        name="timeRange"
+        value={timeRange.id}
+        checked={selectedTimeRange && selectedTimeRange.id === timeRange.id}
+        onChange={() => setSelectedTimeRange(timeRange)} // Update the selection when the radio is changed
+        className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+      />
+      <label className="blue-txt">
+        {timeRange.hourStart} - {timeRange.hourEnd}
+      </label>
+    </div>
+  ))}
+</div>
+
                    
 
                     {/* ---div--- RadioGroup--------------------------------- */}
@@ -574,7 +582,7 @@ export default function Booking() {
                     {participantCodes.map((code, index) => (
                       <div className="flex gap-2">
                         <Input
-                          placeholder="Enter student ID"
+                          placeholder="Enter student Code UIR"
                           className="border-[#1E3B8B]/20 focus-visible:ring-[#1E3B8B]"
                           value={code}
                           onChange={(e) =>
@@ -584,22 +592,25 @@ export default function Booking() {
                         <Button
                           variant="outline"
                           size="icon"
-                          className="border-[#1E3B8B]/20 text-[#1E3B8B] hover:bg-[#1E3B8B]/10 hover:text-[#1E3B8B]"
+                          className="border-[red]/20 text-[white] bg-red-600 hover:bg-[red]/10 hover:text-[red]"
                           onClick={() => removeParticipantCodeField(index)}
                         >
-                          {/* <Plus className="h-4 w-4" /> */} <p>delete</p>
+                          {/* <Delete className="h-4 w-4" /> */} -
                         </Button>
                       </div>
                     ))}
-                  </CardContent>
-                  <button
+                     <div className="flex justify-end">
+                     <button
                     type="button"
-                    className="btn bg-blue-600 text-white px-4 py-2 mt-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                     className="btn bg-blue-600 text-white px-4 py-2 mt-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     onClick={addParticipantCodeField}
                     disabled={participantCodes.length >= nbPlayerSport}
                   >
                     Ajouter un participant
                   </button>
+                  </div>
+                  </CardContent>
+                 
                 </Card>
                 {/* ---div--- card partivipants */}
               </div>

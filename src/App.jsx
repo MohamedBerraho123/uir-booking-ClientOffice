@@ -38,12 +38,12 @@ function App() {
   };
 
   return (
-    <Router>
+    <Router className="bg-[#f8f9fc]">
       {isLoggedIn ? (
         <div className="flex h-screen customm-bg">
           <div className="flex-1 flex flex-col">
             <Header onLogout={handleLogout} />
-            <div className="p-10">
+            <div className="p-0">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/stepper" element={<Booking />} />
