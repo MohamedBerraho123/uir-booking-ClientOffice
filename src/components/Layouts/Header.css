@@ -1,3 +1,8 @@
 .blue-txt{
     color: #183680;
   }
+
+
+.hover\:text-blue-600:hover {
+  color: #2563EB; /* Tailwind's blue-500 */
+}

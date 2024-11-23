@@ -64,7 +64,7 @@ function Header({ onLogout }) {
 
 
           <Link to="/" className="blue-txt hover:text-blue-600">
-            List des Reservations
+           My Reservations 
           </Link>
           <Link to="/contact" className="blue-txt hover:text-blue-600">
             Contact
