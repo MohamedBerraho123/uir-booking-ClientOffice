@@ -3,6 +3,7 @@ import axios from 'axios';
 import ApiManager from "../api";
 import ApiSystem from "../apiSystem";
 import Uirback from "../assets/Uirback.jpeg";
+import {  useNavigate } from "react-router-dom";
 
 
 const LoginSignUp = ({ onLogin }) => {
@@ -12,6 +13,7 @@ const LoginSignUp = ({ onLogin }) => {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [studentData, setStudentData] = useState(null);
   const [studentCodeUIR, setStudentCodeUIR] = useState('');
+  const navigate = useNavigate();
   
 
   const handleSubmit = async (e) => {
@@ -35,6 +37,7 @@ const LoginSignUp = ({ onLogin }) => {
       // Automatically add the student upon successful registration and login 
       await addStudent(newStudentData, token);
       onLogin();
+      navigate("/about");
     } catch (error) {
       setErrorMessage(error.response?.data?.Message || 'Registration/Login failed');
     }

@@ -59,7 +59,7 @@ export default function Booking() {
                 className={`flex items-center gap-3 p-3 rounded-lg ${step === 1 ? "bg-white/10" : ""}`}
                 animate={{ opacity: 1 }}
                 initial={{ opacity: 0 }}
-              > header 1
+              > Choose Sport 
                 <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
                   <Trophy className="w-5 h-5 text-[#cfd803]" /> 
                 </div>
@@ -70,7 +70,7 @@ export default function Booking() {
                 className={`flex items-center gap-3 p-3 rounded-lg ${step === 2 ? "bg-white/10" : ""}`}
                 animate={{ opacity: 1 }}
                 initial={{ opacity: 0 }}
-              > header2
+              > Select Court
                 <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
                   <Shield className="w-5 h-5 text-[#cfd803]" />
                 </div>
@@ -81,7 +81,7 @@ export default function Booking() {
                 className={`flex items-center gap-3 p-3 rounded-lg ${step === 3 ? "bg-white/10" : ""}`}
                 animate={{ opacity: 1 }}
                 initial={{ opacity: 0 }}
-              >header 3
+              >BookTime 
                 <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
                   <Clock className="w-5 h-5 text-[#cfd803]" />
                 </div>
