@@ -70,12 +70,7 @@ export default function About() {
     },
   ];
 
-  // const sports = [
-  //   { name: "Football", image: "/placeholder.svg?height=400&width=600" },
-  //   { name: "Tennis", image: "/placeholder.svg?height=400&width=600" },
-  //   { name: "Padel", image: "/placeholder.svg?height=400&width=600" },
-  //   { name: "Volleyball", image: "/placeholder.svg?height=400&width=600" },
-  // ];
+  
 
 
 
@@ -83,11 +78,19 @@ export default function About() {
     const fetchSports = async () => {
       try {
         const response = await ApiSystem.get("/Sports/list");
-        setSports(response.data);
+        const fetchedSports = response.data;
+
+        // Shuffle and pick 4 random sports
+        const shuffledSports = fetchedSports
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 4);
+
+        setSports(shuffledSports);
       } catch (error) {
         console.error("Failed to load sports:", error);
       }
     };
+
     fetchSports();
   }, []);
 
@@ -197,50 +200,52 @@ export default function About() {
 
       {/* Sports Section */}
       <div className="py-24">
-        <div className="max-w-6xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl font-bold text-[#1E3B8B] mb-4">
-              Available Sports
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Choose from our wide range of sports facilities
-            </p>
-          </motion.div>
+      <div className="max-w-6xl mx-auto px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-3xl font-bold text-[#1E3B8B] mb-4">
+            Available Sports
+          </h2>
+          <p className="text-lg text-muted-foreground">
+            Choose from our wide range of sports facilities
+          </p>
+        </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {sports.map((sport, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.1 }}
-                className="relative group cursor-pointer"
-                onClick={() => navigate("/stepper", { state: { sport } })}
-              >
-                <div className="relative overflow-hidden rounded-lg">
-                  <img
-                    src={ sport.image
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {sports.map((sport, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: index * 0.1 }}
+              className="relative group cursor-pointer"
+              onClick={() => navigate("/stepper", { state: { sport } })}
+            >
+              <div className="relative overflow-hidden rounded-lg">
+                <img
+                  src={
+                    sport.image
                       ? `data:image/png;base64,${sport.image}`
-                      : "placeholder.png"}
-                    alt={sport.name}
-                    className="w-full aspect-square object-cover transition-transform duration-300 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <h3 className="text-xl font-semibold text-white">
-                      {sport.name}
-                    </h3>
-                  </div>
+                      : "placeholder.png"
+                  }
+                  alt={sport.name}
+                  className="w-full aspect-square object-cover transition-transform duration-300 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-6">
+                  <h3 className="text-xl font-semibold text-white">
+                    {sport.name}
+                  </h3>
                 </div>
-              </motion.div>
-            ))}
-          </div>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
+    </div>
 
       {/* CTA Section */}
       <div className="bg-[#1E3B8B] text-white py-16">

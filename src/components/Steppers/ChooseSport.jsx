@@ -33,10 +33,21 @@ const HandelSelectSport = (id) =>{
             onClick={() => HandelSelectSport(sport.id)}
           >
             <CardContent className="flex items-center gap-4 p-6">
-            
+          
+                        <img
+                  src={
+                    sport.image
+                      ? `data:image/png;base64,${sport.image}`
+                      : "placeholder.png"
+                  }
+                  alt={sport.name}
+                  className="w-12 h-12 rounded-full bg-[#1E3B8B]/10 flex items-center justify-center"
+                />
+                      
               <div>
                 <h3 className="font-semibold text-lg">{sport.name}</h3>
                  <p className="text-sm text-muted-foreground">{sport.name.length} courts available</p> 
+                
               </div>
             </CardContent>
           </Card>
