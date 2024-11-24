@@ -37,7 +37,7 @@ const LoginSignUp = ({ onLogin }) => {
       // Automatically add the student upon successful registration and login 
       await addStudent(newStudentData, token);
       onLogin();
-      navigate("/about");
+      navigate("/");
     } catch (error) {
       setErrorMessage(error.response?.data?.Message || 'Registration/Login failed');
     }

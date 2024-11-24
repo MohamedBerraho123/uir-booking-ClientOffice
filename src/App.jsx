@@ -6,7 +6,7 @@ import LoginSignUp from "./LoginSignUp/loginSignUp.jsx";
 import About from "./components/pages/About"; // Ensure the path is correct
 import Contact from "./components/pages/Contact"; // Ensure the path is correct
 import '../src/LoginSignUp//LoginSignup.css'
- import Home from "./components/pages/ReservationList.jsx"
+ import ReservationList from "./components/pages/ReservationList.jsx"
  import Booking from "../src/components/Steppers/Booking"
 
 
@@ -45,11 +45,11 @@ function App() {
             <Header onLogout={handleLogout} />
             <div className="p-0">
               <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/reservationList" element={<ReservationList />} />
                 <Route path="/stepper" element={<Booking />} />
              
               
-                <Route path="/about" element={<About/>} />
+                <Route path="/" element={<About/>} />
                 <Route path="/contact" element={<Contact/>} />
 
               </Routes>

@@ -79,7 +79,7 @@ export default function Header({ onLogout }) {
                 {/* Example navigation links */}
               
 
-                <Link to="/about"   className={classNames(
+                <Link to="/"   className={classNames(
                     'bg-gray-900 text-white',
                     'rounded-md px-3 py-2 text-sm font-medium'
                   )}>
@@ -93,7 +93,7 @@ export default function Header({ onLogout }) {
                 >
                   Booking Now
                 </Link>
-                <Link to="/" 
+                <Link to="/reservationList" 
                   className={classNames(
                     'text-gray-300 hover:bg-gray-700 hover:text-white',
                     'rounded-md px-3 py-2 text-sm font-medium'
@@ -161,7 +161,7 @@ export default function Header({ onLogout }) {
      
        
            {/* Example mobile navigation links */}
-           <Link to="/about"
+           <Link to="/"
               aria-current="page"
               className={classNames(
                 'bg-gray-900 text-white',
@@ -180,7 +180,7 @@ export default function Header({ onLogout }) {
             </Link>
 
 
-             <Link to="/"
+             <Link to="/reservationList"
               className={classNames(
                 'text-gray-300 hover:bg-gray-700 hover:text-white',
                 'block rounded-md px-3 py-2 text-base font-medium'

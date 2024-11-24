@@ -167,13 +167,15 @@ export default function BookTime({
         "/Reservations/AddReservations",
         reservationData
       );
+      navigate("/reservationList");
       if (response.status === 200 || response.status === 201) {
         Swal.fire({
           title: "Réservation ajoutée avec succès!",
           icon: "success",
         });
+        navigate("/reservationList");
         toast.success("Réservation ajoutée avec succès!");
-        navigate("/");
+      
       } else {
         Swal.fire({
           title: "Erreur lors de l'ajout de la réservation!",
@@ -296,7 +298,7 @@ export default function BookTime({
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
               <Users className="w-5 h-5 text-[#1E3B8B]" />
-              Participants
+              Participants {nbPlayerSport-1}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
