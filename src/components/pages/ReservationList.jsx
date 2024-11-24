@@ -29,7 +29,7 @@ const ReservationList = () => {
     if (studentId) {
       fetchReservation();
     }
-    console.log('is work : codeUIR' , codeUIR);
+    // console.log('is work : codeUIR' , codeUIR);
     
   }, [studentId, selectedSport , codeUIR ,studentFirstNames , studentLastNames]); // Add selectedSport as a dependency
 
@@ -42,7 +42,7 @@ const ReservationList = () => {
         setCodeUIR(response.data.codeUIR);
         setStudentFirstNames(response.data.firstName);
         setStudentLastNames(response.data.lastName);
-        console.log('response.data.codeUIR : ', response.data.codeUIR);
+        // console.log('response.data.codeUIR : ', response.data.codeUIR);
         
 
       }
@@ -60,9 +60,9 @@ const ReservationList = () => {
         : `/Reservations/byStudent/${codeUIR}`;
 
       const response = await ApiSystem.get(endpoint);
-      console.log('log brahhou',response.data);
-      console.log('log brahhou',studentId);
-      console.log('log brahhou',selectedSport);
+      // console.log('log brahhou',response.data);
+      // console.log('log brahhou',studentId);
+      // console.log('log brahhou',selectedSport);
       
       setRequests(response.data);
       setFilteredRequests(response.data);

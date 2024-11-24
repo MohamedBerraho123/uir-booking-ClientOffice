@@ -32,7 +32,7 @@ export default function Booking() {
         try {
           const response = await ApiSystem.get("/SportCategorys/list");
           setSports(response.data);
-          console.log(response.data);
+          // console.log(response.data);
           
         } catch (error) {
           console.error("Failed to load sports:", error);

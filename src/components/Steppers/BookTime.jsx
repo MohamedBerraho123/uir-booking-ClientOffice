@@ -58,17 +58,17 @@ export default function BookTime({
       if (response.data) {
         setCodeUIR(response.data.codeUIR);
 
-        console.log("response.data.codeUIR : ", response.data.codeUIR);
+        // console.log("response.data.codeUIR : ", response.data.codeUIR);
       }
     } catch (err) {
       console.error("Error fetching student:", err);
     }
   };
 
-  console.log(
-    "selectedCourt component BookTime 111111111111 : ",
-    selectedCourt
-  );
+  // console.log(
+  //   "selectedCourt component BookTime 111111111111 : ",
+  //   selectedCourt
+  // );
   //todo : fetch time :
   useEffect(() => {
     const fetchTimeRanges = async () => {
@@ -77,11 +77,11 @@ export default function BookTime({
           `/Plannings/get-timeRanges-by-sport-and-day-not-reserved/${selectedCourt}`
         );
 
-        console.log("time : ", response.data);
+        //  console.log("time : ", response.data);
 
         const result = await ApiSystem.get(`/Sports/${selectedCourt}`);
 
-        console.log("spornt number : is ", result.data.nbPlayer);
+        // console.log("spornt number : is ", result.data.nbPlayer);
         setNbPlayerSport(result.data.nbPlayer);
 
         // Get the current time in "HH:mm" format

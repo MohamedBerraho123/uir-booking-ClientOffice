@@ -24,7 +24,7 @@ export default function ChooseSport({ sports, selectedSport, onSelectSport, onNe
           courtCounts[sport.id] = response.data.length;
         }
         setCourtsCount(courtCounts);
-        console.log("Court counts:", courtCounts);
+        // console.log("Court counts:", courtCounts);
       } catch (error) {
         console.error("Failed to fetch courts count:", error);
       }

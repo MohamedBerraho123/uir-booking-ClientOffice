@@ -31,12 +31,12 @@ export default function Header({ onLogout }) {
 
   useEffect(() => {
     const fetchStudentByUserId = async (userId) => {
-      console.log("Header ", userId);
+      // console.log("Header ", userId);
       try {
         const response = await ApiSystem.get(
           `/Students/GetStudentByUserId/${userId}`);
-        console.log("the first name", response.data.firstName);
-        console.log("the last name", response.data.lastName);
+        // console.log("the first name", response.data.firstName);
+        // console.log("the last name", response.data.lastName);
 
         // Update state with fetched data
         setUserData({
@@ -68,7 +68,7 @@ export default function Header({ onLogout }) {
           </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
-            <Link to="/about"  >
+            <Link to="/"  >
                <img src={UIRRLogo} alt="UIRR Logo" className="h-8 w-auto rounded-full" />
                </Link>
             </div>

@@ -70,6 +70,18 @@ const LoginSignUp = ({ onLogin }) => {
   };
 
   const addStudent = async (studentData) => {
+  
+    
+    if (
+      !studentData ||
+      !studentData.firstName ||
+      !studentData.lastName ||
+      !studentData.userId ||
+      !studentData.codeUIR
+    ) {
+      // console.log('Invalid student data:', studentData);
+      return; // Do not add if data is missing
+    }
     try {
       await ApiSystem.post('/Students/add', studentData);
       setStudentCodeUIR(studentData.codeUIR);

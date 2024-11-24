@@ -16,15 +16,15 @@ export default function SelectCourt({
   const [matches, setMatches] = useState([]);
   const [expandedCard, setExpandedCard] = useState(null);
 
-  console.log("the id of sport select is from SelectCourt : ", selectedSport);
-  console.log("courtsis from SelectCourt : ", courts);
-  console.log("selectedCourt is from SelectCourt : ", selectedCourt);
+  // console.log("the id of sport select is from SelectCourt : ", selectedSport);
+  // console.log("courtsis from SelectCourt : ", courts);
+  // console.log("selectedCourt is from SelectCourt : ", selectedCourt);
 
   const HandlerSelectedCourt = (courtId) => {
     
     onSelectCourt(courtId); 
    
-    console.log("sportId : ", courtId);
+    // console.log("sportId : ", courtId);
   };
 
   useEffect(() => {
@@ -35,9 +35,9 @@ export default function SelectCourt({
             `https://localhost:7125/api/Sports/category/${selectedSport}`
           );
           setMatches(response.data);
-          console.log("data of fetchsportmatch : ", response.data);
+          // console.log("data of fetchsportmatch : ", response.data);
 
-          console.log("selectedSport ..:", selectedSport);
+          // console.log("selectedSport ..:", selectedSport);
         } catch (error) {
           console.error(
             "Failed to fetch matches for the selected category:",
