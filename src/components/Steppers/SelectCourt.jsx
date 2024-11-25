@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import ApiSystem from "../../apiSystem";
 
 export default function SelectCourt({
   selectedSport,
@@ -15,17 +16,62 @@ export default function SelectCourt({
 }) {
   const [matches, setMatches] = useState([]);
   const [expandedCard, setExpandedCard] = useState(null);
+  const [codeUIR, setCodeUIR] = useState("");
+  const [hasAccess, setHasAccess] = useState(null); // New state for access control
+  const [nothasAccess, setNotHasAccess] = useState(null); // New state for access control
 
-  // console.log("the id of sport select is from SelectCourt : ", selectedSport);
-  // console.log("courtsis from SelectCourt : ", courts);
-  // console.log("selectedCourt is from SelectCourt : ", selectedCourt);
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem("studentData"));
+    if (storedData) {
+      fetchStudentByUserId(storedData.userId);
+    }
+  }, []);
 
-  const HandlerSelectedCourt = (courtId) => {
-    
-    onSelectCourt(courtId); 
-   
-    // console.log("sportId : ", courtId);
+  const fetchStudentByUserId = async (userId) => {
+    try {
+      const response = await ApiSystem.get(
+        `/Students/GetStudentByUserId/${userId}`
+      );
+      if (response.data) {
+        setCodeUIR(response.data.codeUIR);
+      }
+    } catch (err) {
+      console.error("Error fetching student:", err);
+    }
   };
+
+  const handleSelectedCourt = (courtId) => {
+    onSelectCourt(courtId);
+  };
+
+  useEffect(() => {
+    if (selectedCourt && codeUIR) {
+      const checkAccess = async () => {
+        const reservationData = {
+          codeUIR,
+          codeUIRList: [codeUIR],
+          sportId: selectedCourt,
+        };
+
+        try {
+          const response = await ApiSystem.post(
+            "/Reservations/check-access",
+            reservationData
+          );
+          setHasAccess(response.data); // Save the access result
+          console.log("Check access response:", response.data);
+          if(response.data==false){
+            'is fals stop please ! '
+          }
+        } catch (error) {
+
+          console.error("Failed to check access", error);
+        }
+      };
+
+      checkAccess();
+    }
+  }, [selectedCourt, codeUIR]);
 
   useEffect(() => {
     if (selectedSport) {
@@ -35,9 +81,6 @@ export default function SelectCourt({
             `https://localhost:7125/api/Sports/category/${selectedSport}`
           );
           setMatches(response.data);
-          // console.log("data of fetchsportmatch : ", response.data);
-
-          // console.log("selectedSport ..:", selectedSport);
         } catch (error) {
           console.error(
             "Failed to fetch matches for the selected category:",
@@ -71,7 +114,7 @@ export default function SelectCourt({
                 ? "border-[#1E3B8B] ring-2 ring-[#1E3B8B]/20"
                 : ""
             }`}
-            onClick={() => HandlerSelectedCourt(match.id)}
+            onClick={() => handleSelectedCourt(match.id)}
           >
             <CardContent className="p-0">
               <div className="aspect-video relative">
@@ -95,13 +138,12 @@ export default function SelectCourt({
                     }`}
                   >
                     {expandedCard === match.id
-                      ? match.description // Show the full text if expanded
+                      ? match.description
                       : `${match.description.slice(0, 30)}...`}{" "}
-                    {/* Show first 30 characters */}
                     <button
                       className="text-blue-400 ml-2"
                       onClick={(e) => {
-                        e.stopPropagation(); // Prevent triggering onClick of the parent
+                        e.stopPropagation();
                         setExpandedCard(
                           expandedCard === match.id ? null : match.id
                         );
@@ -116,13 +158,16 @@ export default function SelectCourt({
           </Card>
         ))}
       </div>
+      {hasAccess === false && (
+        <p className="text-red-500">You do not have access to this court.</p>
+      )}
       <div className="flex justify-between">
         <Button variant="outline" onClick={onBack}>
           <ChevronLeft className="mr-2 w-4 h-4" /> Back
         </Button>
         <Button
           onClick={onNext}
-          disabled={!selectedCourt}
+          disabled={!selectedCourt || hasAccess === false}
           className="bg-[#1E3B8B] hover:bg-[#1E3B8B]/90"
         >
           Next <ChevronRight className="ml-2 w-4 h-4" />
