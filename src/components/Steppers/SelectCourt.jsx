@@ -90,13 +90,13 @@ export default function SelectCourt({
                   <p
                     className={`text-sm ${
                       expandedCard === match.id
-                        ? "bg-black text-red-500"
+                        ? "text-black/80 bg-gray-300"
                         : "text-white/80"
                     }`}
                   >
                     {expandedCard === match.id
-                      ? match.conditions // Show the full text if expanded
-                      : `${match.conditions.slice(0, 30)}...`}{" "}
+                      ? match.description // Show the full text if expanded
+                      : `${match.description.slice(0, 30)}...`}{" "}
                     {/* Show first 30 characters */}
                     <button
                       className="text-blue-400 ml-2"

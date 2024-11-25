@@ -86,11 +86,18 @@ export default function BookTime({
     }
 
     // Check if the student code input is not empty
-    if (!codeUIR.trim()) {
+    const updatedStudentCodeUIRList = participantCodes.filter(
+      (code) => code.trim() !== ""
+    );
+
+    // Validation logic remains the same
+    if (updatedStudentCodeUIRList.length !== nbPlayerSport - 1) {
       Swal.fire({
-        title: "Champ Requis",
-        text: "Veuillez entrer le code étudiant UIR avant de continuer.",
-        icon: "warning",
+        title: "Erreur de réservation!",
+        text: `Veuillez ajouter ${
+          nbPlayerSport - 1
+        } participants valides avant de continuer.`,
+        icon: "error",
       });
       return;
     }
@@ -505,7 +512,7 @@ export default function BookTime({
                 <h2 className="text-lg font-semibold text-gray-800">
                   Confirmation Required
                 </h2>
-                <p className="text-sm text-gray-600 mt-2">{conditionSport} </p>
+                <p className="text-sm text-red-600 mt-2">{conditionSport} </p>
                 <label className="flex items-center space-x-2 mt-4">
                   <input
                     type="checkbox"
