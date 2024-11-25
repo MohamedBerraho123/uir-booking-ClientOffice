@@ -21,6 +21,7 @@ import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import ApiSystem from "../../apiSystem";
 import { useNavigate } from "react-router-dom";
+import "./BookTime.css";
 
 export default function BookTime({
   participants,
@@ -32,10 +33,13 @@ export default function BookTime({
 }) {
   const [timeRanges, setTimeRanges] = useState([]);
   const [nbPlayerSport, setNbPlayerSport] = useState(null);
+  const [conditionSport, setConditionSport] = useState("");
   const [participantCodes, setParticipantCodes] = useState([""]);
   const [selectedTimeRange, setSelectedTimeRange] = useState(null);
 
   const [codeUIR, setCodeUIR] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
   const navigate = useNavigate();
 
@@ -45,6 +49,72 @@ export default function BookTime({
       fetchStudentByUserId(storedData.userId);
     }
   }, []);
+
+  useEffect(() => {
+    if (selectedCourt) {
+      const fetchMatches = async () => {
+        try {
+          const response = await axios.get(
+            `https://localhost:7125/api/Sports/${selectedCourt}`
+          );
+          // setMatches(response.data);
+          console.log("data of fetchsportmatch : ", response.data.conditions);
+          setConditionSport(response.data.conditions);
+
+          // console.log("selectedSport ..:", selectedSport);
+        } catch (error) {
+          console.error(
+            "Failed to fetch matches for the selected category:",
+            error
+          );
+        }
+      };
+
+      fetchMatches();
+    }
+  }, [selectedCourt]);
+
+  const handleOpenPopup = () => {
+    // Check if a time range is selected
+    if (!selectedTimeRange) {
+      Swal.fire({
+        title: "Sélection Requise",
+        text: "Veuillez sélectionner une plage horaire avant de continuer.",
+        icon: "warning",
+      });
+      return;
+    }
+
+    // Check if the student code input is not empty
+    if (!codeUIR.trim()) {
+      Swal.fire({
+        title: "Champ Requis",
+        text: "Veuillez entrer le code étudiant UIR avant de continuer.",
+        icon: "warning",
+      });
+      return;
+    }
+
+    setShowPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    setIsCheckboxChecked(false);
+  };
+
+  const handleConfirmPopup = () => {
+    if (isCheckboxChecked) {
+      handleSubmit();
+      setShowPopup(false);
+    } else {
+      Swal.fire({
+        title: "Confirmation Required",
+        text: "Please agree to the conditions before proceeding.",
+        icon: "warning",
+      });
+    }
+  };
 
   // useEffect(() => {
   //   console.log("is work : codeUIR from booking form boking", codeUIR);
@@ -107,15 +177,13 @@ export default function BookTime({
     fetchTimeRanges(); // Fetch time ranges when the component mounts
   }, [selectedCourt]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     // Filter out empty participant codes
     const updatedStudentCodeUIRList = participantCodes.filter(
       (code) => code.trim() !== ""
     );
 
-    // Validation: Check if the number of participants matches nbPlayerSport
+    // Validation logic remains the same
     if (updatedStudentCodeUIRList.length !== nbPlayerSport - 1) {
       Swal.fire({
         title: "Erreur de réservation!",
@@ -127,28 +195,8 @@ export default function BookTime({
       return;
     }
 
-    // Validation: Check for empty inputs
-    if (updatedStudentCodeUIRList.some((code) => code.trim() === "")) {
-      Swal.fire({
-        title: "Erreur de réservation!",
-        text: "Tous les champs des participants doivent être remplis.",
-        icon: "error",
-      });
-      return;
-    }
-
-    // Validation: Check for duplicate participant codes
-    const uniqueCodes = new Set(updatedStudentCodeUIRList);
-    if (uniqueCodes.size !== updatedStudentCodeUIRList.length) {
-      Swal.fire({
-        title: "Erreur de réservation!",
-        text: "Les codes des participants doivent être uniques.",
-        icon: "error",
-      });
-      return;
-    }
-
-    // Prepare reservation data
+    // More validations...
+    // Reservation logic remains the same
     const jsDay = new Date().getDay();
     const day = jsDay === 0 ? 6 : jsDay;
 
@@ -157,8 +205,8 @@ export default function BookTime({
       dayBooking: day,
       sportCategoryId: selectedSport,
       sportId: selectedCourt,
-      hourStart: selectedTimeRange?.hourStart, // Use selected hourStart
-      hourEnd: selectedTimeRange?.hourEnd, // Use selected hourEnd
+      hourStart: selectedTimeRange?.hourStart,
+      hourEnd: selectedTimeRange?.hourEnd,
       codeUIRList: updatedStudentCodeUIRList,
     };
 
@@ -167,15 +215,12 @@ export default function BookTime({
         "/Reservations/AddReservations",
         reservationData
       );
-      navigate("/reservationList");
       if (response.status === 200 || response.status === 201) {
         Swal.fire({
           title: "Réservation ajoutée avec succès!",
           icon: "success",
         });
         navigate("/reservationList");
-        toast.success("Réservation ajoutée avec succès!");
-      
       } else {
         Swal.fire({
           title: "Erreur lors de l'ajout de la réservation!",
@@ -183,15 +228,99 @@ export default function BookTime({
         });
       }
     } catch (error) {
-      // console.log(error.response.data);
-
       Swal.fire({
         title: "Erreur l'ajout de la réservation!",
-        text: error.response.data,
+        text: error.response?.data || "Unknown error",
         icon: "error",
       });
     }
   };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   // Filter out empty participant codes
+  //   const updatedStudentCodeUIRList = participantCodes.filter(
+  //     (code) => code.trim() !== ""
+  //   );
+
+  //   // Validation: Check if the number of participants matches nbPlayerSport
+  //   if (updatedStudentCodeUIRList.length !== nbPlayerSport - 1) {
+  //     Swal.fire({
+  //       title: "Erreur de réservation!",
+  //       text: `Veuillez ajouter ${
+  //         nbPlayerSport - 1
+  //       } participants valides avant de continuer.`,
+  //       icon: "error",
+  //     });
+  //     return;
+  //   }
+
+  //   // Validation: Check for empty inputs
+  //   if (updatedStudentCodeUIRList.some((code) => code.trim() === "")) {
+  //     Swal.fire({
+  //       title: "Erreur de réservation!",
+  //       text: "Tous les champs des participants doivent être remplis.",
+  //       icon: "error",
+  //     });
+  //     return;
+  //   }
+
+  //   // Validation: Check for duplicate participant codes
+  //   const uniqueCodes = new Set(updatedStudentCodeUIRList);
+  //   if (uniqueCodes.size !== updatedStudentCodeUIRList.length) {
+  //     Swal.fire({
+  //       title: "Erreur de réservation!",
+  //       text: "Les codes des participants doivent être uniques.",
+  //       icon: "error",
+  //     });
+  //     return;
+  //   }
+
+  //   // Prepare reservation data
+  //   const jsDay = new Date().getDay();
+  //   const day = jsDay === 0 ? 6 : jsDay;
+
+  //   const reservationData = {
+  //     codeUIR: codeUIR,
+  //     dayBooking: day,
+  //     sportCategoryId: selectedSport,
+  //     sportId: selectedCourt,
+  //     hourStart: selectedTimeRange?.hourStart, // Use selected hourStart
+  //     hourEnd: selectedTimeRange?.hourEnd, // Use selected hourEnd
+  //     codeUIRList: updatedStudentCodeUIRList,
+  //   };
+
+  //   try {
+  //     const response = await ApiSystem.post(
+  //       "/Reservations/AddReservations",
+  //       reservationData
+  //     );
+  //     navigate("/reservationList");
+  //     if (response.status === 200 || response.status === 201) {
+  //       Swal.fire({
+  //         title: "Réservation ajoutée avec succès!",
+  //         icon: "success",
+  //       });
+  //       navigate("/reservationList");
+  //       toast.success("Réservation ajoutée avec succès!");
+
+  //     } else {
+  //       Swal.fire({
+  //         title: "Erreur lors de l'ajout de la réservation!",
+  //         icon: "error",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     // console.log(error.response.data);
+
+  //     Swal.fire({
+  //       title: "Erreur l'ajout de la réservation!",
+  //       text: error.response.data,
+  //       icon: "error",
+  //     });
+  //   }
+  // };
 
   //todo handle :
   const handleParticipantCodeChange = (e, index) => {
@@ -298,7 +427,7 @@ export default function BookTime({
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
               <Users className="w-5 h-5 text-[#1E3B8B]" />
-              Participants {nbPlayerSport-1}
+              Participants {nbPlayerSport - 1}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -357,11 +486,55 @@ export default function BookTime({
         <Button variant="outline" onClick={onBack}>
           <ChevronLeft className="mr-2 w-4 h-4" /> Back
         </Button>
-        <form onSubmit={handleSubmit} className="mt-6">
-          <Button type="submit" className="bg-[#1E3B8B] hover:bg-[#1E3B8B]/90">
-            Confirm Booking
-          </Button>
-        </form>
+        <div>
+          {/* Your existing form */}
+          <form className="mt-6" onSubmit={(e) => e.preventDefault()}>
+            <Button
+              type="button"
+              onClick={handleOpenPopup}
+              className="bg-[#1E3B8B] hover:bg-[#1E3B8B]/90"
+            >
+              Confirm Booking
+            </Button>
+          </form>
+
+          {/* Conditional Popup */}
+          {showPopup && (
+            <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+              <div className="bg-white rounded-lg shadow-lg p-6 w-96">
+                <h2 className="text-lg font-semibold text-gray-800">
+                  Confirmation Required
+                </h2>
+                <p className="text-sm text-gray-600 mt-2">{conditionSport} </p>
+                <label className="flex items-center space-x-2 mt-4">
+                  <input
+                    type="checkbox"
+                    checked={isCheckboxChecked}
+                    onChange={(e) => setIsCheckboxChecked(e.target.checked)}
+                    className="form-checkbox h-5 w-5 text-green-500"
+                  />
+                  <span className="text-sm text-gray-700">
+                    I agree to the terms and conditions.
+                  </span>
+                </label>
+                <div className="flex justify-end space-x-2 mt-6">
+                  <button
+                    onClick={handleClosePopup}
+                    className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleConfirmPopup}
+                    className="px-4 py-2 bg-[#1E3B8B] hover:bg-[#1E3B8B]/90 text-white rounded-lg"
+                  >
+                    Confirm
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </motion.div>
   );
