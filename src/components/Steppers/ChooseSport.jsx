@@ -3,7 +3,8 @@ import { Button } from "../ui/button";
 import { ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import axios from "axios";
+// import axios from "axios";
+import ApiSystem from "../../apiSystem";
 
 export default function ChooseSport({ sports, selectedSport, onSelectSport, onNext }) {
   const [courtsCount, setCourtsCount] = useState({});
@@ -18,8 +19,8 @@ export default function ChooseSport({ sports, selectedSport, onSelectSport, onNe
       try {
         const courtCounts = {};
         for (const sport of sports) {
-          const response = await axios.get(
-            `https://localhost:7125/api/Sports/category/${sport.id}`
+          const response = await ApiSystem.get(
+            `/Sports/category/${sport.id}`
           );
           courtCounts[sport.id] = response.data.length;
         }

@@ -77,8 +77,8 @@ export default function SelectCourt({
     if (selectedSport) {
       const fetchMatches = async () => {
         try {
-          const response = await axios.get(
-            `https://localhost:7125/api/Sports/category/${selectedSport}`
+          const response = await ApiSystem.get(
+            `/Sports/category/${selectedSport}`
           );
           setMatches(response.data);
         } catch (error) {

@@ -23,6 +23,7 @@ import ApiSystem from "../../apiSystem";
 import { useNavigate } from "react-router-dom";
 import "./BookTime.css";
 
+
 export default function BookTime({
   participants,
   selectedSport,
@@ -54,8 +55,8 @@ export default function BookTime({
     if (selectedCourt) {
       const fetchMatches = async () => {
         try {
-          const response = await axios.get(
-            `https://localhost:7125/api/Sports/${selectedCourt}`
+          const response = await ApiSystem.get(
+            `/Sports/${selectedCourt}`
           );
           // setMatches(response.data);
           console.log("data of fetchsportmatch : ", response.data.conditions);
