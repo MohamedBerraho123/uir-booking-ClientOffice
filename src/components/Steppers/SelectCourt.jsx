@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import ApiSystem from "../../apiSystem";
+import CountTime from "./Timer/CountTime";
 
 export default function SelectCourt({
   selectedSport,
@@ -159,7 +160,7 @@ export default function SelectCourt({
         ))}
       </div>
       {hasAccess === false && (
-        <p className="text-red-500">You do not have access to this court.</p>
+        <p className="text-red-500"><CountTime codeUIR={codeUIR}  selectedCourt={selectedCourt}/> </p>
       )}
       <div className="flex justify-between">
         <Button variant="outline" onClick={onBack}>
