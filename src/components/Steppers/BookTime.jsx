@@ -1,29 +1,18 @@
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+
 import { ChevronLeft } from "lucide-react";
 import { motion } from "framer-motion";
-import {
-  Calendar,
-  ChevronRight,
-  Clock,
-  ClubIcon as Football,
-  Plus,
-  Shield,
-  Trophy,
-  Users,
-  X,
-} from "lucide-react";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import axios from "axios";
+
+
+
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import ApiSystem from "../../apiSystem";
 import { useNavigate } from "react-router-dom";
 import "./BookTime.css";
-import AvailableTime from "./BookingTime/AvailableTime"
-
+import AvailableTime from "./BookingTime/AvailableTime";
+import Participants from "./ParticipantsPart/Participants";
 
 export default function BookTime({
   participants,
@@ -33,7 +22,6 @@ export default function BookTime({
   onRemoveParticipant,
   onBack,
 }) {
-
   const [nbPlayerSport, setNbPlayerSport] = useState(null);
   const [conditionSport, setConditionSport] = useState("");
   const [participantCodes, setParticipantCodes] = useState([""]);
@@ -57,9 +45,7 @@ export default function BookTime({
     if (selectedCourt) {
       const fetchMatches = async () => {
         try {
-          const response = await ApiSystem.get(
-            `/Sports/${selectedCourt}`
-          );
+          const response = await ApiSystem.get(`/Sports/${selectedCourt}`);
           // setMatches(response.data);
           console.log("data of fetchsportmatch : ", response.data.conditions);
           setConditionSport(response.data.conditions);
@@ -79,60 +65,50 @@ export default function BookTime({
   }, [selectedCourt]);
 
   const handleOpenPopup = () => {
-     if (!selectedTimeRange) {
-      setErrorMessage("Veuillez sélectionner une plage horaire avant de continuer.");
-      return;
-    }
-    setErrorMessage(""); // Clear the error message if valid
-    console.log("Proceed with booking:", selectedTimeRange);
-
-    // Check if the student code input is not empty
-    const updatedStudentCodeUIRList = participantCodes.filter(
-      (code) => code.trim() !== ""
-    );
-
-    // Validation logic remains the same
-    if (updatedStudentCodeUIRList.length !== nbPlayerSport - 1) {
+    const validationError = validateParticipants();
+    if (validationError) {
       Swal.fire({
         title: "Erreur de réservation!",
-        text: `Veuillez ajouter ${
-          nbPlayerSport - 1
-        } participants valides avant de continuer.`,
+        text: validationError,
         icon: "error",
       });
       return;
     }
-
     setShowPopup(true);
   };
 
-  // const handleOpenPopup = () => {
-  //   // Check if a time range is selected
-  //   if (!selectedTimeRange) {
-  //     setErrorMessage("Veuillez sélectionner une plage horaire avant de continuer.");
-  //     return;
-  //   }
-  //   setErrorMessage(""); // Clear the error message if valid
-  //   console.log("Proceed with booking:", selectedTimeRange);
-  // };
+   const validateParticipants = () => {
+    const updatedList = participantCodes.filter((code) => code.trim() !== "");
+    if (updatedList.length !== nbPlayerSport - 1) {
+      return `Veuillez ajouter ${
+        nbPlayerSport - 1
+      } participants valides avant de continuer.`;
+    }
+    return "";
+  };
+
   const handleClosePopup = () => {
     setShowPopup(false);
     setIsCheckboxChecked(false);
   };
 
-  const handleConfirmPopup = () => {
-    if (isCheckboxChecked) {
-      handleSubmit();
-      setShowPopup(false);
-    } else {
+
+  const handleConfirmPopup = async () => {
+    if (!isCheckboxChecked) {
       Swal.fire({
         title: "Confirmation Required",
         text: "Please agree to the conditions before proceeding.",
         icon: "warning",
       });
+      return;
+    }
+  
+    const isSuccess = await handleSubmit(); // Check for errors in submission
+    if (isSuccess) {
+      setShowPopup(false);
     }
   };
-
+  
 
   const fetchStudentByUserId = async (userId) => {
     try {
@@ -149,15 +125,13 @@ export default function BookTime({
     }
   };
 
-
+ 
 
   const handleSubmit = async () => {
-    // Filter out empty participant codes
     const updatedStudentCodeUIRList = participantCodes.filter(
       (code) => code.trim() !== ""
     );
-
-    // Validation logic remains the same
+  
     if (updatedStudentCodeUIRList.length !== nbPlayerSport - 1) {
       Swal.fire({
         title: "Erreur de réservation!",
@@ -166,14 +140,12 @@ export default function BookTime({
         } participants valides avant de continuer.`,
         icon: "error",
       });
-      return;
+      return false; // Indicate failure
     }
-
-    // More validations...
-    // Reservation logic remains the same
+  
     const jsDay = new Date().getDay();
     const day = jsDay === 0 ? 6 : jsDay;
-
+  
     const reservationData = {
       codeUIR: codeUIR,
       dayBooking: day,
@@ -183,7 +155,7 @@ export default function BookTime({
       hourEnd: selectedTimeRange?.hourEnd,
       codeUIRList: updatedStudentCodeUIRList,
     };
-
+  
     try {
       const response = await ApiSystem.post(
         "/Reservations/AddReservations",
@@ -195,11 +167,13 @@ export default function BookTime({
           icon: "success",
         });
         navigate("/reservationList");
+        return true; // Indicate success
       } else {
         Swal.fire({
           title: "Erreur lors de l'ajout de la réservation!",
           icon: "error",
         });
+        return false; // Indicate failure
       }
     } catch (error) {
       Swal.fire({
@@ -207,38 +181,10 @@ export default function BookTime({
         text: error.response?.data || "Unknown error",
         icon: "error",
       });
+      return false; // Indicate failure
     }
   };
-
-
-  const handleParticipantCodeChange = (e, index) => {
-    const updatedList = [...participantCodes];
-    updatedList[index] = e.target.value;
-    setParticipantCodes(updatedList);
-  };
-
-  const removeParticipantCodeField = (index) => {
-    const updatedList = participantCodes.filter((_, i) => i !== index);
-    setParticipantCodes(updatedList);
-  };
-
-  const addParticipantCodeField = () => {
-    if (participantCodes.length < nbPlayerSport - 1) {
-      setParticipantCodes([...participantCodes, ""]);
-    } else {
-      console.log(
-        "Cannot add more participants. Maximum limit reached:",
-        nbPlayerSport - 1
-      );
-
-      Swal.fire({
-        title: `Vous ne pouvez ajouter que ${nbPlayerSport - 1} participants.`,
-        icon: "error",
-      });
-    }
-  };
-
-
+  
   return (
     <motion.div
       className="space-y-8"
@@ -253,135 +199,91 @@ export default function BookTime({
           Select a time and add participants
         </p>
       </div>
-    
+
       <div className="grid gap-8 md:grid-cols-2">
-        {/* AvailableTime */}
+       
         <Card className="border-0 shadow-md">
-          
-
-        <AvailableTime selectedCourt={selectedCourt}  onTimeSelect={(timeRange) => {
-          setSelectedTimeRange(timeRange);
-          setErrorMessage(""); 
-         
-        }} />
-        {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+          <AvailableTime
+            selectedCourt={selectedCourt}
+            onTimeSelect={(timeRange) => {
+              setSelectedTimeRange(timeRange);
+              setErrorMessage("");
+            }}
+          />
+          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
         </Card>
-        {/* AvailableTime */}
-  
+       
 
         <Card className="border-0 shadow-md">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Users className="w-5 h-5 text-[#1E3B8B]" />
-              Participants {nbPlayerSport - 1}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex flex-wrap gap-2">
-              {participants.map((code) => (
-                <div
-                  key={code}
-                  className="flex items-center gap-2 bg-[#1E3B8B]/10 text-[#1E3B8B] px-3 py-1.5 rounded-full"
-                >
-                  <span className="text-sm font-medium">{code}</span>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-5 w-5 hover:bg-[#1E3B8B]/20"
-                    onClick={() => removeParticipant(code)}
-                  >
-                    <X className="h-3 w-3" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-            {participantCodes.map((code, index) => (
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Enter student Code UIR"
-                  className="border-[#1E3B8B]/20 focus-visible:ring-[#1E3B8B]"
-                  value={code}
-                  onChange={(e) => handleParticipantCodeChange(e, index)}
-                />
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="border-[red]/20 text-[white] bg-red-600 hover:bg-[red]/10 hover:text-[red]"
-                  onClick={() => removeParticipantCodeField(index)}
-                >
-                  {/* <Delete className="h-4 w-4" /> */} -
-                </Button>
-              </div>
-            ))}
-            <div className="flex justify-end">
-              <button
-                type="button"
-                className="btn bg-blue-600 text-white px-4 py-2 mt-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                onClick={addParticipantCodeField}
-                disabled={participantCodes.length >= nbPlayerSport}
-              >
-                Ajouter un participant
-              </button>
-            </div>
-          </CardContent>
+          <Participants
+            selectedCourt={selectedCourt}
+            participants={participants}
+            participantCodes={participantCodes}
+            onParticipantCodeChange={setParticipantCodes}
+            nbPlayerSport={nbPlayerSport}
+            codeUIR={codeUIR}
+          />
         </Card>
-        {/* ---div--- card partivipants */}
+      
       </div>
-         
 
       <div className="flex justify-between pt-4">
         <Button variant="outline" onClick={onBack}>
           <ChevronLeft className="mr-2 w-4 h-4" /> Back
         </Button>
         <div>
-          {/* Your existing form */}
-          <form className="mt-6" onSubmit={(e) => e.preventDefault()}>
-            <Button
-              type="button"
-              onClick={handleOpenPopup}
-              className="bg-[#1E3B8B] hover:bg-[#1E3B8B]/90"
-            >
-              Confirm Booking 
-            </Button>
-          </form>
+  <form className="mt-6" onSubmit={(e) => e.preventDefault()}>
+    <Button
+      type="button"
+      onClick={handleOpenPopup}
+      disabled={!selectedTimeRange || validateParticipants() !== ""}
+      className={`bg-[#1E3B8B] ${
+        !selectedTimeRange || validateParticipants() !== ""
+          ? "opacity-50 cursor-not-allowed"
+          : "hover:bg-[#1E3B8B]/90"
+      }`}
+    >
+      Confirm Booking
+    </Button>
+  </form>
 
-          {/* Conditional Popup */}
-          {showPopup && (
-            <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-              <div className="bg-white rounded-lg shadow-lg p-6 w-96">
-                <h2 className="text-lg font-semibold text-gray-800">
-                  Confirmation Required
-                </h2>
-                <p className="text-sm text-red-600 mt-2">{conditionSport} </p>
-                <label className="flex items-center space-x-2 mt-4">
-                  <input
-                    type="checkbox"
-                    checked={isCheckboxChecked}
-                    onChange={(e) => setIsCheckboxChecked(e.target.checked)}
-                    className="form-checkbox h-5 w-5 text-green-500"
-                  />
-                  <span className="text-sm text-gray-700">
-                    I agree to the terms and conditions.
-                  </span>
-                </label>
-                <div className="flex justify-end space-x-2 mt-6">
-                  <button
-                    onClick={handleClosePopup}
-                    className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleConfirmPopup}
-                    className="px-4 py-2 bg-[#1E3B8B] hover:bg-[#1E3B8B]/90 text-white rounded-lg"
-                  >
-                    Confirm
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+  {showPopup && (
+    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+      <div className="bg-white rounded-lg shadow-lg p-6 w-96">
+        <h2 className="text-lg font-semibold text-gray-800">
+          Confirmation Required
+        </h2>
+        <p className="text-sm text-red-600 mt-2">{conditionSport}</p>
+        <label className="flex items-center space-x-2 mt-4">
+          <input
+            type="checkbox"
+            checked={isCheckboxChecked}
+            onChange={(e) => setIsCheckboxChecked(e.target.checked)}
+            className="form-checkbox h-5 w-5 text-green-500"
+          />
+          <span className="text-sm text-gray-700">
+            I agree to the terms and conditions.
+          </span>
+        </label>
+        <div className="flex justify-end space-x-2 mt-6">
+          <button
+            onClick={handleClosePopup}
+            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleConfirmPopup}
+            className="px-4 py-2 bg-[#1E3B8B] hover:bg-[#1E3B8B]/90 text-white rounded-lg"
+          >
+            Confirm
+          </button>
         </div>
+      </div>
+    </div>
+  )}
+</div>
+
       </div>
     </motion.div>
   );
