@@ -20,6 +20,7 @@ export default function SelectCourt({
   const [codeUIR, setCodeUIR] = useState("");
   const [hasAccess, setHasAccess] = useState(null); // New state for access control
   const [nothasAccess, setNotHasAccess] = useState(null); // New state for access control
+  const [referenceSport , setReferenceSport] = useState(0);
 
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("studentData"));
@@ -44,6 +45,31 @@ export default function SelectCourt({
   const handleSelectedCourt = (courtId) => {
     onSelectCourt(courtId);
   };
+
+  
+  useEffect(() => {
+    if (selectedCourt) {
+      const fetchMatches = async () => {
+        try {
+          const response = await ApiSystem.get(`/Sports/${selectedCourt}`);
+          setReferenceSport(response.data.referenceSport);
+      
+       
+          console.log("ref : " , response.data.referenceSport);
+          
+
+          // console.log("selectedSport ..:", selectedSport);
+        } catch (error) {
+          console.error(
+            "Failed to fetch matches for the selected category:",
+            error
+          );
+        }
+      };
+
+      fetchMatches();
+    }
+  }, [selectedCourt]);
 
   useEffect(() => {
     if (selectedCourt && codeUIR) {
@@ -82,6 +108,8 @@ export default function SelectCourt({
             `/Sports/category/${selectedSport}`
           );
           setMatches(response.data);
+          console.log("respnse.data selectd court454545  : " , response.data);
+          
         } catch (error) {
           console.error(
             "Failed to fetch matches for the selected category:",
@@ -160,7 +188,7 @@ export default function SelectCourt({
         ))}
       </div>
       {hasAccess === false && (
-        <p className="text-red-500"><CountTime codeUIR={codeUIR}  selectedCourt={selectedCourt}/> </p>
+        <p className="text-red-500"><CountTime codeUIR={codeUIR} selectedCourt={selectedCourt }   referenceSport={referenceSport}/> </p>
       )}
       <div className="flex justify-between">
         <Button variant="outline" onClick={onBack}>

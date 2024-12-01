@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import ApiSystem from '../../../apiSystem';
 
-const CountTime = ({ selectedCourt, codeUIR }) => {
+const CountTime = ({ referenceSport, codeUIR }) => {
   const [countTime, setCountTime] = useState("");
 
   useEffect(() => {
     let intervalId;
 
     const FetchCountTime = async () => {
-      if (selectedCourt && codeUIR) {
+      if (referenceSport && codeUIR) {
         const reservationData = {
           codeUIR,
           codeUIRList: [codeUIR],
-          sportId: selectedCourt,
+          reference: referenceSport,
+         
         };
 
         try {
@@ -40,7 +41,7 @@ const CountTime = ({ selectedCourt, codeUIR }) => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [selectedCourt, codeUIR]);
+  }, [referenceSport, codeUIR]);
 
   return (
     <>

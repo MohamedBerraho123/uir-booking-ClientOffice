@@ -32,6 +32,7 @@ export default function BookTime({
   const [showPopup, setShowPopup] = useState(false);
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,6 +51,8 @@ export default function BookTime({
           console.log("data of fetchsportmatch : ", response.data.conditions);
           setConditionSport(response.data.conditions);
           setNbPlayerSport(response.data.nbPlayer);
+       
+          
 
           // console.log("selectedSport ..:", selectedSport);
         } catch (error) {

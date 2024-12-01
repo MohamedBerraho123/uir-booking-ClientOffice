@@ -103,24 +103,7 @@ const Participants = ({ participants, selectedCourt, onParticipantCodeChange }) 
         {titleError && <p className="text-red-500">{titleError}</p>}
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="flex flex-wrap gap-2">
-          {participants.map((code) => (
-            <div
-              key={code}
-              className="flex items-center gap-2 bg-[#1E3B8B]/10 text-[#1E3B8B] px-3 py-1.5 rounded-full"
-            >
-              <span className="text-sm font-medium">{code}</span>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-5 w-5 hover:bg-[#1E3B8B]/20"
-                onClick={() => removeParticipant(code)}
-              >
-                <X className="h-3 w-3" />
-              </Button>
-            </div>
-          ))}
-        </div>
+     
         {participantCodes.map((code, index) => (
           <div className="flex gap-2" key={index}>
             <Input
