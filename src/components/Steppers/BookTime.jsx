@@ -27,6 +27,7 @@ export default function BookTime({
   const [participantCodes, setParticipantCodes] = useState([""]);
   const [selectedTimeRange, setSelectedTimeRange] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessageRes, setErrorMessageRes] = useState("");
 
   const [codeUIR, setCodeUIR] = useState("");
   const [showPopup, setShowPopup] = useState(false);
@@ -109,6 +110,10 @@ export default function BookTime({
     const isSuccess = await handleSubmit(); // Check for errors in submission
     if (isSuccess) {
       setShowPopup(false);
+    }else {
+      // Close the popup on error
+      setShowPopup(false);
+      
     }
   };
   
@@ -145,6 +150,28 @@ export default function BookTime({
       });
       return false; // Indicate failure
     }
+
+        // Validation: Check for empty inputs
+    if (updatedStudentCodeUIRList.some((code) => code.trim() === "")) {
+      setErrorMessageRes("Tous les champs des participants doivent être remplis.");
+      // Swal.fire({
+      //   title: "Erreur de réservation!",
+      //   text: "Tous les champs des participants doivent être remplis.",
+      //   icon: "error",
+      // });
+      return;
+    }
+    // Validation: Check for duplicate participant codes
+    const uniqueCodes = new Set(updatedStudentCodeUIRList);
+    if (uniqueCodes.size !== updatedStudentCodeUIRList.length) {
+      setErrorMessageRes("Les codes des participants doivent être uniques.")
+      // Swal.fire({
+      //   title: "Erreur de réservation!",
+      //   text: "Les codes des participants doivent être uniques.",
+      //   icon: "error",
+      // });
+      return;
+    }
   
     const jsDay = new Date().getDay();
     const day = jsDay === 0 ? 6 : jsDay;
@@ -179,11 +206,12 @@ export default function BookTime({
         return false; // Indicate failure
       }
     } catch (error) {
-      Swal.fire({
-        title: "Erreur l'ajout de la réservation!",
-        text: error.response?.data || "Unknown error",
-        icon: "error",
-      });
+      setErrorMessageRes(error.response?.data)
+      // Swal.fire({
+      //   title: "Erreur l'ajout de la réservation!",
+      //   text: error.response?.data || "Unknown error",
+      //   icon: "error",
+      // });
       return false; // Indicate failure
     }
   };
@@ -218,7 +246,9 @@ export default function BookTime({
        
 
         <Card className="border-0 shadow-md">
+  
           <Participants
+          errorMessageRes={errorMessageRes}
             selectedCourt={selectedCourt}
             participants={participants}
             participantCodes={participantCodes}
@@ -226,9 +256,11 @@ export default function BookTime({
             nbPlayerSport={nbPlayerSport}
             codeUIR={codeUIR}
           />
+          
         </Card>
       
       </div>
+    
 
       <div className="flex justify-between pt-4">
         <Button variant="outline" onClick={onBack}>
@@ -249,42 +281,51 @@ export default function BookTime({
       Confirm Booking
     </Button>
   </form>
-
   {showPopup && (
-    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-96">
-        <h2 className="text-lg font-semibold text-gray-800">
-          Confirmation Required
-        </h2>
-        <p className="text-sm text-red-600 mt-2">{conditionSport}</p>
-        <label className="flex items-center space-x-2 mt-4">
-          <input
-            type="checkbox"
-            checked={isCheckboxChecked}
-            onChange={(e) => setIsCheckboxChecked(e.target.checked)}
-            className="form-checkbox h-5 w-5 text-green-500"
-          />
-          <span className="text-sm text-gray-700">
-            I agree to the terms and conditions.
-          </span>
-        </label>
-        <div className="flex justify-end space-x-2 mt-6">
-          <button
-            onClick={handleClosePopup}
-            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleConfirmPopup}
-            className="px-4 py-2 bg-[#1E3B8B] hover:bg-[#1E3B8B]/90 text-white rounded-lg"
-          >
-            Confirm
-          </button>
-        </div>
+  <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+    <div className="bg-white rounded-lg shadow-lg p-6 w-96">
+      <h2 className="text-lg font-semibold text-gray-800">
+        Confirmation Required
+      </h2>
+      <p className="text-sm text-red-600 mt-2">{conditionSport}</p>
+      <label className="flex items-center space-x-2 mt-4">
+        <input
+          type="checkbox"
+          checked={isCheckboxChecked}
+          onChange={(e) => setIsCheckboxChecked(e.target.checked)}
+          className="form-checkbox h-5 w-5 text-green-500"
+        />
+        <span className="text-sm text-gray-700">
+          I agree to the terms and conditions.
+        </span>
+      </label>
+      <div className="flex justify-end space-x-2 mt-6">
+        <button
+          onClick={handleClosePopup}
+          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={() => {
+            handleConfirmPopup();  // Your existing confirm logic
+            setIsCheckboxChecked(false);  // Uncheck the checkbox
+          }}
+          disabled={!isCheckboxChecked}  // Disable button if checkbox isn't checked
+          className={`px-4 py-2 rounded-lg ${
+            isCheckboxChecked
+              ? "bg-[#1E3B8B] hover:bg-[#1E3B8B]/90 text-white"
+              : "bg-gray-300 cursor-not-allowed text-gray-500"
+          }`}
+        >
+          Confirm
+        </button>
       </div>
     </div>
-  )}
+  </div>
+)}
+
+
 </div>
 
       </div>

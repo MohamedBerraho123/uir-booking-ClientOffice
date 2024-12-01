@@ -45,7 +45,22 @@ export default function Booking() {
       setStep(step + 1)
   
     };
-    const handleBack = () => setStep(step - 1);
+    // const handleBack = () => setStep(step - 1);
+    const handleBack = () => {
+      resetData(step); // Reset data relevant to the current step
+      setStep((prev) => prev - 1);
+    };
+    const resetData = (currentStep) => {
+      if (currentStep === 3) {
+        // Reset data specific to Step 3
+        setSelectedCourt(null);
+      }
+      if (currentStep === 2) {
+        // Reset data specific to Step 2
+        setSelectedSport(null);
+        setSelectedCourt(null);
+      }
+    };
   
     return (
       <div className="min-h-screen bg-[#f8f9fc] p-6">

@@ -5,7 +5,7 @@ import { Input } from "../../ui/input";
 import { useState, useEffect } from "react";
 import ApiSystem from "../../../apiSystem";
 
-const Participants = ({ participants, selectedCourt, onParticipantCodeChange }) => {
+const Participants = ({errorMessageRes, participants, selectedCourt, onParticipantCodeChange }) => {
   const [participantCodes, setParticipantCodes] = useState([""]);
   const [nbPlayerSport, setNbPlayerSport] = useState(null);
   const [titleError, setTitleError] = useState("");
@@ -101,6 +101,7 @@ const Participants = ({ participants, selectedCourt, onParticipantCodeChange }) 
           Participants {nbPlayerSport - 1}
         </CardTitle>
         {titleError && <p className="text-red-500">{titleError}</p>}
+        {errorMessageRes && <p className="text-red-500">{errorMessageRes}</p>}
       </CardHeader>
       <CardContent className="space-y-4">
      
