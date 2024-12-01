@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ApiSystem from "../../apiSystem";
 import Filtrage from "../TableComponent/Fitrage";
-import Pagination from "../TableComponent/Pagination";
+
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 
 const ReservationList = () => {
   const [requests, setRequests] = useState([]);
@@ -15,7 +17,7 @@ const ReservationList = () => {
   const [studentId, setStudentId] = useState(null);
   const [codeUIR, setCodeUIR] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [requestsPerPage] = useState(3);
+  const [requestsPerPage] = useState(1);
   const [selectedSport, setSelectedSport] = useState(null);
 
   useEffect(() => {
@@ -60,10 +62,7 @@ const ReservationList = () => {
         : `/Reservations/byStudent/${codeUIR}`;
 
       const response = await ApiSystem.get(endpoint);
-      // console.log('log brahhou',response.data);
-      // console.log('log brahhou',studentId);
-      // console.log('log brahhou',selectedSport);
-      
+   
       setRequests(response.data);
       setFilteredRequests(response.data);
 
@@ -95,56 +94,93 @@ const ReservationList = () => {
     setSelectedSport(sportId);
   };
 
-  const indexOfLastRequest = currentPage * requestsPerPage;
-  const indexOfFirstRequest = indexOfLastRequest - requestsPerPage;
-  const currentRequests = filteredRequests.slice(indexOfFirstRequest, indexOfLastRequest);
-  const totalPages = Math.ceil(filteredRequests.length / requestsPerPage);
 
+   //todo : Pagination logic
+   const indexOfLastRequest = currentPage * requestsPerPage;
+   const indexOfFirstRequest = indexOfLastRequest - requestsPerPage;
+   const currentRequests = filteredRequests.slice(
+     indexOfFirstRequest,
+     indexOfLastRequest
+   );
+   const totalPages = Math.ceil(filteredRequests.length / requestsPerPage);
+   const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
+ 
   return (
     <>
-      <div className="flex justify-center items-center mt-32 mb-40">
-        <div className="flex flex-col items-center w-full mx-40">
-         
-          <Filtrage
-            requests={requests}
-            onFilteredRequests={setFilteredRequests}
-            sportNames={sportNames}
-            onSportSelect={handleSportSelect}
-          />
-          <div className="overflow-x-auto mt-10 w-full">
-            <table className="bg-white border border-gray-200 w-full">
-              <thead>
-                <tr style={{ backgroundColor: "#183680", color: "white" }}>
-                  <th className="py-3 px-4">Student Code</th>
-                  <th className="py-3 px-4">Full Name</th>
-                  <th className="py-3 px-4">Sport</th>
-                  <th className="py-3 px-4">Time</th>
-                  <th className="py-3 px-4">Date</th>
-                  <th className="py-3 px-4">List Student</th>
+    <div className="flex justify-center items-center mt-16 mb-20">
+      <div className="flex flex-col items-center w-full px-2 sm:px-4 md:px-10 lg:px-40">
+        <Filtrage
+          requests={requests}
+          onFilteredRequests={setFilteredRequests}
+          sportNames={sportNames}
+          onSportSelect={handleSportSelect}
+        />
+        <div className="overflow-x-auto mt-6 w-full">
+          <table className="bg-white border border-gray-200 min-w-full">
+            <thead>
+              <tr style={{ backgroundColor: "#183680", color: "white" }}>
+                <th className="py-2 px-2 text-sm md:py-3 md:px-4 whitespace-nowrap">
+                  Student Code
+                </th>
+                <th className="py-2 px-2 text-sm md:py-3 md:px-4 whitespace-nowrap">
+                  Full Name
+                </th>
+                <th className="py-2 px-2 text-sm md:py-3 md:px-4 whitespace-nowrap">
+                  Sport
+                </th>
+                <th className="py-2 px-2 text-sm md:py-3 md:px-4 whitespace-nowrap">
+                  Time
+                </th>
+                <th className="py-2 px-2 text-sm md:py-3 md:px-4 whitespace-nowrap">
+                  Date
+                </th>
+                <th className="py-2 px-2 text-sm md:py-3 md:px-4 whitespace-nowrap">
+                  List Student
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentRequests.map((request) => (
+                <tr key={request.id} className="hover:bg-gray-100 text-sm">
+                  <td className="py-2 px-2 md:py-2 md:px-4">
+                    {codeUIR || "Loading..."}
+                  </td>
+                  <td className="py-2 px-2 md:py-2 md:px-4">
+                    {`${studentFirstNames || "Loading..."} ${
+                      studentLastNames || "Loading..."
+                    }`}
+                  </td>
+                  <td className="py-2 px-2 md:py-2 md:px-4">
+                    {sportNames[request.sportId] || "Loading..."}
+                  </td>
+                  <td className="py-2 px-2 md:py-2 md:px-4">
+                    {`${request.hourStart} - ${request.hourEnd}`}
+                  </td>
+                  <td className="py-2 px-2 md:py-2 md:px-4">{request.onlyDate}</td>
+                  <td className="py-2 px-2 md:py-2 md:px-4">
+                    {request.codeUIRList?.join(", ") || "No codes"}
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {currentRequests.map((request) => (
-                  <tr key={request.id}>
-                    <td>{codeUIR || "Loading..."}</td>
-                    <td>
-                      {`${studentFirstNames|| "Loading..."} ${
-                        studentLastNames || "Loading..."
-                      }`}
-                    </td>
-                    <td>{sportNames[request.sportId] || "Loading..."}</td>
-                    <td>{`${request.hourStart} - ${request.hourEnd}`}</td>
-                    <td>{request.onlyDate}</td>
-                    <td>{request.codeUIRList?.join(", ") || "No codes"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+              ))}
+            </tbody>
+          </table>
+          <div className="mt-6 flex justify-center">
+            <Stack spacing={2}>
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={handlePageChange}
+                color="primary"
+              />
+            </Stack>
           </div>
         </div>
       </div>
-    </>
+    </div>
+  </>
+  
   );
 };
 

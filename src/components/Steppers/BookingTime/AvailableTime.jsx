@@ -23,8 +23,8 @@ const AvailableTime = ({ selectedCourt, onTimeSelect }) => {
         const formattedCurrentTime = `${currentHours}:${currentMinutes < 10 ? "0" : ""}${currentMinutes}`;
 
         const filteredTimeRanges = response.data.filter(
-          (timeRange) =>  formattedCurrentTime
-        //   (timeRange) => timeRange.hourStart > formattedCurrentTime
+          //  (timeRange) =>  formattedCurrentTime
+           (timeRange) => timeRange.hourStart > formattedCurrentTime
         );
 
         setTimeRanges(filteredTimeRanges);
