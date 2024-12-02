@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ApiManager from "../api";
 import ApiSystem from "../apiSystem";
-import Uirback from "../assets/Uirback.jpeg";
+import Uirback1 from "../assets/uiir.jpeg";
+import uirImage2 from "../assets/Uirback.jpeg"
+import uirImage3 from "../assets/uiirr.jpeg"
 import {  useNavigate } from "react-router-dom";
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';  
 
 
 const LoginSignUp = ({ onLogin }) => {
@@ -14,7 +17,27 @@ const LoginSignUp = ({ onLogin }) => {
   const [studentData, setStudentData] = useState(null);
   const [studentCodeUIR, setStudentCodeUIR] = useState('');
   const navigate = useNavigate();
+    // Array of images
+    const images = [uirImage2, uirImage3, Uirback1];
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+ 
+    const [showPassword, setShowPassword] = useState(false);
   
+    const togglePasswordVisibility = () => {
+      setShowPassword(!showPassword);
+    };
+  
+    // Change image every 10 seconds
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+      }, 5000);
+  
+      // Cleanup the interval on component unmount
+      return () => clearInterval(interval);
+    }, []);
+  
+    
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,31 +66,6 @@ const LoginSignUp = ({ onLogin }) => {
     }
   };
 
-  const fetchStudentByUserId = async (userId) => {
-    try {
-      const response = await ApiSystem.get(`/Students/GetStudentByUserId/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      console.log("id from method fetch student by UserId data : ",response.data);
-      console.log("id from method fetch student by UserId : ",response.data.userId);
-      console.log("id from method fetch student name first name : ",response.data.firstName);
-      console.log("id from method fetch student name last name : ",response.data.lastName);
-      //pass the value of response.data.id to componenet Home 
-      console.log("id from method fetch student by Id : ",response.data.id);
-      //pass the value of response.data.codeUIR from method FetchStudentByUserId 
-      console.log("id from method fetch CodeUIR : ",response.data.codeUIR);
-      
-      if (response.data) {
-        setStudentCodeUIR(response.data.codeUIR);
-      } else {
-        await addStudent(studentData, token);
-      }
-      
-    } catch (err) {
-      console.error('Error fetching student:', err);
-      // setError('Failed to fetch student.');
-    }
-  };
 
   const addStudent = async (studentData) => {
   
@@ -91,55 +89,86 @@ const LoginSignUp = ({ onLogin }) => {
     }
   };
 
-  const handleLogout = () => {
-    setToken('');
-    setStudentData(null);
-    setEmail('');
-    setPassword('');
-    setStudentCodeUIR('');
-    localStorage.removeItem('token');
-    localStorage.removeItem('studentData');
-    onLogin(false);
-  };
 
+
+  
   return (
-    <div className='Main-container '   style={{ backgroundImage: `url(${Uirback})` }}>
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h1 className="text-2xl font-semibold text-center mb-6">Connexion</h1>
-      
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label htmlFor="email" className="block text-gray-700">Email:</label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-              />
-            </div>
-            <div className="mb-6">
-              <label htmlFor="password" className="block text-gray-700">Mot de passe:</label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-              />
-            </div>
-            <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200">
-            Se connecter
-            </button>
-            {errorMessage && <p className="text-red-500 mt-2 text-center">{errorMessage}</p>}
-          </form>
-       
+    <div className="bg-sky-100 flex justify-center items-center h-screen">
+    {/* Left: Image */}
+    <div className="w-1/2 h-screen hidden lg:block">
+      <img
+        src={images[currentImageIndex]} 
+        alt="Dynamic Image"
+        className="object-cover w-full h-full"
+      />
+   
+    </div>
+
+    {/* Right: Login Form */}
+    <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
+      <h1 className="text-2xl font-semibold mb-4">Connexion</h1>
+      <form onSubmit={handleSubmit}>
+        {/* Username Input */}
+        <div className="mb-4 bg-sky-100">
+          <label
+            htmlFor="username"
+            className="block text-gray-600"
+          >
+            Email
+          </label>
+          <input
+               id="email"
+               type="email"
+               value={email}
+               onChange={(e) => setEmail(e.target.value)}
+            required
+            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+            autoComplete="off"
+          />
+        </div>
+
+        {/* Password Input */}
+        <div className="mb-4 relative">
+      <label htmlFor="password" className="block text-gray-800">
+        Mot de passe:
+      </label>
+      <div className="relative">
+        <input
+          id="password"
+          type={showPassword ? 'text' : 'password'}  
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500 pr-10"
+          autoComplete="off"
+        />
+        
+        {/* Show/Hide password icon */}
+        <div
+          onClick={togglePasswordVisibility}
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+        >
+          {showPassword ? <AiFillEyeInvisible size={20} /> : <AiFillEye size={20} />}
+        </div>
       </div>
     </div>
+
+      
+
+        {/* Login Button */}
+        <button
+          type="submit"
+          className="bg-[#1E3B8B] hover:bg-[#1E3B8B]/90 text-white font-semibold rounded-md py-2 px-4 w-full"
+        >
+             Se connecter
+        </button>
+        {errorMessage && <p className="text-red-500 mt-2 text-center">{errorMessage}</p>}
+
+      </form>
+
+      
     </div>
+  </div>
   );
 };
 
