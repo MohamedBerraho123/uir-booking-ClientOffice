@@ -31,7 +31,7 @@ function Filtrage({ onFilteredRequests, requests, sportNames, onSportSelect }) {
   }, [filterText, filterType, filterStatus, filterDate, requests, sportNames]);
 
   return (
-    <div className="flex flex-row gap-24 mt-4 mb-6 p-4 bg-gray-100 rounded-lg shadow-md w-full">
+    <div className="flex flex-col md:flex-row gap-6 mt-4 mb-6 p-4 bg-gray-100 rounded-lg shadow-md w-full">
       <InputFilter filterText={filterText} onFilterTextChange={setFilterText} />
       <Dropdown onSportSelect={onSportSelect} onFilterListSports={setFilterListSports} />
       <DateFilter filterDate={filterDate} onFilterDateChange={setFilterDate} />

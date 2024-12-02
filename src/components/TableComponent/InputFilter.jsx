@@ -7,7 +7,7 @@ const InputFilter = ({ filterText, onFilterTextChange }) => {
       placeholder="Filtrer par nom ou sport"
       value={filterText}
       onChange={e => onFilterTextChange(e.target.value)}
-      className="mt-2 p-2 border rounded w-[400px]"
+      className="mt-2 p-2 border rounded w-full sm:w-[300px] md:w-[400px]"
     />
   );
 };

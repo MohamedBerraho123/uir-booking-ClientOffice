@@ -6,7 +6,7 @@ const DateFilter = ({ filterDate, onFilterDateChange }) => {
       type="date"
       value={filterDate}
       onChange={e => onFilterDateChange(e.target.value)} 
-      className="mt-2 p-2 border rounded"
+      className="mt-2 p-2 border rounded w-full sm:w-[300px] md:w-[400px]"
     />
   );
 };

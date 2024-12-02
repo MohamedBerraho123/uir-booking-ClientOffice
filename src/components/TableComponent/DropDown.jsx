@@ -64,7 +64,7 @@ function Dropdown({ onSportSelect , onFilterListSports}) {
   return (
     <div>
       <select
-        className="mt-2 p-2 border rounded"
+        className="mt-2 p-2 border rounded w-full sm:w-[300px] md:w-[400px]"
         value={selectedSport || ""}
         onChange={handleSportSelection}
       >

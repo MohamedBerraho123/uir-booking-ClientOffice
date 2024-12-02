@@ -5,6 +5,7 @@ import Filtrage from "../TableComponent/Fitrage";
 
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import ProductTable from "./ProductTable"
 
 const ReservationList = () => {
   const [requests, setRequests] = useState([]);
@@ -17,7 +18,7 @@ const ReservationList = () => {
   const [studentId, setStudentId] = useState(null);
   const [codeUIR, setCodeUIR] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [requestsPerPage] = useState(1);
+  const [requestsPerPage] = useState(4);
   const [selectedSport, setSelectedSport] = useState(null);
 
   useEffect(() => {
@@ -117,9 +118,9 @@ const ReservationList = () => {
           sportNames={sportNames}
           onSportSelect={handleSportSelect}
         />
-        <div className="overflow-x-auto mt-6 w-full">
-          <table className="bg-white border border-gray-200 min-w-full">
-            <thead>
+        <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-full">
+          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr style={{ backgroundColor: "#183680", color: "white" }}>
                
                 <th className="py-2 px-2 text-sm md:py-3 md:px-4 whitespace-nowrap">
@@ -141,7 +142,7 @@ const ReservationList = () => {
             </thead>
             <tbody>
               {currentRequests.map((request) => (
-                <tr key={request.id} className="hover:bg-gray-100 text-sm">
+                <tr key={request.id} className="hover:bg-gray-300 odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                 
                   <td className="py-2 px-2 md:py-2 md:px-4">
               
@@ -177,6 +178,8 @@ const ReservationList = () => {
           </div>
         </div>
       </div>
+  {/* <ProductTable/> */}
+     
     </div>
   </>
   
