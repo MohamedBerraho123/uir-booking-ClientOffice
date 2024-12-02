@@ -121,33 +121,32 @@ const ReservationList = () => {
           <table className="bg-white border border-gray-200 min-w-full">
             <thead>
               <tr style={{ backgroundColor: "#183680", color: "white" }}>
+               
                 <th className="py-2 px-2 text-sm md:py-3 md:px-4 whitespace-nowrap">
-                  Student Code
-                </th>
-                <th className="py-2 px-2 text-sm md:py-3 md:px-4 whitespace-nowrap">
-                  Full Name
+                  Nom complet
                 </th>
                 <th className="py-2 px-2 text-sm md:py-3 md:px-4 whitespace-nowrap">
                   Sport
                 </th>
                 <th className="py-2 px-2 text-sm md:py-3 md:px-4 whitespace-nowrap">
-                  Time
+                  Heure
                 </th>
                 <th className="py-2 px-2 text-sm md:py-3 md:px-4 whitespace-nowrap">
                   Date
                 </th>
                 <th className="py-2 px-2 text-sm md:py-3 md:px-4 whitespace-nowrap">
-                  List Student
+                  liste des étudiants
                 </th>
               </tr>
             </thead>
             <tbody>
               {currentRequests.map((request) => (
                 <tr key={request.id} className="hover:bg-gray-100 text-sm">
+                
                   <td className="py-2 px-2 md:py-2 md:px-4">
+              
                     {codeUIR || "Loading..."}
-                  </td>
-                  <td className="py-2 px-2 md:py-2 md:px-4">
+            
                     {`${studentFirstNames || "Loading..."} ${
                       studentLastNames || "Loading..."
                     }`}

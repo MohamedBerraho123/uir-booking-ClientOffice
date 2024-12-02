@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import Uirback from "../../assets/Uirback.jpeg";
 import uiir from "../../assets/uiir.jpeg";
 import uiirr from "../../assets/uiirr.jpeg";
+import Footer from "../Layouts/Footer"
 
 
 export default function About() {
@@ -248,7 +249,7 @@ export default function About() {
     </div>
 
       {/* CTA Section */}
-      <div className="bg-[#1E3B8B] text-white py-16">
+      {/* <div className="bg-[#1E3B8B] text-white py-16">
         <div className="max-w-6xl mx-auto px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -265,7 +266,8 @@ export default function About() {
             </Button>
           </motion.div>
         </div>
-      </div>
+      </div> */}
+      <Footer/>
     </div>
   );
 }

@@ -98,7 +98,7 @@ const Participants = ({errorMessageRes, participants, selectedCourt, onParticipa
       <CardHeader>
         <CardTitle className="text-lg flex items-center gap-2">
           <Users className="w-5 h-5 text-[#1E3B8B]" />
-          Participants {nbPlayerSport - 1}
+          Vous devez ajouter {nbPlayerSport - 1} participants
         </CardTitle>
         {titleError && <p className="text-red-500">{titleError}</p>}
         {errorMessageRes && <p className="text-red-500">{errorMessageRes}</p>}
@@ -108,7 +108,7 @@ const Participants = ({errorMessageRes, participants, selectedCourt, onParticipa
         {participantCodes.map((code, index) => (
           <div className="flex gap-2" key={index}>
             <Input
-              placeholder="Enter student Code UIR"
+              placeholder="Entrez le code étudiant UIR"
               className="border-[#1E3B8B]/20 focus-visible:ring-[#1E3B8B]"
               value={code}
               onChange={(e) => handleParticipantCodeChange(e, index)}

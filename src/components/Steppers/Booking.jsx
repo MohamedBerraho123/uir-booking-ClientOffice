@@ -68,7 +68,7 @@ export default function Booking() {
          <CardHeader className="bg-[#1E3B8B] text-white rounded-t-lg">
             {/* ---div--- of header stepper  */}
           <div className="flex flex-col gap-6">
-            <CardTitle className="text-3xl font-bold text-center text-[#cfd803]">University Sports Booking</CardTitle>
+            <CardTitle className="text-3xl font-bold text-center text-[#cfd803]">Réservation sportive universitaire</CardTitle>
             <div className="flex justify-between items-center">
               <motion.div 
                 className={`flex items-center gap-3 p-3 rounded-lg ${step === 1 ? "bg-white/10" : ""}`}
@@ -78,7 +78,7 @@ export default function Booking() {
                 <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
                   <Trophy className="w-5 h-5 text-[#cfd803]" /> 
                 </div>
-                <span className="hidden sm:inline">Choose Sport</span>
+                <span className="hidden sm:inline">Choisir un sport</span>
               </motion.div>
               <ChevronRight className="w-5 h-5 text-[#cfd803]" />
               <motion.div 
@@ -89,7 +89,7 @@ export default function Booking() {
                 <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
                   <Shield className="w-5 h-5 text-[#cfd803]" />
                 </div>
-                <span className="hidden sm:inline">Select Court</span>
+                <span className="hidden sm:inline">Sélectionner un terrain</span>
               </motion.div>
               <ChevronRight className="w-5 h-5 text-[#cfd803]" />
               <motion.div 
@@ -100,7 +100,7 @@ export default function Booking() {
                 <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
                   <Clock className="w-5 h-5 text-[#cfd803]" />
                 </div>
-                <span className="hidden sm:inline">Book Time</span>
+                <span className="hidden sm:inline">Réserver un créneau horaire</span>
               </motion.div>
             </div>
           </div>

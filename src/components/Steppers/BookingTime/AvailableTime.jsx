@@ -46,7 +46,7 @@ const AvailableTime = ({ selectedCourt, onTimeSelect }) => {
       <CardHeader>
         <CardTitle className="text-lg flex items-center gap-2">
           <Calendar className="w-5 h-5 text-[#1E3B8B]" />
-          Available Time Slots
+          Créneaux horaires disponibles
         </CardTitle>
       </CardHeader>
       <CardContent>

@@ -224,10 +224,10 @@ export default function BookTime({
     >
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-[#1E3B8B]">
-          Book Your Time Slot
+        Réservez votre créneau horaire
         </h2>
         <p className="text-muted-foreground">
-          Select a time and add participants
+        Sélectionnez un horaire et ajoutez des participants
         </p>
       </div>
 
@@ -264,7 +264,7 @@ export default function BookTime({
 
       <div className="flex justify-between pt-4">
         <Button variant="outline" onClick={onBack}>
-          <ChevronLeft className="mr-2 w-4 h-4" /> Back
+          <ChevronLeft className="mr-2 w-4 h-4" /> Retour
         </Button>
         <div>
   <form className="mt-6" onSubmit={(e) => e.preventDefault()}>
@@ -278,14 +278,14 @@ export default function BookTime({
           : "hover:bg-[#1E3B8B]/90"
       }`}
     >
-      Confirm Booking
+      Confirmer la réservation
     </Button>
   </form>
   {showPopup && (
   <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
     <div className="bg-white rounded-lg shadow-lg p-6 w-96">
       <h2 className="text-lg font-semibold text-gray-800">
-        Confirmation Required
+      Confirmation requise
       </h2>
       <p className="text-sm text-red-600 mt-2">{conditionSport}</p>
       <label className="flex items-center space-x-2 mt-4">
@@ -296,7 +296,7 @@ export default function BookTime({
           className="form-checkbox h-5 w-5 text-green-500"
         />
         <span className="text-sm text-gray-700">
-          I agree to the terms and conditions.
+        J'accepte les termes et conditions .
         </span>
       </label>
       <div className="flex justify-end space-x-2 mt-6">
@@ -304,7 +304,7 @@ export default function BookTime({
           onClick={handleClosePopup}
           className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg"
         >
-          Cancel
+          Annuler
         </button>
         <button
           onClick={() => {
@@ -318,7 +318,7 @@ export default function BookTime({
               : "bg-gray-300 cursor-not-allowed text-gray-500"
           }`}
         >
-          Confirm
+          Confirmer
         </button>
       </div>
     </div>

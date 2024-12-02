@@ -43,9 +43,9 @@ export default function ChooseSport({ sports, selectedSport, onSelectSport, onNe
       animate={{ opacity: 1, y: 0 }}
     >
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-[#1E3B8B]">Select Your Sport</h2>
+        <h2 className="text-2xl font-bold text-[#1E3B8B]">Choisissez votre sport</h2>
         <p className="text-muted-foreground">
-          Choose from our available sports facilities
+        Choisissez parmi nos installations sportives disponibles
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -72,7 +72,7 @@ export default function ChooseSport({ sports, selectedSport, onSelectSport, onNe
               <div>
                 <h3 className="font-semibold text-lg">{sport.name}</h3>
                 <p className="text-sm text-muted-foreground">
-                  {courtsCount[sport.id] ?? "Loading..."} courts available
+                  {courtsCount[sport.id] ?? "Loading..."} terrains disponibles
                 </p>
               </div>
             </CardContent>
@@ -85,7 +85,7 @@ export default function ChooseSport({ sports, selectedSport, onSelectSport, onNe
           disabled={!selectedSport}
           className="bg-[#1E3B8B] hover:bg-[#1E3B8B]/90"
         >
-          Next <ChevronRight className="ml-2 w-4 h-4" />
+          Suivant <ChevronRight className="ml-2 w-4 h-4" />
         </Button>
       </div>
     </motion.div>

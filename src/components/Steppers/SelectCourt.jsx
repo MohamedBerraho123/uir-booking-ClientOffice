@@ -129,9 +129,9 @@ export default function SelectCourt({
       animate={{ opacity: 1, y: 0 }}
     >
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-[#1E3B8B]">Select Your Court</h2>
+        <h2 className="text-2xl font-bold text-[#1E3B8B]">Sélectionnez votre terrain</h2>
         <p className="text-muted-foreground">
-          Choose your preferred playing area
+        Choisissez votre zone de jeu préférée
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -178,7 +178,7 @@ export default function SelectCourt({
                         );
                       }}
                     >
-                      {expandedCard === match.id ? "See Less" : "See More"}
+                      {expandedCard === match.id ? "voir moins" : "voir plus"}
                     </button>
                   </p>
                 </div>
@@ -192,14 +192,14 @@ export default function SelectCourt({
       )}
       <div className="flex justify-between">
         <Button variant="outline" onClick={onBack}>
-          <ChevronLeft className="mr-2 w-4 h-4" /> Back
+          <ChevronLeft className="mr-2 w-4 h-4" /> Retour
         </Button>
         <Button
           onClick={onNext}
           disabled={!selectedCourt || hasAccess === false}
           className="bg-[#1E3B8B] hover:bg-[#1E3B8B]/90"
         >
-          Next <ChevronRight className="ml-2 w-4 h-4" />
+          Suivant <ChevronRight className="ml-2 w-4 h-4" />
         </Button>
       </div>
     </motion.div>

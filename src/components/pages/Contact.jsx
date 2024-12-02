@@ -17,7 +17,7 @@ export default function Contact() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            Contact Us
+            Contactez-nous
           </motion.h1>
           <motion.p
             className="text-lg text-muted-foreground"
@@ -25,7 +25,7 @@ export default function Contact() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
           >
-            Get in touch with our sports facility management team
+           Prenez contact avec notre équipe de gestion des installations sportives
           </motion.p>
         </div>
 
@@ -37,9 +37,9 @@ export default function Contact() {
           >
             <Card className="border-0 shadow-lg h-full">
               <CardHeader className="bg-[#1E3B8B] text-white rounded-t-lg">
-                <CardTitle className="text-2xl">Contact Information</CardTitle>
+                <CardTitle className="text-2xl">Informations de contact</CardTitle>
                 <CardDescription className="text-white/80">
-                  Find us using the information below
+                Trouvez-nous en utilisant les informations ci-dessous
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6 pt-6">
@@ -48,9 +48,9 @@ export default function Contact() {
                     <MapPin className="w-5 h-5 text-[#1E3B8B]" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg">Location</h3>
+                    <h3 className="font-semibold text-lg">Localisation</h3>
                     <p className="text-muted-foreground">
-                      Université Internationale de Rabat Technopolis Rabat-Shore Rocade Rabat-Salé
+                    Université Internationale de Rabat Technopolis Rabat-Shore Rocade Rabat-Salé
                     </p>
                   </div>
                 </div>
@@ -59,7 +59,7 @@ export default function Contact() {
                     <Phone className="w-5 h-5 text-[#1E3B8B]" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg">Phone</h3>
+                    <h3 className="font-semibold text-lg">Téléphone</h3>
                     <p className="text-muted-foreground">+212 (0)5 30 10 30 00</p>
                   </div>
                 </div>
@@ -83,18 +83,19 @@ export default function Contact() {
           >
             <Card className="border-0 shadow-lg">
               <CardHeader>
-                <CardTitle>Send us a Message</CardTitle>
+                <CardTitle>Envoyez-nous un message</CardTitle>
                 <CardDescription>
-                  Fill out the form below and we&apos;ll get back to you soon
+                Remplissez le formulaire ci-dessous et nous vous répondrons rapidement
+              
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <form className="space-y-6">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
+                    <Label htmlFor="name">Nom</Label>
                     <Input
                       id="name"
-                      placeholder="Enter your name"
+                      placeholder="Entrez votre nom"
                       className="border-[#1E3B8B]/20 focus-visible:ring-[#1E3B8B]"
                     />
                   </div>
@@ -103,7 +104,7 @@ export default function Contact() {
                     <Input
                       id="email"
                       type="email"
-                      placeholder="Enter your email"
+                      placeholder="Entrez votre email"
                       className="border-[#1E3B8B]/20 focus-visible:ring-[#1E3B8B]"
                     />
                   </div>
@@ -111,12 +112,12 @@ export default function Contact() {
                     <Label htmlFor="message">Message</Label>
                     <Textarea
                       id="message"
-                      placeholder="Type your message here"
+                      placeholder="Tapez votre message ici"
                       className="min-h-[150px] border-[#1E3B8B]/20 focus-visible:ring-[#1E3B8B]"
                     />
                   </div>
                   <Button className="w-full bg-[#1E3B8B] hover:bg-[#1E3B8B]/90">
-                    Send Message
+                  Envoyer le message
                     <Send className="w-4 h-4 ml-2" />
                   </Button>
                 </form>
