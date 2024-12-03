@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ApiSystem from "../../apiSystem";
 import Filtrage from "../TableComponent/Fitrage";
-
+import { ClipLoader } from 'react-spinners'; 
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import ProductTable from "./ProductTable"
+
 
 const ReservationList = () => {
   const [requests, setRequests] = useState([]);
@@ -20,6 +20,7 @@ const ReservationList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [requestsPerPage] = useState(4);
   const [selectedSport, setSelectedSport] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("studentData"));
@@ -56,6 +57,7 @@ const ReservationList = () => {
 
   const fetchReservation = async () => {
     if (!studentId) return;
+    setLoading(true); 
 
     try {
       const endpoint = selectedSport
@@ -77,6 +79,8 @@ const ReservationList = () => {
       });
     } catch (error) {
       console.error("Error fetching reservations:", error);
+    }finally {
+      setLoading(false); // Stop loading animation
     }
   };
 
@@ -119,6 +123,11 @@ const ReservationList = () => {
           onSportSelect={handleSportSelect}
         />
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-full">
+        {loading ? ( // Show spinner if loading
+            <div className="flex justify-center py-10">
+              <ClipLoader size={50} color="#183680" />
+            </div>
+          ) : (
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr style={{ backgroundColor: "#183680", color: "white" }}>
@@ -165,7 +174,8 @@ const ReservationList = () => {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table> 
+          )}
           <div className="mt-6 flex justify-center">
             <Stack spacing={2}>
               <Pagination
@@ -178,7 +188,7 @@ const ReservationList = () => {
           </div>
         </div>
       </div>
-  {/* <ProductTable/> */}
+ 
      
     </div>
   </>

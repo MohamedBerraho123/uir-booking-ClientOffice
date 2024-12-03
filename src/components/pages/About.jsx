@@ -15,71 +15,29 @@ import Footer from "../Layouts/Footer"
 export default function About() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [sports, setSports] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [Listsports, setListSports] = useState([]);
   const navigate = useNavigate();
 
-  const slides = [
-    {
-      image: Uirback,
-      title: "World-Class Sports Facilities",
-      subtitle: "Experience the best in university athletics",
-    },
-    {
-      // image: "../../assets/Uirback.jpeg?height=1080&width=1920",
-      image: uiir,
-      title: "Train Like a Champion",
-      subtitle: "State-of-the-art equipment and expert coaching",
-    },
-    {
-      image: uiirr,
-      title: "Join the Community",
-      subtitle: "Connect with fellow sports enthusiasts",
-    },
-  ];
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % events.length);
+
+      
     }, 5000); // Change slide every 5 seconds
 
     return () => clearInterval(timer);
-  }, [slides.length]);
+  }, [events.length]);
 
-  const features = [
-    {
-      icon: Trophy,
-      title: "Multiple Sports",
-      description:
-        "Access to various sports facilities including football, tennis, padel, and volleyball",
-    },
-    {
-      icon: Calendar,
-      title: "Easy Booking",
-      description:
-        "Simple and quick online booking system for all university sports facilities",
-    },
-    {
-      icon: Users,
-      title: "Team Building",
-      description:
-        "Perfect for organizing team sports and recreational activities",
-    },
-    {
-      icon: Clock,
-      title: "Flexible Hours",
-      description:
-        "Extended facility hours to accommodate different schedules",
-    },
-  ];
 
   
-
-
-
   useEffect(() => {
     const fetchSports = async () => {
       try {
         const response = await ApiSystem.get("/Sports/list");
         const fetchedSports = response.data;
+        // setListSports(response.data)
 
         // Shuffle and pick 4 random sports
         const shuffledSports = fetchedSports
@@ -95,11 +53,33 @@ export default function About() {
     fetchSports();
   }, []);
 
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await ApiSystem.get("/Event/list");
+        const fetchedEvents = response.data;
+        setListSports(response.data)
+
+        // Shuffle and pick 4 random sports
+        const shuffledEvents = fetchedEvents
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 4);
+
+        setEvents(shuffledEvents);
+      } catch (error) {
+        console.error("Failed to load sports:", error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
   return (
     <div className="min-h-screen">
       {/* Hero Section with Slider */}
       <div className="relative bg-[#1E3B8B] text-white h-[600px]">
-        {slides.map((slide, index) => (
+        {Listsports.map((slide, index) => (
           <div
             key={index}
             className={`absolute inset-0 transition-opacity duration-1000 ${
@@ -107,8 +87,12 @@ export default function About() {
             }`}
           >
             <img
-              src={slide.image}
-              alt={slide.title}
+                src={
+                  slide.image
+                    ? `data:image/png;base64,${slide.image}`
+                    : "placeholder.png"
+                }
+                alt={slide.title}
               className="w-full h-full object-cover opacity-50"
             />
             <div className="absolute inset-0 bg-black bg-opacity-50" />
@@ -132,7 +116,7 @@ export default function About() {
                   transition={{ duration: 0.5, delay: 0.2 }}
                   className="text-xl text-white/80"
                 >
-                  {slide.subtitle}
+                  {slide.description}
                 </motion.p>
               </div>
             </div>
@@ -140,7 +124,7 @@ export default function About() {
         ))}
         <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2">
           <div className="flex space-x-2">
-            {slides.map((_, index) => (
+            {events.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentSlide(index)}
@@ -165,15 +149,15 @@ export default function About() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl font-bold text-[#1E3B8B] mb-4">
-              Why Choose Our Facilities?
+            Pourquoi choisir nos installations ?
             </h2>
             <p className="text-lg text-muted-foreground">
-              Experience top-notch sports facilities with modern amenities
+            Découvrez des installations sportives de premier plan avec des équipements modernes.
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
+            {Listsports.map((feature, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
@@ -183,7 +167,16 @@ export default function About() {
                 <Card className="border-0 shadow-lg h-full">
                   <CardContent className="pt-6">
                     <div className="w-12 h-12 rounded-lg bg-[#1E3B8B]/10 flex items-center justify-center mb-4">
-                      <feature.icon className="w-6 h-6 text-[#1E3B8B]" />
+                    <img
+                src={
+                  feature.image
+                    ? `data:image/png;base64,${feature.image}`
+                    : "placeholder.png"
+                }
+                alt={feature.title}
+              className="w-6 h-6 text-[#1E3B8B]"
+            />
+                      {/* <feature.icon className="w-6 h-6 text-[#1E3B8B]" /> */}
                     </div>
                     <h3 className="text-xl font-semibold mb-2">
                       {feature.title}
@@ -208,10 +201,10 @@ export default function About() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl font-bold text-[#1E3B8B] mb-4">
-            Available Sports
+          Sports disponibles
           </h2>
           <p className="text-lg text-muted-foreground">
-            Choose from our wide range of sports facilities
+          Choisissez parmi notre large gamme d'installations sportives.
           </p>
         </motion.div>
 

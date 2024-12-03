@@ -154,22 +154,14 @@ export default function BookTime({
         // Validation: Check for empty inputs
     if (updatedStudentCodeUIRList.some((code) => code.trim() === "")) {
       setErrorMessageRes("Tous les champs des participants doivent être remplis.");
-      // Swal.fire({
-      //   title: "Erreur de réservation!",
-      //   text: "Tous les champs des participants doivent être remplis.",
-      //   icon: "error",
-      // });
+   
       return;
     }
     // Validation: Check for duplicate participant codes
     const uniqueCodes = new Set(updatedStudentCodeUIRList);
     if (uniqueCodes.size !== updatedStudentCodeUIRList.length) {
       setErrorMessageRes("Les codes des participants doivent être uniques.")
-      // Swal.fire({
-      //   title: "Erreur de réservation!",
-      //   text: "Les codes des participants doivent être uniques.",
-      //   icon: "error",
-      // });
+
       return;
     }
   
@@ -207,14 +199,12 @@ export default function BookTime({
       }
     } catch (error) {
       setErrorMessageRes(error.response?.data)
-      // Swal.fire({
-      //   title: "Erreur l'ajout de la réservation!",
-      //   text: error.response?.data || "Unknown error",
-      //   icon: "error",
-      // });
+    
       return false; // Indicate failure
     }
   };
+
+
   
   return (
     <motion.div

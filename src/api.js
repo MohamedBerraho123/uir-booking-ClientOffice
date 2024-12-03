@@ -1,6 +1,6 @@
 import axios from "axios";
 const ApiManager = axios.create({
-  baseURL: "https://localhost:7253/api",
+  baseURL: "https://localhost:7109/api",
   responseType: "json",
  
 });

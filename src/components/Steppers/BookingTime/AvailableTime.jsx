@@ -7,6 +7,7 @@ const AvailableTime = ({ selectedCourt, onTimeSelect }) => {
   const [timeRanges, setTimeRanges] = useState([]);
   const [nbPlayerSport, setNbPlayerSport] = useState(null);
   const [selectedTimeRange, setSelectedTimeRange] = useState(null);
+  const [errorMessage , setErrorMessage] = useState('');
 
   useEffect(() => {
     const fetchTimeRanges = async () => {
@@ -30,6 +31,7 @@ const AvailableTime = ({ selectedCourt, onTimeSelect }) => {
         setTimeRanges(filteredTimeRanges);
       } catch (error) {
         console.error("Failed to load time ranges", error);
+        setErrorMessage(error.response?.data)
       }
     };
 
@@ -53,7 +55,8 @@ const AvailableTime = ({ selectedCourt, onTimeSelect }) => {
         <div className="grid gap-4">
           {timeRanges.length === 0 ? (
             <p className="text-red-500">
-              Nous sommes désolés mais il n'est pas possible de réserver ce terrain pour le moment.
+               Nous sommes désolés mais il n'est pas possible de réserver ce terrain pour le moment.
+             {errorMessage}
             </p>
           ) : (
             timeRanges.map((timeRange) => (

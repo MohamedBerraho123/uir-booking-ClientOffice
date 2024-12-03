@@ -65,7 +65,7 @@ export default function Booking() {
     return (
       <div className="min-h-screen bg-[#f8f9fc] p-6">
          <Card className="w-full max-w-5xl mx-auto border-0 shadow-lg">
-         <CardHeader className="bg-[#1E3B8B] text-white rounded-t-lg">
+         <CardHeader className="bg-[#073567] text-white rounded-t-lg">
             {/* ---div--- of header stepper  */}
           <div className="flex flex-col gap-6">
             <CardTitle className="text-3xl font-bold text-center text-[#cfd803]">Réservation sportive universitaire</CardTitle>

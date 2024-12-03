@@ -7,6 +7,7 @@ import uirImage2 from "../assets/Uirback.jpeg"
 import uirImage3 from "../assets/uiirr.jpeg"
 import {  useNavigate } from "react-router-dom";
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';  
+import { ClipLoader } from 'react-spinners'; 
 
 
 const LoginSignUp = ({ onLogin }) => {
@@ -16,6 +17,7 @@ const LoginSignUp = ({ onLogin }) => {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [studentData, setStudentData] = useState(null);
   const [studentCodeUIR, setStudentCodeUIR] = useState('');
+  const [loading, setLoading] = useState(false); 
   const navigate = useNavigate();
     // Array of images
     const images = [uirImage2, uirImage3, Uirback1];
@@ -41,6 +43,7 @@ const LoginSignUp = ({ onLogin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); 
     try {
       const response = await ApiManager.post('/Account/registerAutomaticallyAndLoginAutomatically', {
         email,
@@ -63,6 +66,8 @@ const LoginSignUp = ({ onLogin }) => {
       navigate("/");
     } catch (error) {
       setErrorMessage(error.response?.data?.Message || 'Registration/Login failed');
+    }finally {
+      setLoading(false); // Stop loading animation
     }
   };
 
@@ -156,12 +161,21 @@ const LoginSignUp = ({ onLogin }) => {
       
 
         {/* Login Button */}
-        <button
+        {/* <button
           type="submit"
           className="bg-[#1E3B8B] hover:bg-[#1E3B8B]/90 text-white font-semibold rounded-md py-2 px-4 w-full"
         >
              Se connecter
-        </button>
+        </button> */}
+         <button
+            type="submit"
+            disabled={loading} // Disable the button when loading
+            className={`${
+              loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#1E3B8B] hover:bg-[#1E3B8B]/90'
+            } text-white font-semibold rounded-md py-2 px-4 w-full flex justify-center items-center`}
+          >
+            {loading ? <ClipLoader size={20} color="#ffffff" /> : 'Se connecter'}
+          </button>
         {errorMessage && <p className="text-red-500 mt-2 text-center">{errorMessage}</p>}
 
       </form>
