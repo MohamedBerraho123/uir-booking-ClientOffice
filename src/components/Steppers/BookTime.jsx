@@ -32,6 +32,10 @@ export default function BookTime({
   const [codeUIR, setCodeUIR] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
+  const [sportName, setSportName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
 
 
   const navigate = useNavigate();
@@ -52,6 +56,7 @@ export default function BookTime({
           console.log("data of fetchsportmatch : ", response.data.conditions);
           setConditionSport(response.data.conditions);
           setNbPlayerSport(response.data.nbPlayer);
+          setSportName(response.data.name)
        
           
 
@@ -125,6 +130,8 @@ export default function BookTime({
       );
       if (response.data) {
         setCodeUIR(response.data.codeUIR);
+        setFirstName(response.data.firstName)
+        setLastName(response.data.lastName)
 
         // console.log("response.data.codeUIR : ", response.data.codeUIR);
       }
@@ -133,7 +140,60 @@ export default function BookTime({
     }
   };
 
+ // Method to fetch names of participants by their UIR codes
+const fetchNamesOfParticipantCodes = async (participantCodes) => {
+  try {
+    // Fetch names for each code in parallel
+    const namePromises = participantCodes.map(async (UIRcode) => {
+      const response = await ApiSystem.get(`/Students/GetStudentByCodeUIR/${UIRcode}`);
+      return `${response.data.firstName} ${response.data.lastName}`; // Assuming API returns firstName and lastName
+    });
+    
+    // Wait for all names to be fetched
+    const participantNames = await Promise.all(namePromises);
+    return participantNames;
+  } catch (error) {
+    console.error("Error fetching names of participants", error);
+    throw error; // Let the caller handle the error
+  }
+};
+
  
+const SendEmail = async () => {
+  try {
+    // Fetch participant names
+    const participantNames = await fetchNamesOfParticipantCodes(participantCodes);
+
+    // Format names with their corresponding UIR codes into a numbered list
+    const formattedParticipantList = participantNames
+      .map((name, index) => `${index + 1}. ${name} (${participantCodes[index]})`)
+      .join("\n");
+
+    // Prepare the email data
+    const EmailData = {
+      email: "contact@souhail.me",
+      subject: `réservation pour le terrain de ${sportName}`,
+      message: `Bonjour Monsieur Jaffar,
+
+Je me permets de vous écrire pour confirmer ma réservation pour le terrain de ${sportName}.
+
+Je suis ${firstName} ${lastName}, mon code étudiant est ${codeUIR}, et j'ai réservé le terrain pour la plage horaire de ${selectedTimeRange?.hourStart} à ${selectedTimeRange?.hourEnd}. Voici la liste des participants prévus :
+
+${formattedParticipantList}
+
+Je vous remercie d'avance pour votre retour, et reste à votre disposition pour toute information complémentaire.
+
+Cordialement,  
+${firstName} ${lastName}`,
+    };
+
+    // Send the email
+    const response = await ApiSystem.post("/Email/SendEmail", EmailData);
+    console.log("Email sent successfully:", response.data);
+  } catch (error) {
+    console.error("Error sending email", error);
+  }
+};
 
   const handleSubmit = async () => {
     const updatedStudentCodeUIRList = participantCodes.filter(
@@ -189,6 +249,7 @@ export default function BookTime({
           icon: "success",
         });
         navigate("/reservationList");
+        SendEmail();
         return true; // Indicate success
       } else {
         Swal.fire({
