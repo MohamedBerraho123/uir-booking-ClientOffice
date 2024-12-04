@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import { motion } from "framer-motion";
 import { Mail, MapPin, Phone, Send } from "lucide-react";
 
@@ -8,12 +8,38 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import ApiSystem from "../../apiSystem";
+import Swal from "sweetalert2";
+import { ClipLoader } from 'react-spinners'; 
 
 export default function Contact() {
   const [formData, setFormData] = useState({
     fullName: "",
     message: "",
   });
+  const [userData, setUserData] = useState({ firstName: "", lastName: "" });
+  const [loading, setLoading] = useState(false); 
+
+
+  useEffect(() => {
+    const fetchStudentByUserId = async (userId) => {
+      // console.log("Header ", userId);
+      try {
+        const response = await ApiSystem.get(
+          `/Students/GetStudentByUserId/${userId}`);
+        setUserData({
+          firstName: response.data.firstName,
+          lastName: response.data.lastName,
+        });
+      } catch (err) {
+        console.error("Error fetching student:", err);
+      }
+    };
+
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      fetchStudentByUserId(userId);
+    }
+  }, []);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -22,12 +48,12 @@ export default function Contact() {
 
   const sendEmail = async (e) => {
     e.preventDefault(); // Prevent form from refreshing the page
-
+    setLoading(true); 
     try {
       // Prepare the email data
       const emailData = {
         email: "contact@souhail.me",
-        subject: `Message from ${formData.fullName}`,
+        subject: `Message from ${userData.firstName} ${userData.lastName}`,
         message: formData.message,
       };
 
@@ -37,10 +63,23 @@ export default function Contact() {
 
       // Optionally, clear the form
       setFormData({ fullName: "", message: "" });
-      alert("Message envoyé avec succès !");
+  
+    
+      if (response.status === 200 || response.status === 201) {
+        Swal.fire({
+          title: "Message envoyé avec succès !",
+          icon: "success",
+        });}else {
+          Swal.fire({
+            title: "Erreur lors de l'envoi le Message!",
+            icon: "error",
+          });}
+    
     } catch (error) {
       console.error("Error sending email", error);
       alert("Erreur lors de l'envoi du message. Veuillez réessayer.");
+    }finally {
+      setLoading(false); 
     }
   };
 
@@ -126,7 +165,7 @@ export default function Contact() {
               </CardHeader>
               <CardContent>
                 <form className="space-y-6" onSubmit={sendEmail}>
-                  <div className="space-y-2">
+                  {/* <div className="space-y-2">
                     <Label htmlFor="fullName">Complete Nom</Label>
                     <Input
                       id="fullName"
@@ -136,7 +175,7 @@ export default function Contact() {
                       className="border-[#1E3B8B]/20 focus-visible:ring-[#1E3B8B]"
                       required
                     />
-                  </div>
+                  </div> */}
 
                   <div className="space-y-2">
                     <Label htmlFor="message">Message</Label>
@@ -149,8 +188,10 @@ export default function Contact() {
                       required
                     />
                   </div>
-                  <Button type="submit" className="w-full bg-[#1E3B8B] hover:bg-[#1E3B8B]/90">
-                    Envoyer le message
+                  <Button disabled={loading}  type="submit"   className={`${
+              loading ? 'bg-gray-400 cursor-not-allowed' : 'w-full bg-[#1E3B8B] hover:bg-[#1E3B8B]/90'
+            } text-white font-semibold rounded-md py-2 px-4 w-full flex justify-center items-center`}>
+                  {loading ? <ClipLoader size={20} color="#ffffff" /> : 'Envoyer le message'}
                     <Send className="w-4 h-4 ml-2" />
                   </Button>
                 </form>

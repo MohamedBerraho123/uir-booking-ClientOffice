@@ -18,7 +18,13 @@ export default function About() {
   const [events, setEvents] = useState([]);
   const [Listsports, setListSports] = useState([]);
   const navigate = useNavigate();
-
+  const [expandedDescriptions, setExpandedDescriptions] = useState({});
+  const toggleDescription = (index) => {
+    setExpandedDescriptions((prevState) => ({
+      ...prevState,
+      [index]: !prevState[index],
+    }));
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -108,7 +114,7 @@ export default function About() {
                 >
                   {slide.title}
                 </motion.h1>
-                <motion.p
+                {/* <motion.p
                   key={`${index}-subtitle`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -117,7 +123,7 @@ export default function About() {
                   className="text-xl text-white/80"
                 >
                   {slide.description}
-                </motion.p>
+                </motion.p> */}
               </div>
             </div>
           </div>
@@ -182,8 +188,16 @@ export default function About() {
                       {feature.title}
                     </h3>
                     <p className="text-muted-foreground">
-                      {feature.description}
+                      {expandedDescriptions[index]
+                        ? feature.description
+                        : `${feature.description.slice(0, 100)}...`}
                     </p>
+                    <button
+                      className="text-[#1E3B8B] "
+                      onClick={() => toggleDescription(index)}
+                    >
+                      {expandedDescriptions[index] ? "Voir moins" : "Voir plus"}
+                    </button>
                   </CardContent>
                 </Card>
               </motion.div>
