@@ -2,15 +2,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
 import { Calendar } from "lucide-react";
 import ApiSystem from "../../../apiSystem";
 import { useState, useEffect } from "react";
+import { ClipLoader } from 'react-spinners'; 
 
 const AvailableTime = ({ selectedCourt, onTimeSelect }) => {
   const [timeRanges, setTimeRanges] = useState([]);
   const [nbPlayerSport, setNbPlayerSport] = useState(null);
   const [selectedTimeRange, setSelectedTimeRange] = useState(null);
   const [errorMessage , setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     const fetchTimeRanges = async () => {
+      setLoading(true);
       try {
         const response = await ApiSystem.get(
           `/Plannings/get-timeRanges-by-sport-and-day-not-reserved/${selectedCourt}`
@@ -32,6 +35,8 @@ const AvailableTime = ({ selectedCourt, onTimeSelect }) => {
       } catch (error) {
         console.error("Failed to load time ranges", error);
         setErrorMessage(error.response?.data)
+      } finally {
+        setLoading(false); 
       }
     };
 
@@ -53,7 +58,12 @@ const AvailableTime = ({ selectedCourt, onTimeSelect }) => {
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
-          {timeRanges.length === 0 ? (
+        {loading ? (
+            <div className="flex justify-center items-center">
+              <ClipLoader size={50} color="#1E3B8B" />
+            </div>
+          ) : 
+          timeRanges.length === 0 ? (
             <p className="text-red-500">
                Nous sommes désolés mais il n'est pas possible de réserver ce terrain pour le moment.
              {errorMessage}

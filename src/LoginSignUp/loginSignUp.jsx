@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ApiManager from "../api";
 import ApiSystem from "../apiSystem";
-import Uirback1 from "../assets/uiir.jpeg";
-import uirImage2 from "../assets/Uirback.jpeg"
-import uirImage3 from "../assets/uiirr.jpeg"
+import Uirback1 from "../assets/uir5.jpg";
+import uirImage2 from "../assets/imageuir3.jpg"
+import uirImage3 from "../assets/image4uir.jpg"
 import {  useNavigate } from "react-router-dom";
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';  
 import { ClipLoader } from 'react-spinners'; 
