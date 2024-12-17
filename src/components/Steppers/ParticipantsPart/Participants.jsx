@@ -88,10 +88,7 @@ const Participants = ({errorMessageRes, participants, selectedCourt, onParticipa
     }
   };
 
-  const removeParticipant = (code) => {
-    const updatedParticipants = participants.filter((participant) => participant !== code);
-    console.log("Removed participant:", code, updatedParticipants);
-  };
+ 
 
   return (
     <>
@@ -103,7 +100,7 @@ const Participants = ({errorMessageRes, participants, selectedCourt, onParticipa
         {titleError && <p className="text-red-500">{titleError}</p>}
         {errorMessageRes && <p className="text-red-500">{errorMessageRes}</p>}
       </CardHeader>
-      <CardContent className="space-y-4">
+      {/* <CardContent className="space-y-4">
      
         {participantCodes.map((code, index) => (
           <div className="flex gap-2" key={index}>
@@ -136,7 +133,42 @@ const Participants = ({errorMessageRes, participants, selectedCourt, onParticipa
             Ajouter un participant
           </button>
         </div>
-      </CardContent>
+      </CardContent> */}
+
+<CardContent className="space-y-4 max-h-96 overflow-y-auto">
+  {participantCodes.map((code, index) => (
+    <div className="flex gap-2" key={index}>
+      <Input
+        placeholder="Entrez le code étudiant UIR"
+        className="border-[#1E3B8B]/20 focus-visible:ring-[#1E3B8B]"
+        value={code}
+        onChange={(e) => handleParticipantCodeChange(e, index)}
+      />
+      {inputErrors[index] && (
+        <p className="text-red-500 text-sm">{inputErrors[index]}</p>
+      )}
+      <Button
+        variant="outline"
+        size="icon"
+        className="border-[red]/20 text-[white] bg-red-600 hover:bg-[red]/10 hover:text-[red]"
+        onClick={() => removeParticipantCodeField(index)}
+      >
+        -
+      </Button>
+    </div>
+  ))}
+  <div className="flex justify-end">
+    <button
+      type="button"
+      className="btn bg-blue-600 text-white px-4 py-2 mt-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      onClick={addParticipantCodeField}
+      disabled={participantCodes.length >= nbPlayerSport}
+    >
+      Ajouter un participant
+    </button>
+  </div>
+</CardContent>
+
     </>
   );
 };

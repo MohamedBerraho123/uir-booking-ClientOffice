@@ -20,11 +20,14 @@ export default function ChooseSport({ sports, selectedSport, onSelectSport, onNe
         const courtCounts = {};
         for (const sport of sports) {
           const response = await ApiSystem.get(
-            `/Sports/category/${sport.id}`
+            `/Sports/total-category/${sport.id}`
           );
-          courtCounts[sport.id] = response.data.length;
+          courtCounts[sport.id] = response.data;
+          console.log('court total : ' , courtCounts);
+          
         }
         setCourtsCount(courtCounts);
+        console.log('court total : ' , courtCounts);
         // console.log("Court counts:", courtCounts);
       } catch (error) {
         console.error("Failed to fetch courts count:", error);

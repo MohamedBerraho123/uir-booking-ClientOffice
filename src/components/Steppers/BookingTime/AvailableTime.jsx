@@ -18,17 +18,23 @@ const AvailableTime = ({ selectedCourt, onTimeSelect }) => {
         const response = await ApiSystem.get(
           `/Plannings/get-timeRanges-by-sport-and-day-not-reserved/${selectedCourt}`
         );
+
+        console.log('response :' , response.data);
+        
         const sportResponse = await ApiSystem.get(`/Sports/${selectedCourt}`);
         setNbPlayerSport(sportResponse.data.nbPlayer);
 
         const currentTime = new Date();
         const currentHours = currentTime.getHours();
         const currentMinutes = currentTime.getMinutes();
+
         const formattedCurrentTime = `${currentHours}:${currentMinutes < 10 ? "0" : ""}${currentMinutes}`;
+        console.log(`currentTime :  ${currentTime}  - currentHours ${currentHours} - currentMinutes ${currentMinutes} `);
+        
 
         const filteredTimeRanges = response.data.filter(
-          //  (timeRange) =>  formattedCurrentTime
-           (timeRange) => timeRange.hourStart > formattedCurrentTime
+          //  (timeRange) => timeRange.hourStart > formattedCurrentTime
+        (timeRange) =>  formattedCurrentTime
         );
 
         setTimeRanges(filteredTimeRanges);

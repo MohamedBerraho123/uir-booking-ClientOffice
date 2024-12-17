@@ -159,41 +159,41 @@ const fetchNamesOfParticipantCodes = async (participantCodes) => {
 };
 
  
-const SendEmail = async () => {
-  try {
-    // Fetch participant names
-    const participantNames = await fetchNamesOfParticipantCodes(participantCodes);
+// const SendEmail = async () => {
+//   try {
+//     // Fetch participant names
+//     const participantNames = await fetchNamesOfParticipantCodes(participantCodes);
 
-    // Format names with their corresponding UIR codes into a numbered list
-    const formattedParticipantList = participantNames
-      .map((name, index) => `${index + 1}. ${name} (${participantCodes[index]})`)
-      .join("\n");
+//     // Format names with their corresponding UIR codes into a numbered list
+//     const formattedParticipantList = participantNames
+//       .map((name, index) => `${index + 1}. ${name} (${participantCodes[index]})`)
+//       .join("\n");
 
-    // Prepare the email data
-    const EmailData = {
-      email: "contact@souhail.me",
-      subject: `réservation pour le terrain de ${sportName}`,
-      message: `Bonjour Monsieur Jaffar,
+//     // Prepare the email data
+//     const EmailData = {
+//       email: "contact@souhail.me",
+//       subject: `réservation pour le terrain de ${sportName}`,
+//       message: `Bonjour Monsieur Jaffar,
 
-Je me permets de vous écrire pour confirmer ma réservation pour le terrain de ${sportName}.
+// Je me permets de vous écrire pour confirmer ma réservation pour le terrain de ${sportName}.
 
-Je suis ${firstName} ${lastName}, mon code étudiant est ${codeUIR}, et j'ai réservé le terrain pour la plage horaire de ${selectedTimeRange?.hourStart} à ${selectedTimeRange?.hourEnd}. Voici la liste des participants prévus :
+// Je suis ${firstName} ${lastName}, mon code étudiant est ${codeUIR}, et j'ai réservé le terrain pour la plage horaire de ${selectedTimeRange?.hourStart} à ${selectedTimeRange?.hourEnd}. Voici la liste des participants prévus :
 
-${formattedParticipantList}
+// ${formattedParticipantList}
 
-Je vous remercie d'avance pour votre retour, et reste à votre disposition pour toute information complémentaire.
+// Je vous remercie d'avance pour votre retour, et reste à votre disposition pour toute information complémentaire.
 
-Cordialement,  
-${firstName} ${lastName}`,
-    };
+// Cordialement,  
+// ${firstName} ${lastName}`,
+//     };
 
-    // Send the email
-    const response = await ApiSystem.post("/Email/SendEmail", EmailData);
-    console.log("Email sent successfully:", response.data);
-  } catch (error) {
-    console.error("Error sending email", error);
-  }
-};
+//     // Send the email
+//     const response = await ApiSystem.post("/Email/SendEmail", EmailData);
+//     console.log("Email sent successfully:", response.data);
+//   } catch (error) {
+//     console.error("Error sending email", error);
+//   }
+// };
 
   const handleSubmit = async () => {
     const updatedStudentCodeUIRList = participantCodes.filter(
@@ -249,7 +249,7 @@ ${firstName} ${lastName}`,
           icon: "success",
         });
         navigate("/reservationList");
-        SendEmail();
+        // SendEmail();
         return true; // Indicate success
       } else {
         Swal.fire({
