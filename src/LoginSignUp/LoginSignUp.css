@@ -1,127 +1,16 @@
-
-
-.Main-container {
-    background-image: url('../assets/Uirback.jpeg');
-    /* Adjust the path according to your project structure */
-    background-size: cover;
-    /* Ensures the image covers the entire container */
-    background-position: center;
-    /* Centers the background image */
-    background-color: rgba(24, 54, 128, 0.3);
-    width: 100%;
-    position: absolute;
-    height: 100%;
-    z-index: 1;
+.css-background {
+    --s: 153px; /* control the size*/
+    --c1: #b2b2b2;
+    --c2: #ffffff;
+    --c3: #d9d9d9;
     
-}
-
-.Login-container {
-    display: flex;
-    flex-direction: column;
-    margin: auto;
-    margin-top: 150px;
-    background: white;
-    width: 600px;
-    padding-bottom: 30px;
-    z-index: 100;
-    border-radius: 20px;
-}
-
-.header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 9px;
-    width: 100%;
-    margin-top: 30px;
-}
-
-.text {
-    color: #183680;
-    font-size: 48px;
-    font-weight: 500;
-}
-
-.underline {
-    width: 70px;
-    height: 6px;
-    background-color: #D1D901;
-    border-radius: 9px;
-}
-
-.inputs {
-    margin-top: 55px;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-}
-
-.input {
-    display: flex;
-    align-items: center;
-    margin: auto;
-    width: 480px;
-    height: 80px;
-    background: #eaeaea;
-    border-radius: 6px;
-}
-
-.input img {
-    margin: 0px 30px;
-}
-
-.input input {
-    height: 50px;
-    width: 400px;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: black;
-    font-size: 19px;
-}
-
-.forgot-password {
-    padding-left: 62px;
-    margin-top: 27px;
-    color: #797979;
-    font-size: 18px;
-}
-
-.forgot-password span {
-    color: grey;
-    cursor: pointer;
-}
-
-.submit-container {
-    display: flex;
-    gap: 30px;
-    margin: 60px auto;
-}
-
-.submit {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 220px;
-    height: 59px;
-    color: #fff;
-    border-radius: 50px;
-    background-color: #183680;
-    font-size: 19px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.gray {
-    background: #eaeaea;
-    color: #183680;
-    width: 220px;
-    height: 59px;
-    cursor: pointer;
-    border-radius: 50px;
-    font-size: 19px;
-    font-weight: 700;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+    --_g: var(--c3) 0 120deg,#0000 0;
+    background:
+      conic-gradient(from -60deg at 50% calc(100%/3),var(--_g)),
+      conic-gradient(from 120deg at 50% calc(200%/3),var(--_g)),
+      conic-gradient(from  60deg at calc(200%/3),var(--c3) 60deg,var(--c2) 0 120deg,#0000 0),
+      conic-gradient(from 180deg at calc(100%/3),var(--c1) 60deg,var(--_g)),
+      linear-gradient(90deg,var(--c1)   calc(100%/6),var(--c2) 0 50%,
+                            var(--c1) 0 calc(500%/6),var(--c2) 0);
+    background-size: calc(1.732*var(--s)) var(--s);
+  }

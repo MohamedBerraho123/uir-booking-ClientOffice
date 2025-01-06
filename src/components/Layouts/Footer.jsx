@@ -87,7 +87,7 @@ const Footer = () => {
         </div>
       </div>
 
-      <p className='text-gray-300 text-sm mt-10'>© ReadymadeUI. All rights reserved.</p>
+    
     </footer>
   );
 };
