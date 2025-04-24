@@ -58,7 +58,7 @@ function AppWrapper() {
             <div className="p-0">
               <Routes>
                 <Route path="/" element={<About />} />
-                <Route path="/reservationList" element={<ReservationList />} />
+                <Route path="/reservationList" element={<ReservationList userId={userId} />} />
                 <Route path="/stepper" element={<Booking userId={userId} />} />
                 <Route path="/contact" element={<Contact />} />
               </Routes>

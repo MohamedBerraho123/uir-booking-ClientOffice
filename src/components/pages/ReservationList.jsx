@@ -7,7 +7,7 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 
 
-const ReservationList = () => {
+const ReservationList = ({userId}) => {
   const [requests, setRequests] = useState([]);
   const [filteredRequests, setFilteredRequests] = useState([]);
   const [sportNames, setSportNames] = useState({});
@@ -23,13 +23,18 @@ const ReservationList = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem("studentData"));
-    if (storedData) {
-      fetchStudentByUserId(storedData.userId);
+
+    console.log("user id :::::",userId);
+    if (userId) {
+      fetchStudentByUserId(userId);
     }
+
+    
   }, []);
 
   useEffect(() => {
+    
+    
     if (studentId) {
       fetchReservation();
     }
@@ -68,6 +73,8 @@ const ReservationList = () => {
    
       setRequests(response.data);
       setFilteredRequests(response.data);
+      console.log("list res",codeUIR);
+      
 
       response.data.forEach((reservation) => {
         if (reservation.sportId && !sportNames[reservation.sportId]) {
