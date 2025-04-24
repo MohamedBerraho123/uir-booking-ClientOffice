@@ -36,7 +36,7 @@ function AppWrapper() {
       setIsLoggedIn(true);
   
       // Clean URL and redirect to /
-      // navigate("/", { replace: true });
+      navigate("/", { replace: true });
     }
   }, [location.search, navigate]);
   
