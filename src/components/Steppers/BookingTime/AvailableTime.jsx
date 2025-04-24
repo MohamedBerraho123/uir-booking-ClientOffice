@@ -12,40 +12,75 @@ const AvailableTime = ({ selectedCourt, onTimeSelect }) => {
   const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
+    // const fetchTimeRanges = async () => {
+    //   setLoading(true);
+    //   try {
+    //     const response = await ApiSystem.get(
+    //       `/Plannings/get-timeRanges-by-sport-and-day-not-reserved/${selectedCourt}`
+    //     );
+
+    //     console.log('response :' , response.data);
+        
+    //     const sportResponse = await ApiSystem.get(`/Sports/${selectedCourt}`);
+    //     setNbPlayerSport(sportResponse.data.nbPlayer);
+
+    //     const currentTime = new Date();
+    //     const currentHours = currentTime.getHours();
+    //     const currentMinutes = currentTime.getMinutes();
+
+    //     const formattedCurrentTime = `${currentHours}:${currentMinutes < 10 ? "0" : ""}${currentMinutes}`;
+    //     console.log(`currentTime :  ${currentTime}  - currentHours ${currentHours} - currentMinutes ${currentMinutes} `);
+        
+
+    //     const filteredTimeRanges = response.data.filter(
+    //       //  (timeRange) => timeRange.hourStart > formattedCurrentTime
+    //     (timeRange) =>  formattedCurrentTime
+    //     );
+
+    //     setTimeRanges(filteredTimeRanges);
+    //   } catch (error) {
+    //     console.error("Failed to load time ranges", error);
+    //     setErrorMessage(error.response?.data)
+    //   } finally {
+    //     setLoading(false); 
+    //   }
+    // };
+
     const fetchTimeRanges = async () => {
       setLoading(true);
       try {
         const response = await ApiSystem.get(
           `/Plannings/get-timeRanges-by-sport-and-day-not-reserved/${selectedCourt}`
         );
-
-        console.log('response :' , response.data);
-        
+    
+     
+    
         const sportResponse = await ApiSystem.get(`/Sports/${selectedCourt}`);
         setNbPlayerSport(sportResponse.data.nbPlayer);
-
+    
         const currentTime = new Date();
         const currentHours = currentTime.getHours();
         const currentMinutes = currentTime.getMinutes();
 
+     
+
+    
         const formattedCurrentTime = `${currentHours}:${currentMinutes < 10 ? "0" : ""}${currentMinutes}`;
-        console.log(`currentTime :  ${currentTime}  - currentHours ${currentHours} - currentMinutes ${currentMinutes} `);
-        
 
-        const filteredTimeRanges = response.data.filter(
-          //  (timeRange) => timeRange.hourStart > formattedCurrentTime
-        (timeRange) =>  formattedCurrentTime
-        );
-
-        setTimeRanges(filteredTimeRanges);
+    
+        const sortedTimeRanges = response.data
+          .sort((a, b) => a.hourStart.localeCompare(b.hourStart))
+          .filter((timeRange) =>  formattedCurrentTime);
+    
+        setTimeRanges(sortedTimeRanges);
       } catch (error) {
         console.error("Failed to load time ranges", error);
-        setErrorMessage(error.response?.data)
+        setErrorMessage(error.response?.data);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
-
+    
     fetchTimeRanges();
   }, [selectedCourt]);
 

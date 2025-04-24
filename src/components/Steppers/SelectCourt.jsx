@@ -8,6 +8,7 @@ import ApiSystem from "../../apiSystem";
 import CountTime from "./Timer/CountTime";
 
 export default function SelectCourt({
+  userId,
   selectedSport,
   courts,
   selectedCourt,
@@ -22,25 +23,60 @@ export default function SelectCourt({
   const [nothasAccess, setNotHasAccess] = useState(null); // New state for access control
   const [referenceSport , setReferenceSport] = useState(0);
 
-  useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem("studentData"));
-    if (storedData) {
-      fetchStudentByUserId(storedData.userId);
-    }
-  }, []);
 
   const fetchStudentByUserId = async (userId) => {
+    if (!userId) return;
+
+    
     try {
-      const response = await ApiSystem.get(
-        `/Students/GetStudentByUserId/${userId}`
-      );
+      const response = await ApiSystem.get(`/Students/GetStudentByUserId/${userId}`);
       if (response.data) {
         setCodeUIR(response.data.codeUIR);
       }
     } catch (err) {
-      console.error("Error fetching student:", err);
+      console.error("--Error fetching student:", err);
     }
   };
+
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem("studentData"));
+    if (storedData?.userId) {
+      fetchStudentByUserId(storedData.userId);
+    }
+    // console.log('----- from today storedData.userId' , storedData.userId);
+    
+  }, []);
+
+  useEffect(() => {
+    console.log("--------- userID today", userId);
+    if (userId) {
+      fetchStudentByUserId(userId);
+    }
+  }, [userId]);
+
+  //todo : 
+  // useEffect(()=>{
+
+  //   console.log("--------- userID today " , userId);
+    
+  //   const fetchStudentByUserId = async (userId) => {
+  //     try {
+  //       const response = await ApiSystem.get(
+  //         `/Students/GetStudentByUserId/${userId}`
+  //       );
+  //       if (response.data) {
+  //         setCodeUIR(response.data.codeUIR);
+  //       }
+  //     } catch (err) {
+  //       console.error("Error fetching student:", err);
+  //     }
+  //   };
+  //   if (userId) {
+  //     fetchStudentByUserId(userId);
+  //   }
+
+  // },[userId]);
+
 
   const handleSelectedCourt = (courtId) => {
     onSelectCourt(courtId);
@@ -54,8 +90,7 @@ export default function SelectCourt({
           const response = await ApiSystem.get(`/Sports/${selectedCourt}`);
           setReferenceSport(response.data.referenceSport);
       
-       
-          console.log("ref : " , response.data.referenceSport);
+
           
 
           // console.log("selectedSport ..:", selectedSport);
@@ -72,6 +107,9 @@ export default function SelectCourt({
   }, [selectedCourt]);
 
   useEffect(() => {
+
+    console.log("uir code is : -----", codeUIR);
+    
     if (selectedCourt && codeUIR) {
       const checkAccess = async () => {
         const reservationData = {
@@ -108,7 +146,8 @@ export default function SelectCourt({
             `/Sports/category/${selectedSport}`
           );
           setMatches(response.data);
-          console.log("respnse.data selectd court454545  : " , response.data);
+    
+          console.log("user id from selectCourt ",userId);
           
         } catch (error) {
           console.error(
@@ -136,15 +175,16 @@ export default function SelectCourt({
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {matches.map((match) => (
-          <Card
-            key={match.id}
-            className={`cursor-pointer transition-all hover:border-[#1E3B8B] ${
-              selectedCourt === match.id
-                ? "border-[#1E3B8B] ring-2 ring-[#1E3B8B]/20"
-                : ""
-            }`}
-            onClick={() => handleSelectedCourt(match.id)}
-          >
+         <Card
+         key={match.id}
+         className={`cursor-pointer transition-all hover:border-4 hover:border-[#1E3B8B] ${
+           selectedCourt === match.id
+             ? "border-4 border-[#1E3B8B] ring-4 ring-[#1E3B8B]/20"
+             : "border-2"
+         }`}
+         onClick={() => handleSelectedCourt(match.id)}
+       >
+       
             <CardContent className="p-0">
               <div className="aspect-video relative">
                 <img

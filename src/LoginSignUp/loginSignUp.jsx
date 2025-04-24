@@ -1,135 +1,112 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import ApiManager from "../api";
-import ApiSystem from "../apiSystem";
-import { useNavigate } from "react-router-dom";
-import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';  
-import { ClipLoader } from 'react-spinners'; 
-import './LoginSignUp.css'
+import React, { useState, useEffect } from 'react';
+import './LoginSignUp.css';
+import { useNavigate } from 'react-router-dom';
 
-const LoginSignUp = ({ onLogin }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [token, setToken] = useState(localStorage.getItem('token') || '');
-  const [studentData, setStudentData] = useState(null);
-  const [studentCodeUIR, setStudentCodeUIR] = useState('');
-  const [loading, setLoading] = useState(false); 
-  const [showPassword, setShowPassword] = useState(false);
+const LoginSignUp = () => {
   const navigate = useNavigate();
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  const handleLoginMicrosoft = () => {
+    // Redirect to the backend's Microsoft authentication endpoint
+    window.location.href = "https://localhost:7109/api/auth/microsoft";
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true); 
-    try {
-      const response = await ApiManager.post('/Account/registerAutomaticallyAndLoginAutomatically', {
-        email,
-        password,
-      });
-
-      const { token, userId, codeUIR, firstName, lastName } = response.data;
-      setToken(token);
-      localStorage.setItem('token', token);
-      localStorage.setItem('userId', userId);
-      localStorage.setItem('studentData', JSON.stringify({ userId, codeUIR, firstName, lastName }));
-      
-      const newStudentData = { userId, codeUIR, firstName, lastName };
-      setStudentData(newStudentData);
-   
-      await addStudent(newStudentData, token);
-      onLogin();
-      navigate("/");
-    } catch (error) {
-      setErrorMessage(error.response?.data?.Message || 'Registration/Login failed');
-    } finally {
-      setLoading(false);
-    }
+    
   };
-
-  const addStudent = async (studentData) => {
-    if (
-      !studentData ||
-      !studentData.firstName ||
-      !studentData.lastName ||
-      !studentData.userId ||
-      !studentData.codeUIR
-    ) {
-      return;
-    }
-    try {
-      await ApiSystem.post('/Students/add', studentData);
-      setStudentCodeUIR(studentData.codeUIR);
-    } catch (err) {
-      console.error('Error adding student:', err);
-    }
-  };
+  
 
   return (
     <div className="flex justify-center items-center h-screen css-background">
-    {/* center: Login Form */}
-    <div className="bg-[#f8f9fc] lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2 shadow-lg rounded-lg">
-      <h1 className="text-2xl font-semibold mb-4">Connexion</h1>
-      <form onSubmit={handleSubmit}>
+      {/* center: Login Form */}
+      <div className="bg-[#f8f9fc] lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2 shadow-lg rounded-lg">
+        <h1 className="text-2xl font-semibold mb-4">Connexion</h1>
 
-
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-600">
-            Email
-          </label>
-          
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
-            autoComplete="off"
-          />
-        </div>
-  
-        <div className="mb-4 relative">
-          <label htmlFor="password" className="block text-gray-800">
-            Mot de passe
-          </label>
-          <div className="relative">
-            <input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500 pr-10"
-              autoComplete="off"
-            />
-            <div
-              onClick={togglePasswordVisibility}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
-            >
-              {showPassword ? <AiFillEyeInvisible size={20} /> : <AiFillEye size={20} />}
-            </div>
-          </div>
-        </div>
-  
         <button
-          type="submit"
-          disabled={loading}
-          className={`${
-            loading ? "bg-gray-400 cursor-not-allowed" : "bg-[#1E3B8B] hover:bg-[#1E3B8B]/90"
-          } text-white font-semibold rounded-md py-2 px-4 w-full flex justify-center items-center`}
+          onClick={handleLoginMicrosoft}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#4285F4',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '5px',
+            fontSize: '16px',
+            cursor: 'pointer',
+          }}
         >
-          {loading ? <ClipLoader size={20} color="#ffffff" /> : "Se connecter"}
+          Sign in with Microsoft
         </button>
-        {errorMessage && <p className="text-red-500 mt-2 text-center">{errorMessage}</p>}
-      </form>
+      </div>
     </div>
-  </div>
-  
   );
 };
 
 export default LoginSignUp;
+
+
+//todo : 
+// import { useEffect, useState } from "react";
+// import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
+// import Header from "./components/Layouts/Header";
+// import LoginSignUp from "./LoginSignUp/loginSignUp.jsx";
+// import About from "./components/pages/About";
+// import Contact from "./components/pages/Contact";
+// import ReservationList from "./components/pages/ReservationList.jsx";
+// import Booking from "./components/Steppers/Booking";
+
+// function AppWrapper() {
+//   const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem("isLoggedIn") === "true");
+//   const navigate = useNavigate();
+//   const location = useLocation();
+
+//   useEffect(() => {
+//     const queryParams = new URLSearchParams(location.search);
+//     const token = queryParams.get("token");
+
+//     if (token) {
+//       localStorage.setItem("token", token);
+//       localStorage.setItem("isLoggedIn", "true");
+//       setIsLoggedIn(true);
+
+//       // Clean URL and redirect to /
+//       navigate("/", { replace: true });
+//     }
+//   }, [location.search, navigate]);
+
+//   const handleLogout = () => {
+//     setIsLoggedIn(false);
+//     localStorage.removeItem("isLoggedIn");
+//     localStorage.removeItem("token");
+//     localStorage.removeItem("studentData");
+//   };
+
+//   return (
+//     <>
+//       {isLoggedIn ? (
+//         <div className="flex h-screen customm-bg">
+//           <div className="flex-1 flex flex-col">
+//             <Header onLogout={handleLogout} />
+//             <div className="p-0">
+//               <Routes>
+//                 <Route path="/" element={<About />} />
+//                 <Route path="/reservationList" element={<ReservationList />} />
+//                 <Route path="/stepper" element={<Booking />} />
+//                 <Route path="/contact" element={<Contact />} />
+//               </Routes>
+//             </div>
+//           </div>
+//         </div>
+//       ) : (
+//         <LoginSignUp />
+//       )}
+//     </>
+//   );
+// }
+
+// function App() {
+//   return (
+//     <Router>
+//       <AppWrapper />
+//     </Router>
+//   );
+// }
+
+// export default App;
+

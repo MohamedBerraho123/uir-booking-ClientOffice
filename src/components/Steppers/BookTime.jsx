@@ -15,6 +15,7 @@ import AvailableTime from "./BookingTime/AvailableTime";
 import Participants from "./ParticipantsPart/Participants";
 
 export default function BookTime({
+  userId,
   participants,
   selectedSport,
   selectedCourt,
@@ -35,6 +36,7 @@ export default function BookTime({
   const [sportName, setSportName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const[userUir,setUserUir]=useState("");
 
 
 
@@ -43,8 +45,11 @@ export default function BookTime({
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("studentData"));
     if (storedData) {
+ 
       fetchStudentByUserId(storedData.userId);
     }
+  
+    
   }, []);
 
   useEffect(() => {
@@ -53,7 +58,9 @@ export default function BookTime({
         try {
           const response = await ApiSystem.get(`/Sports/${selectedCourt}`);
           // setMatches(response.data);
-          console.log("data of fetchsportmatch : ", response.data.conditions);
+      
+          console.log("----- user from booktime : " ,userId);
+          
           setConditionSport(response.data.conditions);
           setNbPlayerSport(response.data.nbPlayer);
           setSportName(response.data.name)
@@ -72,6 +79,9 @@ export default function BookTime({
       fetchMatches();
     }
   }, [selectedCourt]);
+
+
+
 
   const handleOpenPopup = () => {
     const validationError = validateParticipants();
@@ -122,7 +132,7 @@ export default function BookTime({
     }
   };
   
-
+  useEffect(() => {
   const fetchStudentByUserId = async (userId) => {
     try {
       const response = await ApiSystem.get(
@@ -133,13 +143,16 @@ export default function BookTime({
         setFirstName(response.data.firstName)
         setLastName(response.data.lastName)
 
-        // console.log("response.data.codeUIR : ", response.data.codeUIR);
+         console.log("--- response.data.codeUIR : ", response.data.codeUIR);
       }
     } catch (err) {
       console.error("Error fetching student:", err);
     }
   };
-
+  if (userId) {
+    fetchStudentByUserId(userId);
+  }
+}, [userId]);
  // Method to fetch names of participants by their UIR codes
 const fetchNamesOfParticipantCodes = async (participantCodes) => {
   try {
@@ -237,12 +250,14 @@ const fetchNamesOfParticipantCodes = async (participantCodes) => {
       hourEnd: selectedTimeRange?.hourEnd,
       codeUIRList: updatedStudentCodeUIRList,
     };
-  
+    console.log("show code uir : " , reservationData.codeUIR);
     try {
       const response = await ApiSystem.post(
         "/Reservations/AddReservations",
         reservationData
       );
+    
+      
       if (response.status === 200 || response.status === 201) {
         Swal.fire({
           title: "Réservation ajoutée avec succès!",

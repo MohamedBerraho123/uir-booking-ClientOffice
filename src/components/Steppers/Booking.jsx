@@ -16,7 +16,7 @@ import ApiSystem from "../../apiSystem";
 
 
 
-export default function Booking() {
+export default function Booking({  userId}) {
     const [step, setStep] = useState(1);
     const [selectedSport, setSelectedSport] = useState("");
     const [selectedCourt, setSelectedCourt] = useState("");
@@ -32,6 +32,8 @@ export default function Booking() {
         try {
           const response = await ApiSystem.get("/SportCategorys/list");
           setSports(response.data);
+          console.log("user id from booking component : ",userId);
+          
           // console.log(response.data);
           
         } catch (error) {
@@ -115,6 +117,7 @@ export default function Booking() {
             selectedSport={selectedSport}
             onSelectSport={setSelectedSport}
             onNext={handleNext}
+            userId={userId}
           />
         )}
         {step === 2 && (
@@ -125,6 +128,7 @@ export default function Booking() {
             onSelectCourt={setSelectedCourt}
             onNext={handleNext}
             onBack={handleBack}
+            userId={userId}
           />
         )}
         {step === 3 && (
@@ -137,6 +141,7 @@ export default function Booking() {
             onAddParticipant={() => {}}
             onRemoveParticipant={() => {}}
             onBack={handleBack}
+            userId={userId}
           />
         )}
          </CardContent>

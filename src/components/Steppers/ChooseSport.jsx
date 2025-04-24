@@ -11,7 +11,7 @@ export default function ChooseSport({ sports, selectedSport, onSelectSport, onNe
 
   const handleSelectSport = (id) => {
     onSelectSport(id);
-    console.log("id of sport selected : ", id);
+
   };
 
   useEffect(() => {
@@ -23,11 +23,11 @@ export default function ChooseSport({ sports, selectedSport, onSelectSport, onNe
             `/Sports/total-category/${sport.id}`
           );
           courtCounts[sport.id] = response.data;
-          console.log('court total : ' , courtCounts);
+  
           
         }
         setCourtsCount(courtCounts);
-        console.log('court total : ' , courtCounts);
+     
         // console.log("Court counts:", courtCounts);
       } catch (error) {
         console.error("Failed to fetch courts count:", error);

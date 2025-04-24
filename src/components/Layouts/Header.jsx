@@ -11,48 +11,244 @@ import profile from "../../assets/profile.png";
 import "./Header.css";
 import ApiSystem from "../../apiSystem"
 
+import { useLocation } from 'react-router-dom'
+import axios from "axios";
+
+
 
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Header({ onLogout }) {
+export default function Header({ onLogout , userId}) {
+
+
+
+  //666
+
+  const [userData, setUserData] = useState({
+    givenName: "",
+    surname: "",
+    email: "",
+    userId: "",
+    profilePicture: ""
+  });
+
+  const[firstNameStudent,setFierstNameStudent]=useState("");
+  const[lastNameStudent,setLastNameStudent]=useState("");
+  const[userIdStudent,setuserIdStudent]=useState("");
+  const[CodeUirStudent,setCodeUirStudent]=useState("");
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  
+  const message = queryParams.get('message');
+  const email = queryParams.get('email');
+  const token = queryParams.get('token');
+  const givenName = queryParams.get('givenName');
+  const surname = queryParams.get('surname');
+
+  const profilePicture = queryParams.get('profilePicture');
+  
+  const [profileData, setProfileData] = useState({});
+  
+  
+  useEffect(() => {
+    const storedData = {
+      givenName: localStorage.getItem("givenName"),
+      surname: localStorage.getItem("surname"),
+      email: localStorage.getItem("email"),
+      userId: localStorage.getItem("userId"),
+      profilePicture: localStorage.getItem("profilePicture")
+    };
+    setFierstNameStudent(storedData.givenName);
+    setLastNameStudent(storedData.surname);
+    setuserIdStudent(storedData.userId);
+    setCodeUirStudent(storedData.email);
+
+    console.log("--- stord data id user : " , storedData.userId);
+    console.log("--- stord data email code uir : " , storedData.email);
+    console.log("--- geven name  stord data : " , storedData.givenName);
+    console.log("--- sur name  stord data : " , storedData.surname);
+    console.log("---  : user id only " , userId);
+    
+    setUserData(storedData);
+
+  const studentData = {
+    firstName:storedData.givenName,
+    lastName: storedData.surname,
+    userId:storedData.userId,
+    codeUIR: storedData.email,
+  };
+
+
+    const fetchAndAddStudent = async () => {
+      if (
+        !studentData.firstName ||
+        !studentData.lastName ||
+        !studentData.userId ||
+        !studentData.codeUIR
+      ) {
+        console.warn("Incomplete student data:", studentData);
+        return;
+      }
+  
+      try {
+        // Check if student already exists
+        const response = await ApiSystem.get(`/Students/GetStudentByUserId/${studentData.userId}`);
+  
+        if (response?.data?.userId) {
+          console.log("✅ Student already exists:", response.data);
+          return; // ✅ don't add again
+        }
+    
+        // If no existing student found, add new one
+        await ApiSystem.post('/Students/add', studentData);
+        console.log("🎉 Student added successfully!");
+        // const existingStudent = response.data;
+  
+        // if (existingStudent) {
+        //   setUserData({
+        //     firstName: existingStudent.firstName,
+        //     lastName: existingStudent.lastName,
+        //   });
+        //   console.log("Student already exists:", existingStudent);
+        // } else {
+        //   // Add the new student
+        //   await ApiSystem.post('/Students/add', studentData);
+        //   console.log("Student added successfully!");
+        // }
+      } catch (err) {
+        // console.error("Error fetching or adding student:", err);
+         // If GET fails with 404, we assume student doesn't exist and add
+      if (err.response?.status === 404) {
+        try {
+          await ApiSystem.post('/Students/add', studentData);
+          console.log("🎉 Student added after 404 GET!");
+        } catch (postErr) {
+          console.error("❌ Failed to add student after 404:", postErr);
+        }
+      } else {
+        console.error("❌ Error fetching student:", err);
+      }
+  
+  
+      }
+    };
+  
+    fetchAndAddStudent();
+
+
+  }, [userId]);
+
+  const handleSignOut = () => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('email');
+      navigate('/');
+  };
+  // 6666
+  
 
 
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [userData, setUserData] = useState({ firstName: "", lastName: "" });
+
   const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  useEffect(() => {
-    const fetchStudentByUserId = async (userId) => {
-      // console.log("Header ", userId);
-      try {
-        const response = await ApiSystem.get(
-          `/Students/GetStudentByUserId/${userId}`);
-        // console.log("the first name", response.data.firstName);
-        // console.log("the last name", response.data.lastName);
+  
 
-        // Update state with fetched data
-        setUserData({
-          firstName: response.data.firstName,
-          lastName: response.data.lastName,
-        });
-      } catch (err) {
-        console.error("Error fetching student:", err);
-      }
-    };
 
-    const userId = localStorage.getItem("userId");
-    if (userId) {
-      fetchStudentByUserId(userId);
-    }
-  }, []);
+ 
+// useEffect(() => {
+//   const studentData = {
+//     firstName:firstNameStudent,
+//     lastName: lastNameStudent,
+//     userId:userIdStudent,
+//     codeUIR: CodeUirStudent,
+//   };
+
+//   const fetchAndAddStudent = async () => {
+//     if (
+//       !studentData.firstName ||
+//       !studentData.lastName ||
+//       !studentData.userId ||
+//       !studentData.codeUIR
+//     ) {
+//       console.warn("Incomplete student data:", studentData);
+//       return;
+//     }
+
+//     try {
+//       // Check if student already exists
+//       const response = await ApiSystem.get(`/Students/GetStudentByUserId/${studentData.userId}`);
+
+//       if (response?.data?.userId) {
+//         console.log("✅ Student already exists:", response.data);
+//         return; // ✅ don't add again
+//       }
+  
+//       // If no existing student found, add new one
+//       await ApiSystem.post('/Students/add', studentData);
+//       console.log("🎉 Student added successfully!");
+//       // const existingStudent = response.data;
+
+//       // if (existingStudent) {
+//       //   setUserData({
+//       //     firstName: existingStudent.firstName,
+//       //     lastName: existingStudent.lastName,
+//       //   });
+//       //   console.log("Student already exists:", existingStudent);
+//       // } else {
+//       //   // Add the new student
+//       //   await ApiSystem.post('/Students/add', studentData);
+//       //   console.log("Student added successfully!");
+//       // }
+//     } catch (err) {
+//       // console.error("Error fetching or adding student:", err);
+//        // If GET fails with 404, we assume student doesn't exist and add
+//     if (err.response?.status === 404) {
+//       try {
+//         await ApiSystem.post('/Students/add', studentData);
+//         console.log("🎉 Student added after 404 GET!");
+//       } catch (postErr) {
+//         console.error("❌ Failed to add student after 404:", postErr);
+//       }
+//     } else {
+//       console.error("❌ Error fetching student:", err);
+//     }
+
+
+//     }
+//   };
+
+//   fetchAndAddStudent();
+// }, [userId]);
+//todo : -------------------------
+
+  // useEffect(() => {
+  //   if (userId) {
+  //     const fetchStudentByUserId = async (userId) => {
+  //       try {
+  //         const response = await ApiSystem.get(`/Students/GetStudentByUserId/${userId}`);
+  //         console.log(userId);
+  //         setUserData({
+  //           firstName: response.data.firstName,
+  //           lastName: response.data.lastName,
+  //         });
+  //       } catch (err) {
+
+  //         console.error("-- Error fetching student:", err);
+  //       }
+  //     };
+
+  //   }
+  //   fetchStudentByUserId(userId);
+  // }, [userId]);
   return (
     <Disclosure as="nav" className="bg-[#073567] sticky top-0 z-50">
   <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -92,7 +288,21 @@ export default function Header({ onLogout }) {
       <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
         <button type="button" className="relative rounded-full bg-[#073567] p-1 text-white hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
           <span className="absolute -inset-1.5" />
-          <span className="sr-only">View notifications</span> {userData.firstName} {userData.lastName}
+          <span className="sr-only">View notifications</span>   <div style={{ maxWidth: '500px', margin: 'auto', textAlign: 'center', padding: '20px' }}>
+         
+          
+                <>
+                   
+                 
+  
+                     {firstNameStudent} {lastNameStudent}
+              
+                   
+                </>
+        
+
+        
+        </div>
         </button>
 
         {/* Profile dropdown */}
