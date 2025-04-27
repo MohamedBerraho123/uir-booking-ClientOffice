@@ -11,7 +11,7 @@ import ApiSystem from "../../apiSystem";
 import Swal from "sweetalert2";
 import { ClipLoader } from 'react-spinners'; 
 
-export default function Contact() {
+export default function Contact({userId}) {
   const [formData, setFormData] = useState({
     fullName: "",
     message: "",
@@ -22,7 +22,7 @@ export default function Contact() {
 
   useEffect(() => {
     const fetchStudentByUserId = async (userId) => {
-      // console.log("Header ", userId);
+       console.log("Header ", userId);
       try {
         const response = await ApiSystem.get(
           `/Students/GetStudentByUserId/${userId}`);
@@ -30,12 +30,15 @@ export default function Contact() {
           firstName: response.data.firstName,
           lastName: response.data.lastName,
         });
+        console.log("res : ",response);
+        console.log("res : ",response.data.firstName);
+        
       } catch (err) {
         console.error("Error fetching student:", err);
       }
     };
 
-    const userId = localStorage.getItem("userId");
+
     if (userId) {
       fetchStudentByUserId(userId);
     }
@@ -52,7 +55,7 @@ export default function Contact() {
     try {
       // Prepare the email data
       const emailData = {
-        email: "contact@souhail.me",
+        email: "elghiouanesouhail19@gmail.com",
         subject: `Message from ${userData.firstName} ${userData.lastName}`,
         message: formData.message,
       };

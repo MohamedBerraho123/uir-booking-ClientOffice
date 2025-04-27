@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import ApiSystem from "../../apiSystem";
 import Footer from "../Layouts/Footer";
+import uirevent from "../../assets/Uirback.jpeg"
 
 export default function About() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -60,6 +61,9 @@ export default function About() {
       try {
         const response = await ApiSystem.get("/Event/list");
         const fetchedEvents = response.data;
+
+        console.log(fetchedEvents);
+        
         setListSports(response.data);
         const shuffledEvents = fetchedEvents.sort(() => 0.5 - Math.random()).slice(0, 4);
         setEvents(shuffledEvents);
@@ -73,39 +77,66 @@ export default function About() {
   return (
     <div className="min-h-screen">
       <div className="relative bg-[#1E3B8B] text-white h-[600px]">
-        {Listsports.map((slide, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentSlide ? "opacity-100" : "opacity-0"
-            }`}
+      {Listsports.length === 0 ? (
+     <div className="absolute inset-0">
+    <img
+      src={uirevent}
+      alt="Default"
+      className="w-full h-full object-cover opacity-50"
+    />
+    <div className="absolute inset-0 bg-black bg-opacity-50" />
+    <div className="absolute inset-0 flex items-center justify-center">
+      <div className="text-center space-y-6 max-w-4xl mx-auto px-6">
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-5xl font-bold mb-6"
+        >
+   
+        </motion.h1>
+      </div>
+    </div>
+  </div>
+) : (
+  Listsports.map((slide, index) => (
+    <div
+      key={index}
+      className={`absolute inset-0 transition-opacity duration-1000 ${
+        index === currentSlide ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      <img
+        src={
+          slide.image
+            ? `data:image/png;base64,${slide.image}`
+            : "placeholder.png"
+        }
+        alt={slide.title}
+        className="w-full h-full object-cover opacity-50"
+      />
+      <div className="absolute inset-0 bg-black bg-opacity-50" />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="text-center space-y-6 max-w-4xl mx-auto px-6">
+          <motion.h1
+            key={`${index}-title`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+            className="text-5xl font-bold mb-6"
           >
-            <img
-              src={
-                slide.image
-                  ? `data:image/png;base64,${slide.image}`
-                  : "placeholder.png"
-              }
-              alt={slide.title}
-              className="w-full h-full object-cover opacity-50"
-            />
-            <div className="absolute inset-0 bg-black bg-opacity-50" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center space-y-6 max-w-4xl mx-auto px-6">
-                <motion.h1
-                  key={`${index}-title`}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.5 }}
-                  className="text-5xl font-bold mb-6"
-                >
-                  {slide.title}
-                </motion.h1>
-              </div>
-            </div>
-          </div>
-        ))}
+            {slide.title}
+          </motion.h1>
+        </div>
+      </div>
+    </div>
+  ))
+)}
+
+
+
+
         <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2">
           <div className="flex space-x-2">
             {events.map((_, index) => (

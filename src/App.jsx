@@ -60,7 +60,7 @@ function AppWrapper() {
                 <Route path="/" element={<About />} />
                 <Route path="/reservationList" element={<ReservationList userId={userId} />} />
                 <Route path="/stepper" element={<Booking userId={userId} />} />
-                <Route path="/contact" element={<Contact />} />
+                <Route path="/contact" element={<Contact userId={userId}/>} />
               </Routes>
             </div>
           </div>
